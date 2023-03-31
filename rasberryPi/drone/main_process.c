@@ -1,7 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <pthread.h>
+
+
 
 #define NUM_THREADS 3
 
@@ -11,40 +9,6 @@ void main_thred_func(){
         i++;
         printf("B");
     }
-}
-
-// 각각의 스레드가 수행할 함수 정의
-void *thread_func1(void *arg)
-{
-    int i = 0;
-    while(i<1000){
-        i++;
-        printf("0");
-    }
-    return 0;
-}
-
-void *thread_func2(void *arg)
-{
-    int i = 0;
-    while(i<1000){
-        i++;
-        printf("1");
-    }
-    return 0;
-
-
-}
-
-void *thread_func3(void *arg)
-{
-    int i = 0;
-    while(i<1000){
-        i++;
-        printf("4");
-    }
-    return 0;
-
 }
 
 int main()
