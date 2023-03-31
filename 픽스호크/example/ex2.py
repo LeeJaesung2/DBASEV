@@ -82,6 +82,7 @@ def set_roi(location):
 
     vehicle.send_mavlink(msg)
     
+# original_location으로부터 북쪽으로 dNOrth 동쪽으로 dEast만큼 간 LocationGlobal
 def get_location_meters(original_location, dNorth, dEast):
     earth_radius = 6378137.0
     dLat = dNorth/earth_radius
@@ -92,4 +93,105 @@ def get_location_meters(original_location, dNorth, dEast):
 
     if type(original_location) is LocationGlobal:
         targetlocation = LocationGlobal(newlat, newlon, original_location.alt)
-    elif type(original_location) is 
+    elif type(original_location) is LocationGlobalRelative:
+        targetlocation = LocationGlobalRelative(newlat, newlon, original_location.alt)
+    else:
+        raise Exception("Invalid Location object passed")
+    
+    return targetlocation
+
+# 두 LocationGlobal 사이 ground distance
+def get_distance_meters(aLocation1, aLocation2):
+    dlat = aLocation2.lat - aLocation1.lat
+    dlong = aLocation2.lon - aLocation1.lon
+    return math.sqrt((dlat*dlat)+(dlong*dlong)) * 1.113195e5
+
+def get_bearing(aLocation1, aLocation2):
+    off_x = aLocation2.lon - aLocation1.lon
+    off_y = aLocation2.lat - aLocation1.lat
+    bearing = 90.00 + math.atan2(-off_y, off_x) * 57.2957795
+    if bearing < 0 :
+        bearing += 360.00
+    return bearing
+
+def goto_position_target_global_int(aLocation):
+    msg = vehicle.message_factor.set_position_target_global_int_encode(
+        0,
+        0, 0,
+        mavutil.mavlink.MAV_FAME_GLOBAL_RLATIVE_ALT_INT,
+        0b0000111111111000,     #type_mask(only speeds enabled)
+        aLocation.lat*1e7,
+        aLocation.lon*1e7,
+        aLocation.alt,
+        0,
+        0,
+        0,
+        0, 0, 0,
+        0, 0
+    )
+
+    vehicle.send_mavlink(msg)
+
+def goto_position_target_local_ned(north, east, down)
+    msg = vehicle.message_factory.set_position_target_local_ned_encode(
+        0,
+        0, 0,
+        mavutil.mavlink.MAV_FRAME_LOCAL_NED,
+        0b0000111111111000,
+        north, east, down,
+        0, 0, 0,
+        0, 0, 0,
+        0, 0
+    )
+
+    vehicle.send_mavlink(msg)
+
+def goto(dNorth, dEast, gotoFunction=vehicle.simple_goto):
+    currentLocation = vehicle.location.global_relative_frame
+    targetLocation = get_location_meters(currentLocation, dNorth, dEast)
+    targetDistance = get_distance_meters(currentLocation, targetLocation)
+    gotoFunction(targetLocation)
+
+    while vehicle.mode.name =="GUIDED":
+        remainingDistance= get_distance_meters(vehicle.location.global_relative_frame, targetLocation)
+        print("Distance to target: ", remainingDistance)
+        if remainingDistance <= targetDistance * 0.01:
+            print("Reached target")
+            break
+        time.sleep(2)
+
+def send_ned_velocity(velocity_x, velocity_y, velocity_z, duration):
+    msg = vehicle.message_factory.set_position_target_local_ned_encode(
+        0,
+        0, 0,
+        mavutil.mavlink.MAV_FRAME_LOCAL_NED,
+        0b0000111111000111,
+        0, 0, 0,
+        velocity_x, velocity_y, velocity_z,
+        0, 0, 0,
+        0, 0
+    )
+
+    for x in range(0, duration):
+        vehicle.send_mavlink(msg)
+        time.sleep(1)
+
+def send_global_velocity(velocity_x, velocity_y, velocity_z, duration):
+    msg = vehicle.message_factory.set_position_target_global_int_encode(
+        0,
+        0, 0,
+        mavutil.mavlink.MAV_FRAME_GLBAL_RELATIVE_ALT_INT,
+        0b0000111111000111,
+        0,
+        0,
+        0,
+        velocity_x,
+        velocity_y,
+        velocity_z,
+        0, 0, 0,
+        0, 0
+    )
+
+    for x in range(0, duration):
+        vehicle.send_mavlink(msg)
+        time.sleep(1)
