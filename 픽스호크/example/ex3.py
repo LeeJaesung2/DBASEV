@@ -6,8 +6,9 @@ from dronekit import connect, VehicleMode, LocationGlobalRelative, LocationGloba
 import time
 import math
 from pymavlink import mavutil
-
+import dronekit_sitl
 import argparse  
+
 parser = argparse.ArgumentParser(description='Demonstrates basic mission operations.')
 parser.add_argument('--connect', help="vehicle connection target string. If not specified, SITL automatically started and used.")
 args = parser.parse_args()
@@ -18,7 +19,6 @@ sitl = None
 
 #Start SITL if no connection string specified
 if not connection_string:
-    import dronekit_sitl
     sitl = dronekit_sitl.start_default()
     connection_string = sitl.connection_string()
 
@@ -147,7 +147,7 @@ vehicle.mode = VehicleMode("AUTO")
 while True:
     nextwaypoint=vehicle.commands.next
     print('Distance to waypoint (%s): %s' % (nextwaypoint, distance_to_current_waypoint()))
-  
+
     if nextwaypoint==3: #Skip to next waypoint
         print('Skipping to Waypoint 5 when reach waypoint 3')
         vehicle.commands.next = 5
