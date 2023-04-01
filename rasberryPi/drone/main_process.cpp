@@ -6,7 +6,7 @@
 
 #define NUM_THREADS 3
 
-void main_thred_func(){rr
+void main_thred_func(){
     int i = 0;
     while(i<1000){
         i++;
