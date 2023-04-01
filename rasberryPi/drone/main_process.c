@@ -1,12 +1,12 @@
 #include "../../src/include/visibility.h"
-#include "../../src/modules/colllision_avoidance/collision_avoidance.h"
+#include "../../src/modules/collision_avoidance/collision_avoidance.h"
 #include "../../src/modules/communication/communication.h"
 #include "../../src/modules/speed_control/speed_control.h"
 
 
 #define NUM_THREADS 3
 
-void main_thred_func(){
+void main_thred_func(){rr
     int i = 0;
     while(i<1000){
         i++;
