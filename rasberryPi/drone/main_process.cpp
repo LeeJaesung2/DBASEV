@@ -16,12 +16,13 @@ void main_thred_func(){rr
 
 int main()
 {
-    int i;
-    void *status;
-    int thr_id;
-    time_t begin = clock();
-    // 각각의 스레드를 생성
-    pthread_t threads[NUM_THREADS];
+    printf("compile test done");
+    // int i;
+    // void *status;
+    // int thr_id;
+    // time_t begin = clock();
+    // // 각각의 스레드를 생성
+    // pthread_t threads[NUM_THREADS];
 
     // //첫번째 스레드 생성
     // thr_id = pthread_create(&threads[0], NULL, thread_func1, (void *)begin);

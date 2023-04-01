@@ -21,6 +21,6 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 all: $(OBJ) $(MAIN)
 	$(CC) $(LDFLAGS) $^ -o $(EXECUTABLE)
 
-# # Clean all object files and executable
-# clean:
-# 	rm -rf $(OBJ_DIR)/*.o $(DRONE_DIR)/main_process.exe
+# Clean all object files and executable
+clean:
+	rm -rf $(OBJ_DIR)/*.o $(DRONE_DIR)/main_process.exe
