@@ -1,7 +1,7 @@
 #include "../../src/include/visibility.h"
-#include "../../src/modules/collision_avoidance/collision_avoidance.h"
-#include "../../src/modules/communication/communication.h"
-#include "../../src/modules/speed_control/speed_control.h"
+#include "../../src/include/collision_avoidance.h"
+#include "../../src/include/communication.h"
+#include "../../src/include/speed_control.h"
 
 
 #define NUM_THREADS 3
@@ -16,7 +16,7 @@ void main_thred_func(){
 
 int main()
 {
-    printf("compile test done");
+    test();
     // int i;
     // void *status;
     // int thr_id;
@@ -51,7 +51,7 @@ int main()
     // }
 
     // 모든 스레드 종료시 메인스레드 기능
-    printf("all of threads are dead");
+    // printf("all of threads are dead");
 
     return 0;
 }
