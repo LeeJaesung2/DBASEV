@@ -40,3 +40,7 @@ Temporary Items
 docs/link.hwp
 docs/orderlist.xls
 docs/proposal.hwp
+
+#object file and executable file
+.o
+.exe
