@@ -2,7 +2,7 @@ CC=g++
 CFLAGS=-c -Wall
 LDFLAGS=
 SRC_DIR=./src
-INC_DIR=./src/include
+#INC_DIR=./src/include
 OBJ_DIR=./build
 DRONE_DIR=./rasberryPi/drone
 VEHICLE_DIR=./raspberryPi/vehicle
@@ -10,17 +10,27 @@ VEHICLE_DIR=./raspberryPi/vehicle
 # List all source files to be compiled
 SRC=$(wildcard $(SRC_DIR)/drivers/**/*.cpp $(SRC_DIR)/modules/**/*.cpp)
 OBJ=$(SRC:$(SRC_DIR)/**/**/%.cpp=$(OBJ_DIR)/**/**/%.o)
-MAIN=$(DRONE_DIR)/main_process
+MAIN=$(DRONE_DIR)/main_process.o
 EXECUTABLE=$(DRONE_DIR)/main_process.exe
 
-# Rules for building object files
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
-	$(CC) $(CFLAGS) -I$(INC_DIR) $< -o $@
+all : $(EXECUTABLE)	
 
 # Build executable from object files
-all: $(OBJ) $(MAIN)
+$(EXECUTABLE): $(OBJ) $(MAIN)
 	$(CC) $(LDFLAGS) $^ -o $(EXECUTABLE) 
+
+# Rules for building object files
+#$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+#	$(CC) $(CFLAGS) -I$(INC_DIR) $< -o $@
+
+
+
+
+
 
 # Clean all object files and executable
 clean:
-	rm -rf $(OBJ_DIR)/*.o $(DRONE_DIR)/main_process.exe
+	rm $(OBJ_DIR)/*.o $(DRONE_DIR)/main_process.o $(DRONE_DIR)/main_process.exe
+
+execute:
+	./rasberryPi/drone/main_process.exe	

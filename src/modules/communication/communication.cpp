@@ -1,4 +1,4 @@
-#include "communication.h"
+#include "../../include/communication.h"
 
 void *thread_func2(void *arg)
 {
