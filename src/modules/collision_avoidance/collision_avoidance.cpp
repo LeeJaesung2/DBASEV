@@ -10,5 +10,5 @@ void * thread_func3(void *arg){
 }
 
 void test(){
-    printf("module test sucess");
+    printf("module test sucess\n");
 }
