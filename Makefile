@@ -30,7 +30,7 @@ $(EXECUTABLE): $(OBJ) $(MAIN)
 
 # Clean all object files and executable
 clean:
-	rm $(OBJ_DIR)/*.o $(DRONE_DIR)/main_process.o $(DRONE_DIR)/main_process.exe
+	rm $(DRONE_DIR)/main_process.o $(DRONE_DIR)/main_process.exe
 
 execute:
 	./rasberryPi/drone/main_process.exe	
