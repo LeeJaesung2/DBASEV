@@ -1,6 +1,6 @@
 CC=g++
 CFLAGS=-c -Wall
-LDFLAGS=
+LDFLAGS=-lpthread
 SRC_DIR=./src
 #INC_DIR=./src/include
 OBJ_DIR=./build
@@ -17,7 +17,7 @@ all : $(EXECUTABLE)
 
 # Build executable from object files
 $(EXECUTABLE): $(OBJ) $(MAIN)
-	$(CC) $(LDFLAGS) $^ -o $(EXECUTABLE) 
+	$(CC) $^ -o $(EXECUTABLE) $(LDFLAGS)
 
 # Rules for building object files
 #$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
