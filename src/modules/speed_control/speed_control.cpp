@@ -3,8 +3,8 @@
 void * thread_func1(void *arg)
 {
     while(true){
-        printf("A");
-        
+        printf("0");
+
     }
     return 0;
 }

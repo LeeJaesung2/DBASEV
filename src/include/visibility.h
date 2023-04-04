@@ -9,7 +9,7 @@
 #include <time.h>
 #include <concurrent_queue.h>
 
-//using namespace Concurrency; //Concurrency Queue define
+//using namespace Concurrency; //Concurrency Queue define.
 
 
 #endif
