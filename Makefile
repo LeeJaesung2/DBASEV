@@ -4,8 +4,8 @@ LDFLAGS=-lpthread
 SRC_DIR=./src
 #INC_DIR=./src/include
 OBJ_DIR=./build
-DRONE_DIR=./rasberryPi/drone
-VEHICLE_DIR=./rasberryPi/vehicle
+DRONE_DIR=./raspberryPi/drone
+VEHICLE_DIR=./raspberryPi/vehicle
 
 # List all source files to be compiled
 SRC=$(wildcard $(SRC_DIR)/drivers/**/*.cpp $(SRC_DIR)/modules/**/*.cpp)

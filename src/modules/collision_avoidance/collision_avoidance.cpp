@@ -2,9 +2,7 @@
 
 void *thread_func3(void *arg)
 {
-    int i = 0;
-    while(i<1000){
-        i++;
+    while(true){
         printf("0");
     }
     return 0;

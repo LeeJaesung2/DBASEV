@@ -2,9 +2,7 @@
 
 void * thread_func1(void *arg)
 {
-    int i = 0;
-    while(i<1000){
-        i++;
+    while(true){
         printf("A");
     }
     return 0;
