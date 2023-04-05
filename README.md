@@ -7,7 +7,7 @@
 **긴급차량 추월로 확보**- 긴급차량보다 선행하여 전방 100M에서 차량들에게 긴급상황을 미리 알려줍니다.<br>
 <br>
 
-<img width="80%" src="https://user-images.githubusercontent.com/79908225/230010518-7f447d72-8689-4b2c-ba36-85ca38e63d48.gif"/>
+<img width="50%" src="https://user-images.githubusercontent.com/79908225/230010518-7f447d72-8689-4b2c-ba36-85ca38e63d48.gif"/>
 
 ## 📆 개발 일정
 기획 (23.02.20 ~ 23.03)<br>
