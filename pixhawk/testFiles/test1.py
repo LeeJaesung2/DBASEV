@@ -15,6 +15,7 @@ while not vehicle.mode.name =='GUIDED' and not vehicle.armed and not api.exit:
 
 cmds = None
 
+
 # 미션 초기화
 def init_commands():
     print("명령어 초기화중 ...")
@@ -64,7 +65,17 @@ def add_mission(new_cmd):
 
 # 맨 처음으로 미션 추가 코드
 def add_mission_first(new_cmd):
-    pass
+    print("새로운 미션 맨 처음으로 넣는중 ...")
+    missionlist = [new_cmd]
+    for cmd in cmds:
+        missionlist.append(cmd)
+    
+    cmds.clear()
+    for cmd in missionlist:
+        cmds.add(cmd)
+
+    cmds.upload()
+    print("새로운 미션 맨 처음으로 업로드 완료!!")
 
 # 모든 미션 없애버리고 새로운 미션 추가 코드
 def add_mission_ignore_all_mission(new_cmd):
@@ -106,6 +117,25 @@ def hovering_time(stop_time=1.0, target_lat=0, target_lon=0, target_alt=0):
 
     return new_cmd
 
+# 홈 위치 설정하기
+def set_home(target_alt):
+    print("\nSet new home location")
+    my_location_alt = vehicle.location.global_frame
+    my_location_alt.alt = target_alt
+    vehicle.home_location = my_location_alt
+
+# 홈 위치 또는 집결 지점으로 돌아가기
+def return_home():
+    new_cmd = Command(
+        0, 0, 0,
+        mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,
+        mavutil.mavlink.MAV_CMD_NAV_RETURN_TO_LAUNCH,
+        0,
+        0, 0, 0,
+        0, 0, 0
+    )
+
+    return new_cmd
 
 init_commands()
 arm_and_takeoff(5)
