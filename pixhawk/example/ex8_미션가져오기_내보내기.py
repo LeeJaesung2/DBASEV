@@ -22,7 +22,7 @@ import time
 import argparse  
 parser = argparse.ArgumentParser(description='Demonstrates mission import/export from a file.')
 parser.add_argument('--connect', 
-                   help="Vehicle connection target string. If not specified, SITL automatically started and used.")
+                help="Vehicle connection target string. If not specified, SITL automatically started and used.")
 args = parser.parse_args()
 
 connection_string = args.connect
@@ -65,17 +65,17 @@ def readmission(aFileName):
                     raise Exception('File is not supported WP version')
             else:
                 linearray=line.split('\t')
-                ln_index=int(linearray[0])
-                ln_currentwp=int(linearray[1])
-                ln_frame=int(linearray[2])
-                ln_command=int(linearray[3])
-                ln_param1=float(linearray[4])
-                ln_param2=float(linearray[5])
-                ln_param3=float(linearray[6])
-                ln_param4=float(linearray[7])
-                ln_param5=float(linearray[8])
-                ln_param6=float(linearray[9])
-                ln_param7=float(linearray[10])
+                ln_index=int(linearray[0])  # 몇 번째 명령어
+                ln_currentwp=int(linearray[1]) # 
+                ln_frame=int(linearray[2]) # 좌표계 : 0이면 MAV_FRAME_GLOBAL | 1 이면 NAV_FRAME_GLOBAL_RELATIVE_ALT
+                ln_command=int(linearray[3]) # 명령어
+                ln_param1=float(linearray[4]) # 파라미터 1
+                ln_param2=float(linearray[5]) # 파라미터 2
+                ln_param3=float(linearray[6]) # 파라미터 3
+                ln_param4=float(linearray[7]) # 파라미터 4
+                ln_param5=float(linearray[8]) # 목표 위도, 0이면 현재 위도
+                ln_param6=float(linearray[9]) # 목표 경도, 0이면 현재 경도
+                ln_param7=float(linearray[10]) # 목표 고도, 0 이면 현재 고도
                 ln_autocontinue=int(linearray[11].strip())
                 cmd = Command( 0, 0, 0, ln_frame, ln_command, ln_currentwp, ln_autocontinue, ln_param1, ln_param2, ln_param3, ln_param4, ln_param5, ln_param6, ln_param7)
                 missionlist.append(cmd)

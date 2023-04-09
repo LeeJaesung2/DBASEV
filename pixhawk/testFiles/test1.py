@@ -15,6 +15,30 @@ while not vehicle.mode.name =='GUIDED' and not vehicle.armed and not api.exit:
 
 cmds = None
 
+# 미션 읽기
+def readmission(aFileName):
+    print("\n다음 파일에서 읽기 : %s" % aFileName)
+
+    missionlist=[]
+    with open(aFileName) as f:
+        for i, line in enumerate(f):
+            if i==0:
+                if not line.startswith('QGC WPL 110'):
+                    raise Exception('File is not supported WP version')
+            else:
+                linearray=line.strip().split('\t')
+
+                ln_index=int(linearray[0])  # 몇 번째 명령어
+                ln_command=int(linearray[1]) # 명령어
+                ln_param1=float(linearray[2]) # 파라미터 1
+                ln_param2=float(linearray[3]) # 파라미터 2
+                ln_param3=float(linearray[4]) # 파라미터 3
+                ln_param4=float(linearray[5]) # 파라미터 4
+                ln_param5=float(linearray[6]) # 목표 위도, 0이면 현재 위도
+                ln_param6=float(linearray[7]) # 목표 경도, 0이면 현재 경도
+                ln_param7=float(linearray[8]) # 목표 고도, 0 이면 현재 고도
+                
+    return missionlist
 
 # 미션 초기화
 def init_commands():
