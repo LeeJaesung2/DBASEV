@@ -5,19 +5,20 @@ from pymavlink import mavutil
 import dronekit_sitl
 import argparse  
 
-# 기본 시작 코드
+# start basic code
+print("Start Programe")
 vehicle = connect("/dev/ttyAMA0", wait_ready=True, baud=57600)
 vehicle.mode = VehicleMode("GUIDED")
 vehicle.armed = True
 while not vehicle.mode.name =='GUIDED' and not vehicle.armed and not api.exit:
-    print (" 이륙 중비중 ...")
+    print ("Getting ready to take off...")
     time.sleep(1)
 
 cmds = None
 
-# 미션 읽기
+# Read the mission file
 def readmission(aFileName):
-    print("\n다음 파일에서 읽기 : %s" % aFileName)
+    print("\nRead from the following file : %s" % aFileName)
 
     missionlist=[]
     with open(aFileName) as f:
@@ -28,68 +29,68 @@ def readmission(aFileName):
             else:
                 linearray=line.strip().split('\t')
 
-                ln_index=int(linearray[0])  # 몇 번째 명령어
-                ln_command=int(linearray[1]) # 명령어
-                ln_param1=float(linearray[2]) # 파라미터 1
-                ln_param2=float(linearray[3]) # 파라미터 2
-                ln_param3=float(linearray[4]) # 파라미터 3
-                ln_param4=float(linearray[5]) # 파라미터 4
-                ln_param5=float(linearray[6]) # 목표 위도, 0이면 현재 위도
-                ln_param6=float(linearray[7]) # 목표 경도, 0이면 현재 경도
-                ln_param7=float(linearray[8]) # 목표 고도, 0 이면 현재 고도
+                ln_index=int(linearray[0])  # Command Index
+                ln_command=int(linearray[1]) # Command
+                ln_param1=float(linearray[2]) # Parameters 1
+                ln_param2=float(linearray[3]) # Parameters 2
+                ln_param3=float(linearray[4]) # Parameters 3
+                ln_param4=float(linearray[5]) # Parameters 4
+                ln_param5=float(linearray[6]) # Target latitude, 0 means current latitude
+                ln_param6=float(linearray[7]) # Target hardness, if zero, current hardness
+                ln_param7=float(linearray[8]) # Target altitude, 0 means current altitude
                 
     return missionlist
 
-# 미션 초기화
+# Mission initialization
 def init_commands():
-    print("명령어 초기화중 ...")
+    print("Initializing command...")
     cmds = vehicle.commands
     cmds.clear()
     cmds.upload()
     cmds.wait_ready()
-    print("명령어 초기화 완료")
+    print("Command initialization complete!!")
 
-# 이륙 코드
+# takeoff code
 def arm_and_takeoff(aTargetAltitude):
-    print("기본 사전 검사 ...")
+    print("Basic Pre-Scanning...")
     while not vehicle.is_armable:
-        print("초기화 대기중 ...")
+        print("Waiting for initialization...")
         time.sleep(1)
 
-    print("모터 가동 확인!!")
+    print("Check operation of motor operation!!")
     vehicle.mode = VehicleMode("GUIDED")
     vehicle.armed = True
 
     while not vehicle.armed:
-        print("장비 가동 가능 확인중 ...")
+        print("Checking equipment availability...")
         time.sleep(1)
 
-    print("이륙!!")
+    print("Takeoff!!")
     vehicle.simple_takeoff(aTargetAltitude)
 
     while True:
-        print(" 고도: ", vehicle.location.global_relative_frame.alt)
+        print("altitude: ", vehicle.location.global_relative_frame.alt)
         if vehicle.location.global_relative_frame.alt >= aTargetAltitude*0.95:
-            print("목표 고도에 도달했습니다!")
+            print("You've reached your target altitude!!")
             break
         time.sleep(1)
 
-# 미션 시작 세팅
+# Setting up to start the mission
 def start_mission():
-    print("자동주행 시스템 가동중 ...")
+    print("Automatic driving system in operation...")
     vehicle.commands.next=0
     vehicle.mode = VehicleMode("AUTO")
 
-# 미션 추가 코드
+# Mission Additional Code
 def add_mission(new_cmd):
-    print(f"새로운 명령어 : {new_cmd} 추가중 ...")
+    print(f"new command: {new_cmd} Adding...")
     cmds.add(new_cmd)
     cmds.upload()
-    print("추가 완료!!")
+    print("Addition Complete!!")
 
-# 맨 처음으로 미션 추가 코드
+# The first mission addition code
 def add_mission_first(new_cmd):
-    print("새로운 미션 맨 처음으로 넣는중 ...")
+    print("Putting in a new mission for the first time...")
     missionlist = [new_cmd]
     for cmd in cmds:
         missionlist.append(cmd)
@@ -99,20 +100,20 @@ def add_mission_first(new_cmd):
         cmds.add(cmd)
 
     cmds.upload()
-    print("새로운 미션 맨 처음으로 업로드 완료!!")
+    print("New mission completed uploading for the first time!!")
 
-# 모든 미션 없애버리고 새로운 미션 추가 코드
+# Get rid of all the missions and add a new mission code
 def add_mission_ignore_all_mission(new_cmd):
-    print("모든 명령 삭제중 ...")
+    print("Deleting all commands ...")
     cmds.clear()
-    print("모든 명령 삭제 완료!!")
+    print("Delete all commands complete!!")
 
-    print(f"새로운 명령어 : {new_cmd} 추가중 ...")
+    print(f"New command : {new_cmd} adding ...")
     cmds.add(new_cmd)
     cmds.upload()
-    print("추가 완료!!")
+    print("Addition Complete!!")
 
-# wayPoint 만들어서 명령에 넣기
+# Create a waypoint and put it in the command
 def way_point(stop_time=0, target_lat=0, target_lon=0, target_alt=0):
     new_cmd = Command(
         0, 0, 0,
@@ -126,7 +127,7 @@ def way_point(stop_time=0, target_lat=0, target_lon=0, target_alt=0):
     )
     return new_cmd
 
-# 특정 위치에 hovering 하기
+# Hovering in a Specific Location
 def hovering_time(stop_time=1.0, target_lat=0, target_lon=0, target_alt=0):
     new_cmd = Command(
         0, 0, 0,
@@ -141,14 +142,14 @@ def hovering_time(stop_time=1.0, target_lat=0, target_lon=0, target_alt=0):
 
     return new_cmd
 
-# 홈 위치 설정하기
+# Setting the Home Location
 def set_home(target_alt):
     print("\nSet new home location")
     my_location_alt = vehicle.location.global_frame
     my_location_alt.alt = target_alt
     vehicle.home_location = my_location_alt
 
-# 홈 위치 또는 집결 지점으로 돌아가기
+# Return to Home Location or Gathering Point
 def return_home():
     new_cmd = Command(
         0, 0, 0,
