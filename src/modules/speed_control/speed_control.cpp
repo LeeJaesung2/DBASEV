@@ -1,10 +1,9 @@
-#include "../../include/speed_control.h"
+#include <DBASEV/speed_control.h>
 
 void * thread_func1(void *arg)
 {
-    while(true){
-        printf("0");
-
-    }
+    const char* src = "speed_control";
+    const char* func = "speed_control";
+    embedd(src, func, 3, 7);   
     return 0;
 }

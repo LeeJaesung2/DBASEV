@@ -1,7 +1,7 @@
-#include "../../src/include/visibility.h"
-#include "../../src/include/collision_avoidance.h"
-#include "../../src/include/communication.h"
-#include "../../src/include/speed_control.h"
+#include <DBASEV/visibility.h>
+#include <DBASEV/collision_avoidance.h>
+#include <DBASEV/communication.h>
+#include <DBASEV/speed_control.h>
 
 
 #define NUM_THREADS 3
@@ -29,7 +29,7 @@ int main()
         perror("failure create thread");
     }
 
-    //두번째 스레드 생성
+    // //두번째 스레드 생성
     thr_id = pthread_create(&threads[1], NULL, &thread_func2, (void *)&begin);
     if(thr_id < 0){
         perror("failure create thread");
