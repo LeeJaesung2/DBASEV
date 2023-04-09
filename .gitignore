@@ -45,3 +45,5 @@ docs/proposal.hwp
 *.pyc
 *.o
 *.exe
+
+myvenv
