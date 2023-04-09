@@ -42,5 +42,6 @@ docs/orderlist.xls
 docs/proposal.hwp
 
 #object file and executable file
+*.pyc
 *.o
 *.exe
