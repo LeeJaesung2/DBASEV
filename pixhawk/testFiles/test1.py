@@ -3,18 +3,27 @@ import time
 import math
 from pymavlink import mavutil
 import dronekit_sitl
+
+#Set up option parsing to get connection string
 import argparse  
+parser = argparse.ArgumentParser(description='Control Copter and send commands in GUIDED mode ')
+parser.add_argument('--connect', 
+                help="Vehicle connection target string. If not specified, SITL automatically started and used.")
+args = parser.parse_args()
 
-# start basic code
-print("Start Programe")
-vehicle = connect("/dev/ttyAMA0", wait_ready=True, baud=57600)
-vehicle.mode = VehicleMode("GUIDED")
-vehicle.armed = True
-while not vehicle.mode.name =='GUIDED' and not vehicle.armed and not api.exit:
-    print ("Getting ready to take off...")
-    time.sleep(1)
+connection_string = args.connect
+sitl = None
 
-cmds = None
+#Start SITL if no connection string specified
+if not connection_string:
+    sitl = dronekit_sitl.start_default()
+    connection_string = sitl.connection_string()
+
+# Connect to the Vehicle
+print('Connecting to vehicle on: %s' % connection_string)
+vehicle = connect(connection_string, wait_ready=True)
+cmds = vehicle.cmds
+
 
 # Read the mission file
 def readmission(aFileName):
