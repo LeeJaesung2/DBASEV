@@ -7,4 +7,5 @@ apt-get update
 apt-get upgrade
 
 # Install required packages
-apt-get install -y python-pip python-dev dronekit
+apt-get install -y python3-pip
+pip install dronekit dronekit-sitl
