@@ -1,4 +1,5 @@
 #include <DBASEV/embedd.h>
+#include <python2.7/Python.h>
 
 int embedd(const char *src,const char *func, int arg, ...){
     PyObject *pName, *pModule, *pFunc;
