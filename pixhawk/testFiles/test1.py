@@ -21,9 +21,16 @@ if not connection_string:
 
 # Connect to the Vehicle
 print('Connecting to vehicle on: %s' % connection_string)
+
 vehicle = connect(connection_string, wait_ready=True)
 cmds = vehicle.cmds
-
+car_velocity = 0
+mission_dic = { 
+    1 : "MAV_CMD_NAV_TAKEOFF",
+    2 : "MAV_CMD_NAV_LAND",
+    3 : "MAV_CMD_NAV_WAYPOINT",
+    4 : "MAV_CMD_NAV_LOITER_TIME",
+    }
 
 # Read the mission file
 def readmission(aFileName):
@@ -35,11 +42,14 @@ def readmission(aFileName):
             if i==0:
                 if not line.startswith('QGC WPL 110'):
                     raise Exception('File is not supported WP version')
+            elif i ==1 :
+                linearray = line.strip().split(':')
+                car_velocity = float(linearray[1])
             else:
                 linearray=line.strip().split('\t')
 
                 ln_index=int(linearray[0])  # Command Index
-                ln_command=int(linearray[1]) # Command
+                ln_command=mission_dic[int(linearray[1])]  # Command
                 ln_param1=float(linearray[2]) # Parameters 1
                 ln_param2=float(linearray[3]) # Parameters 2
                 ln_param3=float(linearray[4]) # Parameters 3
@@ -47,8 +57,11 @@ def readmission(aFileName):
                 ln_param5=float(linearray[6]) # Target latitude, 0 means current latitude
                 ln_param6=float(linearray[7]) # Target hardness, if zero, current hardness
                 ln_param7=float(linearray[8]) # Target altitude, 0 means current altitude
+
+                new_command = Command(0, 0, 0
                 
-    return missionlist
+    return missionlist, car_velocity
+
 
 # Mission initialization
 def init_commands():
@@ -58,6 +71,7 @@ def init_commands():
     cmds.upload()
     cmds.wait_ready()
     print("Command initialization complete!!")
+
 
 # takeoff code
 def arm_and_takeoff(aTargetAltitude):
@@ -84,6 +98,7 @@ def arm_and_takeoff(aTargetAltitude):
             break
         time.sleep(1)
 
+
 # Setting up to start the mission
 def start_mission():
     print("Automatic driving system in operation...")
@@ -96,6 +111,7 @@ def add_mission(new_cmd):
     cmds.add(new_cmd)
     cmds.upload()
     print("Addition Complete!!")
+
 
 # The first mission addition code
 def add_mission_first(new_cmd):
@@ -110,6 +126,7 @@ def add_mission_first(new_cmd):
 
     cmds.upload()
     print("New mission completed uploading for the first time!!")
+
 
 # Get rid of all the missions and add a new mission code
 def add_mission_ignore_all_mission(new_cmd):
@@ -136,6 +153,7 @@ def way_point(stop_time=0, target_lat=0, target_lon=0, target_alt=0):
     )
     return new_cmd
 
+
 # Hovering in a Specific Location
 def hovering_time(stop_time=1.0, target_lat=0, target_lon=0, target_alt=0):
     new_cmd = Command(
@@ -151,12 +169,14 @@ def hovering_time(stop_time=1.0, target_lat=0, target_lon=0, target_alt=0):
 
     return new_cmd
 
+
 # Setting the Home Location
 def set_home(target_alt):
     print("\nSet new home location")
     my_location_alt = vehicle.location.global_frame
     my_location_alt.alt = target_alt
     vehicle.home_location = my_location_alt
+
 
 # Return to Home Location or Gathering Point
 def return_home():
@@ -170,6 +190,10 @@ def return_home():
     )
 
     return new_cmd
+
+# main function
+def main():
+    pass
 
 init_commands()
 arm_and_takeoff(5)
