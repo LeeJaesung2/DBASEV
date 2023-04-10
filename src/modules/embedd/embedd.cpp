@@ -8,7 +8,7 @@ int embedd(const char *src,const char *func, int arg, ...){
 
     Py_Initialize();
     PyRun_SimpleString("import sys");
-    PyRun_SimpleString("sys.path.append(\"../../../python_src\")"); //set python src path
+    PyRun_SimpleString("sys.path.append(\"python_src\")"); //set python src path
     pName = PyString_FromString(src); //get python src
 
     /*Error checking of pName*/
@@ -54,14 +54,14 @@ int embedd(const char *src,const char *func, int arg, ...){
         else {
             if (PyErr_Occurred())
                 PyErr_Print();
-            fprintf(stderr, "Cannot find function \"%s\"\n", "multiply");
+            fprintf(stderr, "Cannot find function \"%s\"\n", func);
         }
         Py_XDECREF(pFunc);
         Py_DECREF(pModule);
     }
     else {
         PyErr_Print();
-        fprintf(stderr, "Failed to load \"%s\"\n", "multiply");
+        fprintf(stderr, "Failed to load \"%s\"\n", src);
         return 1;
     }
     Py_Finalize();
