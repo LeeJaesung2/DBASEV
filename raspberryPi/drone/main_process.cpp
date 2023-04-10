@@ -4,7 +4,7 @@
 #include <DBASEV/speed_control.h>
 
 
-#define NUM_THREADS 3
+#define NUM_THREADS 1
 
 void main_thred_func(){
     int i = 0;
