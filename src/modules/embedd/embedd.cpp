@@ -8,7 +8,7 @@ int embedd(const char *src,const char *func, int arg, ...){
 
     Py_Initialize();
     PyRun_SimpleString("import sys");
-    PyRun_SimpleString("sys.path.append(\"python_src\")"); //set python src path
+    PyRun_SimpleString("sys.path.append(\"../python_src\")"); //set python src path
     pName = PyString_FromString(src); //get python src
 
     /*Error checking of pName*/

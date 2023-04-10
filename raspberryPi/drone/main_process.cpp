@@ -29,7 +29,7 @@ int main()
         perror("failure create thread");
     }
 
-    // //두번째 스레드 생성
+    //두번째 스레드 생성
     thr_id = pthread_create(&threads[1], NULL, &thread_func2, (void *)&begin);
     if(thr_id < 0){
         perror("failure create thread");

@@ -1,6 +1,19 @@
+# g++ -c src/modules/speed_control/speed_control.cpp -I/usr/include/python2.7 -lpython2.7
+# g++ -c raspberryPi/drone/main_process.cpp
+# g++ -c src/modules/embedd/embedd.cpp -I/usr/include/python2.7 -lpython2.7
+# g++ main_process.o speed_control.o embedd.o -o main -I/usr/include -lpthread -I/usr/include/python2.7 -lpython2.7
+
+
+# make object file all of modules
+# make object file main process 
+# make execution file with all of object file
+
+
+
 CC=g++
 CFLAGS=-c -Wall
 LDFLAGS=-lpthread
+PYFLAGS = -I/usr/include/python2.7 -lpython2.7
 SRC_DIR=./src
 #INC_DIR=./src/include
 OBJ_DIR=./build
