@@ -24,7 +24,7 @@ int embedd(const char *src,const char *func, int arg, ...){
             va_start(ap,arg);
             pArgs = PyTuple_New(arg);
             for (i = 0; i < arg; ++i) {
-                pValue = PyInt_FromLong(va_arg(ap, int));
+                pValue = PyInt_FromLong(va_arg(ap,int));
                 if (!pValue) {
                     Py_DECREF(pArgs);
                     Py_DECREF(pModule);
