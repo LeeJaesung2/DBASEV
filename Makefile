@@ -15,34 +15,41 @@ CFLAGS=-c -Wall
 LDFLAGS=-lpthread
 PYFLAGS = -I/usr/include/python2.7 -lpython2.7
 SRC_DIR=./src
-#INC_DIR=./src/include
+INC_DIR=./src/include
 OBJ_DIR=./build
 DRONE_DIR=./raspberryPi/drone
 VEHICLE_DIR=./raspberryPi/vehicle
 
+
 # List all source files to be compiled
-SRC=$(wildcard $(SRC_DIR)/drivers/**/*.cpp $(SRC_DIR)/modules/**/*.cpp)
-OBJ=$(SRC:$(SRC_DIR)/**/**/%.cpp=$(OBJ_DIR)/**/**/%.o)
-DRONE_MAIN=$(DRONE_DIR)/main_process.o
-DRONE_EXECUTABLE=$(DRONE_DIR)/main_process.exe
+SRC=$(wildcard $(SRC_DIR)/**/**/*.cpp)
+OBJ=$(SRC:$(SRC_DIR)/**/**/%.cpp=$(OBJ_DIR)/%.o)
 
-VEHICLE_MAIN=$(VEHICLE_DIR)/main_process.o
-VEHICLE_EXECUTABLE=$(VEHICLE_DIR)/main_process.exe
 
-all : $(DRONE_EXECUTABLE) $(VEHICLE_EXECUTABLE)
 
-# Build executable from object files
+DRONE_MAIN=$(DRONE_DIR)/drone_main_process.o
+DRONE_EXECUTABLE=$(OBJ_DIR)/drone.exe
+
+VEHICLE_MAIN=$(VEHICLE_DIR)/vehicle_main_process.o
+VEHICLE_EXECUTABLE=$(OBJ_DIR)/vehicle.exe
+
+
+
+all : $(DRONE_EXECUTABLE)
+
+
+
 $(DRONE_EXECUTABLE): $(OBJ) $(DRONE_MAIN)
-	$(CC) $^ -o $(DRONE_EXECUTABLE) $(LDFLAGS)
+		$(CC) $^ -o $(DRONE_EXECUTABLE) $(LDFLAGS) $(PYFLAGS)
 
-$(VEHICLE_EXECUTABLE): $(OBJ) $(VEHICLE_MAIN)
-	$(CC) $^ -o $(VEHICLE_EXECUTABLE) $(LDFLAGS)
+	$(DRONE_MAIN) : $(DRONE_DIR)/drone_main_process.cpp
+		$(CC) $(CFLAGS) $(DRONE_DIR)/drone_main_process.cpp -o $(DRONE_MAIN)
 
-$(DRONE_MAIN) : $(DRONE_DIR)/main_process.cpp
-	$(CC) $(CFLAGS) -o $(DRONE_MAIN) $(DRONE_DIR)/main_process.cpp
+$(OBJ_DIR)/%.o: $(SRC_DIR)/**/**/%.cpp
+	$(CC) $(CFLAGS) $(PYFLAGS) $< -o $@
 
-$(VEHICLE_MAIN) : $(VEHICLE_DIR)/main_process.cpp
-	$(CC) $(CFLAGS) -o $(VEHICLE_MAIN) $(VEHICLE_DIR)/main_process.cpp
+
+
 
 # Rules for building object files
 #$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
@@ -51,7 +58,29 @@ $(VEHICLE_MAIN) : $(VEHICLE_DIR)/main_process.cpp
 
 
 
+obj:
+	all :$(OBJ)
+	$(OBJ_DIR)/%.o: $(SRC_DIR)/**/**/%.cpp
+		$(CC) $(CFLAGS) $(PYFLAGS) $< -o $@
 
+drone:
+	all : $(DRONE_EXECUTABLE)
+
+	$(DRONE_EXECUTABLE): $(OBJS) $(DRONE_MAIN)
+		$(CC) $^ -o $(DRONE_EXECUTABLE) $(LDFLAGS) $(PYFLAGS)
+
+	$(DRONE_MAIN) : $(DRONE_DIR)/drone_main_process.cpp
+		$(CC) $(CFLAGS) $(DRONE_DIR)/drone_main_process.cpp -o $(DRONE_MAIN)
+
+
+vheicle:
+	all : $(VEHICLE_EXECUTABLE)
+
+	$(VEHICLE_EXECUTABLE): $(OBJS) $(VEHICLE_MAIN)
+		$(CC) $^ -o $(VEHICLE_EXECUTABLE) $(LDFLAGS) $(PYFLAGS)
+
+	$(VEHICLE_MAIN) : $(VEHICLE_DIR)/vehicle_main_process.cpp
+		$(CC) $(CFLAGS) $(VEHICLE_DIR)/vehicle_main_process.cpp- o $(VEHICLE_MAIN)
 
 # Clean all object files and executable
 clean:
