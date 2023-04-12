@@ -23,8 +23,7 @@ VEHICLE_DIR=./raspberryPi/vehicle
 
 # List all source files to be compiled
 SRC=$(wildcard $(SRC_DIR)/**/**/*.cpp)
-OBJ=$(SRC:$(SRC_DIR)/**/**/%.cpp=$(OBJ_DIR)/%.o)
-
+OBJ=$(SRC:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
 
 
 DRONE_MAIN=$(DRONE_DIR)/drone_main_process.o
@@ -35,56 +34,32 @@ VEHICLE_EXECUTABLE=$(OBJ_DIR)/vehicle.exe
 
 
 
-all : $(DRONE_EXECUTABLE)
-
-
+all : $(DRONE_EXECUTABLE) $(VEHICLE_EXECUTABLE)
 
 $(DRONE_EXECUTABLE): $(OBJ) $(DRONE_MAIN)
 		$(CC) $^ -o $(DRONE_EXECUTABLE) $(LDFLAGS) $(PYFLAGS)
 
-	$(DRONE_MAIN) : $(DRONE_DIR)/drone_main_process.cpp
+$(VEHICLE_EXECUTABLE): $(OBJS) $(VEHICLE_MAIN)
+		$(CC) $^ -o $(VEHICLE_EXECUTABLE) $(LDFLAGS)
+
+$(DRONE_MAIN) : $(DRONE_DIR)/drone_main_process.cpp
 		$(CC) $(CFLAGS) $(DRONE_DIR)/drone_main_process.cpp -o $(DRONE_MAIN)
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/**/**/%.cpp
-	$(CC) $(CFLAGS) $(PYFLAGS) $< -o $@
+$(VEHICLE_MAIN) : $(VEHICLE_DIR)/vehicle_main_process.cpp
+		$(CC) $(CFLAGS) $(VEHICLE_DIR)/vehicle_main_process.cpp -o $(VEHICLE_MAIN)
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+	$(CC) $(CFLAGS) $(PYFLAGS) $< -o $@ 
 
 
 
 
-# Rules for building object files
-#$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
-#	$(CC) $(CFLAGS) -I$(INC_DIR) $< -o $@
 
 
-
-
-obj:
-	all :$(OBJ)
-	$(OBJ_DIR)/%.o: $(SRC_DIR)/**/**/%.cpp
-		$(CC) $(CFLAGS) $(PYFLAGS) $< -o $@
-
-drone:
-	all : $(DRONE_EXECUTABLE)
-
-	$(DRONE_EXECUTABLE): $(OBJS) $(DRONE_MAIN)
-		$(CC) $^ -o $(DRONE_EXECUTABLE) $(LDFLAGS) $(PYFLAGS)
-
-	$(DRONE_MAIN) : $(DRONE_DIR)/drone_main_process.cpp
-		$(CC) $(CFLAGS) $(DRONE_DIR)/drone_main_process.cpp -o $(DRONE_MAIN)
-
-
-vheicle:
-	all : $(VEHICLE_EXECUTABLE)
-
-	$(VEHICLE_EXECUTABLE): $(OBJS) $(VEHICLE_MAIN)
-		$(CC) $^ -o $(VEHICLE_EXECUTABLE) $(LDFLAGS) $(PYFLAGS)
-
-	$(VEHICLE_MAIN) : $(VEHICLE_DIR)/vehicle_main_process.cpp
-		$(CC) $(CFLAGS) $(VEHICLE_DIR)/vehicle_main_process.cpp- o $(VEHICLE_MAIN)
 
 # Clean all object files and executable
 clean:
-	rm $(DRONE_DIR)/main_process.o $(DRONE_DIR)/main_process.exe $(VEHICLE_DIR)/main_process.o $(VEHICLE_DIR)/main_process.exe
+	rm -rf $(OBJ_DIR)/**/**/*.o $(DRONE_DIR)/drone_main_process.o $(OBJ_DIR)/drone.exe $(VEHICLE_DIR)/vehicle_main_process.o $(OBJ_DIR)/vehicle.exe
 
 exedrone:
 	./$(DRONE_EXECUTABLE)
