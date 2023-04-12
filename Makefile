@@ -17,6 +17,7 @@ OBJ_DIR=./build
 DRONE_DIR=./raspberryPi/drone
 VEHICLE_DIR=./raspberryPi/vehicle
 PYTHONE_DIR=./python_src
+INSTALL_DIR=/usr/include/DBASEV
 
 
 # Create build directories if they don't exist
@@ -69,6 +70,9 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 clean:
 	rm -rf $(OBJ_DIR)/**/**/*.o $(DRONE_DIR)/drone_main_process.o $(OBJ_DIR)/drone.exe $(VEHICLE_DIR)/vehicle_main_process.o $(OBJ_DIR)/vehicle.exe  $(PYTHONE_DIR)/*.pyc
 
+install:
+	mkdir -p $(INSTALL_DIR)
+	cp -r src/include/*.h $(INSTALL_DIR)
 
 #program start command
 exedrone:
