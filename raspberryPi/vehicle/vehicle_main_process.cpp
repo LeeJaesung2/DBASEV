@@ -1,10 +1,8 @@
-#include "../../src/include/visibility.h"
-#include "../../src/include/collision_avoidance.h"
-#include "../../src/include/communication.h"
-#include "../../src/include/speed_control.h"
+#include <DBASEV/visibility.h>
 
 
-#define NUM_THREADS 3
+
+#define NUM_THREADS 1
 
 void main_thred_func(){
     int i = 0;
@@ -13,6 +11,34 @@ void main_thred_func(){
         printf("B");
     }
 }
+
+void * thread_func1(void * arg)
+{
+  while(true){
+
+        printf("A");
+    }
+    return 0;
+}
+
+void * thread_func2(void * arg)
+{
+  while(true){
+
+        printf("B");
+    }
+    return 0;
+}
+
+void * thread_func3(void * arg)
+{
+  while(true){
+
+        printf("O");
+    }
+    return 0;
+}
+
 
 int main()
 {
@@ -24,19 +50,19 @@ int main()
     pthread_t threads[NUM_THREADS];
 
     //첫번째 스레드 생성
-    thr_id = pthread_create(&threads[0], NULL, &thread_func1, (void *)&begin);
+    thr_id = pthread_create(&threads[0], NULL, thread_func1, &begin);
     if(thr_id < 0){
         perror("failure create thread");
     }
 
     //두번째 스레드 생성
-    thr_id = pthread_create(&threads[1], NULL, &thread_func2, (void *)&begin);
+    thr_id = pthread_create(&threads[1], NULL, thread_func2, &begin);
     if(thr_id < 0){
         perror("failure create thread");
     }
 
     //세번째 스레드 생성
-    thr_id = pthread_create(&threads[2], NULL, &thread_func3, (void *)&begin);
+    thr_id = pthread_create(&threads[2], NULL, thread_func3, &begin);
     if(thr_id < 0){
         perror("failure create thread");
     }
