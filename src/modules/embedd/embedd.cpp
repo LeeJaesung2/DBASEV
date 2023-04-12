@@ -18,7 +18,7 @@ int embedd(const char *src,const char *func, int arg, ...){
     if (pModule != NULL) {
         pFunc = PyObject_GetAttrString(pModule, func);
 
-        if (pFunc && PyCallable_Check(pFunc)) {//
+        if (pFunc && PyCallable_Check(pFunc)) {
 
             va_list ap;
             va_start(ap,arg);
