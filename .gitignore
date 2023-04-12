@@ -44,7 +44,7 @@ command.txt
 
 #object file and executable file
 *.pyc
-*.o
-*.exe
+#*.o
+#*.exe
 
 myvenv
