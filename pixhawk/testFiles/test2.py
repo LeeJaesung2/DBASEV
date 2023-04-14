@@ -88,6 +88,8 @@ def readmission(msg):
     print("\n Reading mission")
     missionlist = []
 
+    
+
     msg_list = msg.split('nxt')
     for i, cur_msg in enumerate(msg_list):
         if i == 0:
@@ -104,12 +106,12 @@ def readmission(msg):
             parm6 = float(parm_str[6]) 
             parm7 = float(parm_str[7]) 
 
-        new_command = Command(0, 0, 0,
+            new_command = Command(0, 0, 0,
                             mavutil.mavlink.MAV_FAME_GLOBAL_RLATIVE_ALT_INT, 
                             cmds_list[parm0],
                             parm1, parm2, parm3, parm4, parm5, parm6, parm7 )    
 
-        missionlist.append(new_command)
+            missionlist.append(new_command)
     
     return car_velocity, missionlist
 

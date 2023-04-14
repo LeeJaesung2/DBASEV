@@ -17,3 +17,14 @@ velocity:26.871 nxt
 5:"MAV_CMD_NAV_CONDITION_YAW",
 6:"MAV_CMD_NAV_CONDITION_CHANGE_ALT",
 7:"MAV_CMD_DO_CHANGE_SPEED",
+
+
+* 새로운 길로 긴급 차량이 들어온 경우
+# 현재 차량의 속도를 줘야 해요
+# 길(STOP POINT - STOP POINT사이) & way_point의 고유 번호를 줘야 해요
+# way point data format : waypoint_id | 위도 | 경도 | 고도 | countable | last_point
+
+Enter_new_road
+velocity : 42.6
+road_Id : 5
+way_points : 0 
