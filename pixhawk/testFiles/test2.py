@@ -73,7 +73,62 @@ def start_mission(vehicle):
 ######################초기화########################
 
 ######################메세지 분석########################
-def readmission(msg):
+def readmsg(msg, pre_road_id, pre_car_waypoint_id, pre_car_velocity):
+    msg_list = msg.strip().split('nxt')
+    car_data ={
+        "car_road_id" : pre_road_id,
+        "car_waypoint_id" : pre_car_waypoint_id,
+        "car_velocity" : pre_car_velocity
+    }
+    will_go_way_points = []
+    mode = None # 0 : enter new road | 1 : update data
+
+    # determine mode & update common data
+    for idx in range(4):
+        clean_data  = msg_list[idx].strip().split()
+        
+        # data format info
+        if idx == 0: 
+            if clean_data[0] == "Enter_new_road":
+                mode = 0
+                print("Enter new road data")
+            elif clean_data[0] == "real_time_value":
+                mode = 1
+                print("Update car value")
+        
+        # car velocity
+        elif idx == 1:
+            car_data["car_velocity"] = float(clean_data[1])
+        
+        # car road id
+        elif idx == 2:
+            car_data["car_road_id"] = int(clean_data[1])
+
+        # car waypoint id    
+        elif idx == 3:    
+            if mode == 1:
+                car_data["car_waypoint_id"] = int(clean_data[1])
+
+    # add way points
+    if mode == 0:
+        for way_point in msg_list[4:]:
+            way_point_data = way_point.strip().split()
+            param1 = int(way_point_data[0])
+            param2 = float(way_point_data[0])
+            param3 = float(way_point_data[0])
+            param4 = float(way_point_data[0])
+            param5 = int(way_point_data[0])
+            param6 = int(way_point_data[0])
+
+            will_go_way_points.append([param1, param2, param3, param4, param5, param6])
+        
+        return car_data, will_go_way_points
+    else:
+        return car_data, None
+
+
+
+def send_mission():
     cmds_list = {
         0:"MAV_CMD_NAV_TAKEOFF",
         1:"MAV_CMD_NAV_LAND",
@@ -84,41 +139,3 @@ def readmission(msg):
         6:"MAV_CMD_NAV_CONDITION_CHANGE_ALT",
         7:"MAV_CMD_DO_CHANGE_SPEED",
     }
-
-    print("\n Reading mission")
-    missionlist = []
-
-    
-
-    msg_list = msg.split('nxt')
-    for i, cur_msg in enumerate(msg_list):
-        if i == 0:
-            temp = cur_msg.split(":")
-            car_velocity = int(temp[1])
-        else:
-            parm_str = cur_msg.split("\t")
-            parm0 = int(parm_str[0]) # command
-            parm1 = float(parm_str[1])
-            parm2 = float(parm_str[2])
-            parm3 = float(parm_str[3])
-            parm4 = float(parm_str[4])
-            parm5 = float(parm_str[5])  
-            parm6 = float(parm_str[6]) 
-            parm7 = float(parm_str[7]) 
-
-            new_command = Command(0, 0, 0,
-                            mavutil.mavlink.MAV_FAME_GLOBAL_RLATIVE_ALT_INT, 
-                            cmds_list[parm0],
-                            parm1, parm2, parm3, parm4, parm5, parm6, parm7 )    
-
-            missionlist.append(new_command)
-    
-    return car_velocity, missionlist
-
-def control_velocity(car_velocity, vehicle_velocity):
-    #1.
-    pass
-
-def addmissionlist(vehicle):
-    vehicle.velocity
-    vehicle.gps_0
