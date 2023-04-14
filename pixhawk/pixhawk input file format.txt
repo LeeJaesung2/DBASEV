@@ -1,16 +1,19 @@
-# 명령어 번째 수(int) | 명령어(int) | 파라미터1(float) | 파라미터2(float) | 파라미터3(float) | 파라미터4(float) | 목표 위도(float) | 목표 경도(float) | 목표 고도(float)
+# 명령어(int) | 파라미터1(float) | 파라미터2(float) | 파라미터3(float) | 파라미터4(float) | 목표 위도(float) | 목표 경도(float) | 목표 고도(float)
 # \t 으로 구분하여 파라미터들 보내기
-# 두 번째 줄은 현재 차량의 속도
+# 첫 번째 줄은 현재 차량의 속도
 
 # 파일 예시
-QGC WPL 110
-velocity:26.871
-0	2	1.0 	0.0	0.0	0.0	37.0	127.128	3.5
-1	1	0.0	0.0	0.0	0.0	0.0	0.0	0.0
-2	2	2.0	0.0	0.0	0.0	0.0	0.0	4.0
+velocity:26.871 nxt
+2	1.0 0.0	0.0	0.0	37.0    127.128	3.5 nxt
+1	0.0 0.0	0.0	0.0	0.0	0.0	0.0 nxt
+2	2.0	0.0	0.0	0.0	0.0	0.0	4.0 
 
 # 명령어 리스트
-1 : MAV_CMD_NAV_TAKEOFF 원하는 고도로 이륙
-2 : MAV_CMD_NAV_LAND 착륙
-3 : MAV_CMD_NAV_WAYPOINT 원하는 way point로 이동
-4 : MAV_CMD_NAV_LOITER_TIME 원하는 시간만큼 호버링
+0:"MAV_CMD_NAV_TAKEOFF",
+1:"MAV_CMD_NAV_LAND",
+2:"MAV_CMD_NAV_WAYPOINT",
+3:"MAV_CMD_NAV_LOITER_TIME",
+4:"MAV_CMD_NAV_RETURN_TO_LAUNCH",
+5:"MAV_CMD_NAV_CONDITION_YAW",
+6:"MAV_CMD_NAV_CONDITION_CHANGE_ALT",
+7:"MAV_CMD_DO_CHANGE_SPEED",
