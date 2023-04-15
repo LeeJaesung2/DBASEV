@@ -10,7 +10,7 @@
 
 CC=g++
 CFLAGS=-c -Wall
-LDFLAGS=-lpthread
+LDFLAGS=-lpthread -ltbb -std=c++14
 PYFLAGS = -I/usr/include/python2.7 -lpython2.7
 SRC_DIR=./src
 OBJ_DIR=./build
