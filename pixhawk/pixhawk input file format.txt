@@ -38,3 +38,7 @@
     velocity 37.8 nxt
     road_id 31 nxt
     waypoint_id 6
+
+* 실시간 명령어 전달
+
+    oreder_command 

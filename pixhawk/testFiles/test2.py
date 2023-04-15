@@ -6,12 +6,24 @@ import dronekit_sitl
 import argparse  
 
 def main():
-    vehicle, cmds = init_setting()
+    vehicle, cmds , car_data, drone_data = init_setting(0 ,0)
 
 
-######################초기화########################
+######################initialize########################
 # init setting
-def init_setting():
+def init_setting(home_road_id, home_waypoint_id):
+    car_data ={
+        "car_road_id" : home_road_id,
+        "car_waypoint_id" : home_waypoint_id,
+        "car_velocity" : 0
+    }
+
+    drone_data ={
+        "drone_road_id" : home_road_id,
+        "drone_waypoint_id" : home_waypoint_id,
+        "drone_velocity" : 0,
+    }
+
     vehicle = connect("/dev/ttyAMA0", wait_ready=True, baud=57600)
     vehicle.mode = VehicleMode("GUIDED")
     vehicle.armed = True
@@ -23,7 +35,7 @@ def init_setting():
     vehicle = arm_and_takeoff(vehicle, 3.3) # takeoff
     vehicle = start_mission(vehicle)
 
-    return vehicle, cmds
+    return vehicle, cmds, car_data, drone_data
 
 # Mission initialization
 def init_commands(vehicle):
@@ -70,47 +82,32 @@ def start_mission(vehicle):
     print("Complete")
     return vehicle
 
-######################초기화########################
+######################analysis massage########################
 
-######################메세지 분석########################
-def readmsg(msg, pre_road_id, pre_car_waypoint_id, pre_car_velocity):
-    msg_list = msg.strip().split('nxt')
-    car_data ={
-        "car_road_id" : pre_road_id,
-        "car_waypoint_id" : pre_car_waypoint_id,
-        "car_velocity" : pre_car_velocity
-    }
+def readmsg(msg):
     will_go_way_points = []
     mode = None # 0 : enter new road | 1 : update data
+    car_data = {}
 
+    msg_list = msg.strip().split('nxt')
     # determine mode & update common data
-    for idx in range(4):
-        clean_data  = msg_list[idx].strip().split()
-        
-        # data format info
-        if idx == 0: 
-            if clean_data[0] == "Enter_new_road":
-                mode = 0
-                print("Enter new road data")
-            elif clean_data[0] == "real_time_value":
-                mode = 1
-                print("Update car value")
-        
-        # car velocity
-        elif idx == 1:
-            car_data["car_velocity"] = float(clean_data[1])
-        
-        # car road id
-        elif idx == 2:
-            car_data["car_road_id"] = int(clean_data[1])
+    if msg_list[0].strip().split()[0] == "Enter_new_road":
+        mode = 0
+        print("Enter new road")
 
-        # car waypoint id    
-        elif idx == 3:    
-            if mode == 1:
-                car_data["car_waypoint_id"] = int(clean_data[1])
-
+    elif msg_list[0].strip().split()[0] == " real_time_value":
+        mode = 1
+        print("Update car value")
+    
+    car_data["car_velocity"] = float(msg_list[1].strip().split()[1])
+    car_data["car_road_id"] = int(msg_list[2].strip().split()[1])
+    
+    if mode == 1:
+        car_data["car_waypoint_id"] = int(msg_list[3].strip().split()[1])
+        return car_data, None
+    
     # add way points
-    if mode == 0:
+    elif mode == 0:
         for way_point in msg_list[4:]:
             way_point_data = way_point.strip().split()
             param1 = int(way_point_data[0])
@@ -120,15 +117,12 @@ def readmsg(msg, pre_road_id, pre_car_waypoint_id, pre_car_velocity):
             param5 = int(way_point_data[0])
             param6 = int(way_point_data[0])
 
-            will_go_way_points.append([param1, param2, param3, param4, param5, param6])
+            will_go_way_points.append([car_data["car_road_id"] , param1, param2, param3, param4, param5, param6])
         
         return car_data, will_go_way_points
-    else:
-        return car_data, None
+        
 
-
-
-def send_mission():
+def create_mission(will_go_way_points, car_data, drone_data):
     cmds_list = {
         0:"MAV_CMD_NAV_TAKEOFF",
         1:"MAV_CMD_NAV_LAND",
@@ -139,3 +133,5 @@ def send_mission():
         6:"MAV_CMD_NAV_CONDITION_CHANGE_ALT",
         7:"MAV_CMD_DO_CHANGE_SPEED",
     }
+
+
