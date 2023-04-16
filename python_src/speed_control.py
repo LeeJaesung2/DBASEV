@@ -1,2 +1,3 @@
-def speed_control(int a, int b):
+def speed_control(a, b):
     print(a+b)
+    return a+b

@@ -40,6 +40,7 @@ Temporary Items
 docs/link.hwp
 docs/orderlist.xls
 docs/proposal.hwp
+token.txt
 
 #object file and executable file
 *.pyc
