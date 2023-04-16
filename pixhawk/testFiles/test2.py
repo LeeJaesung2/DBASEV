@@ -5,23 +5,32 @@ from pymavlink import mavutil
 import dronekit_sitl
 import argparse  
 
-def main():
-    vehicle, cmds , car_data, drone_data = init_setting(0 ,0)
+def main(init_flag, vehicle = None, cmds = None , car_data = None, drone_data=None, msg):
+    if init_flag:
+        vehicle, car_data, drone_data = init_setting(0 ,0)
+        return  vehicle, car_data, drone_data
 
+    car_data, drone_data = readmsg(msg, car_data, drone_data)
+    drone_data = setting_drone_velocity(car_data, drone_data)
+
+    return  vehicle, car_data, drone_data
 
 ######################initialize########################
 # init setting
 def init_setting(home_road_id, home_waypoint_id):
     car_data ={
-        "car_road_id" : home_road_id,
-        "car_waypoint_id" : home_waypoint_id,
-        "car_velocity" : 0
+        "road_id" : home_road_id,
+        "waypoint_id" : home_waypoint_id,
+        "velocity" : 0,
     }
 
     drone_data ={
-        "drone_road_id" : home_road_id,
-        "drone_waypoint_id" : home_waypoint_id,
-        "drone_velocity" : 0,
+
+        "road_id" : home_road_id,
+        "waypoint_id" : home_waypoint_id,
+        "velocity" : 0,
+        "max_velocity" : 50,
+        "will_go_waypoints" : []
     }
 
     vehicle = connect("/dev/ttyAMA0", wait_ready=True, baud=57600)
@@ -31,11 +40,11 @@ def init_setting(home_road_id, home_waypoint_id):
         print (" ready to take off ...")
         time.sleep(1)
     
-    cmds = init_commands(vehicle) # Mission initialization
+    init_commands(vehicle) # Mission initialization
     vehicle = arm_and_takeoff(vehicle, 3.3) # takeoff
     vehicle = start_mission(vehicle)
 
-    return vehicle, cmds, car_data, drone_data
+    return vehicle, car_data, drone_data
 
 # Mission initialization
 def init_commands(vehicle):
@@ -45,7 +54,7 @@ def init_commands(vehicle):
     cmds.upload()
     cmds.wait_ready()
     print("Command initialization complete")   
-    return cmds
+
 
 # takeoff code
 def arm_and_takeoff(vehicle, aTargetAltitude):
@@ -84,10 +93,9 @@ def start_mission(vehicle):
 
 ######################analysis massage########################
 
-def readmsg(msg):
-    will_go_way_points = []
+def readmsg(msg, car_data, drone_data):
+
     mode = None # 0 : enter new road | 1 : update data
-    car_data = {}
 
     msg_list = msg.strip().split('nxt')
     # determine mode & update common data
@@ -99,12 +107,12 @@ def readmsg(msg):
         mode = 1
         print("Update car value")
     
-    car_data["car_velocity"] = float(msg_list[1].strip().split()[1])
-    car_data["car_road_id"] = int(msg_list[2].strip().split()[1])
+    car_data["velocity"] = float(msg_list[1].strip().split()[1])
+    car_data["road_id"] = int(msg_list[2].strip().split()[1])
     
     if mode == 1:
         car_data["car_waypoint_id"] = int(msg_list[3].strip().split()[1])
-        return car_data, None
+        return car_data, drone_data
     
     # add way points
     elif mode == 0:
@@ -117,12 +125,34 @@ def readmsg(msg):
             param5 = int(way_point_data[0])
             param6 = int(way_point_data[0])
 
-            will_go_way_points.append([car_data["car_road_id"] , param1, param2, param3, param4, param5, param6])
+            drone_data["will_go_waypoints"].append([car_data["road_id"] , param1, param2, param3, param4, param5, param6])
         
-        return car_data, will_go_way_points
-        
+        return car_data, drone_data
 
-def create_mission(will_go_way_points, car_data, drone_data):
+def setting_drone_velocity(car_data, drone_data):
+    # if they are same road.
+    if car_data["road_id"] == drone_data["road_id"]:
+        print("car and drone was in same road")
+        # if drone far more than 6 way point
+        if car_data["waypoint_id"] <= drone_data["waypoint_id"] - 6:
+            temp_velocity = car_data["velocity"] - ((16.5 * (drone_data["waypoint_id"] - car_data["waypoint_id"] - 6))/1000)
+            if temp_velocity < 0 :
+                drone_data["velocity"] = 0
+            elif temp_velocity > drone_data["max_velocity"]:
+                drone_data["velocity"] = drone_data["max_velocity"]
+
+        # if drone less than 6 way point.    
+        else:
+            drone_data["velocity"] = drone_data["max_velocity"]
+
+    # if they are different road.
+    else:
+        drone_data["velocity"] = drone_data["max_velocity"]
+
+    return drone_data
+
+
+def create_mission( car_data, drone_data):
     cmds_list = {
         0:"MAV_CMD_NAV_TAKEOFF",
         1:"MAV_CMD_NAV_LAND",
