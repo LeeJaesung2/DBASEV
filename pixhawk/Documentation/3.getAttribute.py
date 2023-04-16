@@ -33,4 +33,3 @@ print ("Is Armable?: %s" % vehicle.is_armable)
 print ("System status: %s" % vehicle.system_status.state)
 print ("Mode: %s" % vehicle.mode.name) # settable
 print ("Armed: %s" % vehicle.armed) # settable
-

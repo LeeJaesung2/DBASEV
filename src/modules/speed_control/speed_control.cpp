@@ -4,7 +4,7 @@ void * thread_func1(void *arg)
 {   
     tbb::concurrent_queue<int>* cq = static_cast<tbb::concurrent_queue<int>*>(arg);
     int item;
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 15; i++) {
         if (cq->try_pop(item)) { // try to pop item from the concurrent queue
             printf("Popped item %d\n", item);
         } else {
