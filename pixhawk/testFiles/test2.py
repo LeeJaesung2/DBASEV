@@ -12,6 +12,7 @@ def main(init_flag, vehicle = None, cmds = None , car_data = None, drone_data=No
 
     car_data, drone_data = readmsg(msg, car_data, drone_data)
     drone_data = setting_drone_velocity(car_data, drone_data)
+    update_mission
 
     return  vehicle, car_data, drone_data
 
@@ -25,7 +26,6 @@ def init_setting(home_road_id, home_waypoint_id):
     }
 
     drone_data ={
-
         "road_id" : home_road_id,
         "waypoint_id" : home_waypoint_id,
         "velocity" : 0,
@@ -152,7 +152,7 @@ def setting_drone_velocity(car_data, drone_data):
     return drone_data
 
 
-def create_mission( car_data, drone_data):
+def update_mission(vehicle, car_data, drone_data):
     cmds_list = {
         0:"MAV_CMD_NAV_TAKEOFF",
         1:"MAV_CMD_NAV_LAND",
@@ -163,5 +163,12 @@ def create_mission( car_data, drone_data):
         6:"MAV_CMD_NAV_CONDITION_CHANGE_ALT",
         7:"MAV_CMD_DO_CHANGE_SPEED",
     }
+
+    cmds = vehicle.cmds
+    cmds_length = len(cmds)
+    pass
+
+
+
 
 
