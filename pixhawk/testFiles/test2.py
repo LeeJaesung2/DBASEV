@@ -22,14 +22,14 @@ def init_setting(home_road_id, home_waypoint_id):
     car_data ={
         "road_id" : home_road_id,
         "waypoint_id" : home_waypoint_id,
-        "velocity" : 0,
+        "velocity" : 0.0,
     }
 
     drone_data ={
         "road_id" : home_road_id,
         "waypoint_id" : home_waypoint_id,
-        "velocity" : 0,
-        "max_velocity" : 50,
+        "velocity" : 0.0,
+        "max_velocity" : 50.0,
         "will_go_waypoints" : []
     }
 
@@ -103,7 +103,7 @@ def readmsg(msg, car_data, drone_data):
         mode = 0
         print("Enter new road")
 
-    elif msg_list[0].strip().split()[0] == " real_time_value":
+    elif msg_list[0].strip().split()[0] == "real_time_value":
         mode = 1
         print("Update car value")
     
@@ -119,11 +119,11 @@ def readmsg(msg, car_data, drone_data):
         for way_point in msg_list[4:]:
             way_point_data = way_point.strip().split()
             param1 = int(way_point_data[0])
-            param2 = float(way_point_data[0])
-            param3 = float(way_point_data[0])
-            param4 = float(way_point_data[0])
-            param5 = int(way_point_data[0])
-            param6 = int(way_point_data[0])
+            param2 = float(way_point_data[1])
+            param3 = float(way_point_data[2])
+            param4 = float(way_point_data[3])
+            param5 = int(way_point_data[4])
+            param6 = int(way_point_data[5])
 
             drone_data["will_go_waypoints"].append([car_data["road_id"] , param1, param2, param3, param4, param5, param6])
         
@@ -135,12 +135,15 @@ def setting_drone_velocity(car_data, drone_data):
         print("car and drone was in same road")
         # if drone far more than 6 way point
         if car_data["waypoint_id"] <= drone_data["waypoint_id"] - 6:
+            
             temp_velocity = car_data["velocity"] - ((16.5 * (drone_data["waypoint_id"] - car_data["waypoint_id"] - 6))/1000)
+
             if temp_velocity < 0 :
                 drone_data["velocity"] = 0
             elif temp_velocity > drone_data["max_velocity"]:
                 drone_data["velocity"] = drone_data["max_velocity"]
-
+            else:
+                drone_data["velocity"] = temp_velocity
         # if drone less than 6 way point.    
         else:
             drone_data["velocity"] = drone_data["max_velocity"]
@@ -150,7 +153,7 @@ def setting_drone_velocity(car_data, drone_data):
         drone_data["velocity"] = drone_data["max_velocity"]
 
     return drone_data
-
+    
 
 def update_mission(vehicle, car_data, drone_data):
     cmds_list = {
