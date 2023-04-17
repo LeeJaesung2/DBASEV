@@ -19,10 +19,11 @@
 ## ⌨ How To Use?
 
 1. 파이썬 2.7 설치
+
 chomod +x installpython.sh
 ./installpython.sh
 
-2.dronekit 설치
+2. 드론킷(droneKit) 설치
 chomod +x dronekit.sh
 ./dronekit.sh
 
