@@ -18,25 +18,25 @@
 
 ## ⌨ How To Use?
 
-1. 파이썬 2.7 설치
+##1. 파이썬 2.7 설치
 chomod +x installpython.sh
 ./installpython.sh
 
-2. 드론킷(droneKit) 설치
+##2. 드론킷(droneKit) 설치
 chomod +x dronekit.sh
 ./dronekit.sh
 
-3. 헤더파일 설치 (Linux)
-sudo make install
+##3. 헤더파일 설치 (Linux)
+##sudo make install
 
-4. 컴파일 (Linux)
+##4. 컴파일 (Linux)
 sudo make
 
-5. 실행
+##5. 실행
 sudo make exedrone (드론 실행파일)
 sudo make exevhicle (차량 실행파일)
 
-6. 실행파일 지우기
+##6. 실행파일 지우기
 sudo make clean
 
 
