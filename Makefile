@@ -72,7 +72,9 @@ clean:
 
 install:
 	mkdir -p $(INSTALL_DIR)
+	$(shell mkdir -p $(INSTALL_DIR)/telemetry)
 	cp -r src/include/*.h $(INSTALL_DIR)
+	cp -r src/include/telemetry/*.h $(INSTALL_DIR)/telemetry
 
 #program start command
 exedrone:

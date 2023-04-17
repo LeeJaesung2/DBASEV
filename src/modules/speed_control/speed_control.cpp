@@ -11,8 +11,8 @@ void * thread_func1(void *arg)
             printf("Concurrent queue is empty\n");
         }
     }
-    const char* src = "speed_control";
-    const char* func = "speed_control";
-    embedd(src, func, 2, 3, 7);   
+    const char* src = "testfunction";
+    const char* func = "main";
+    embedd(src, func, 1, 1);   
     return 0;
 }
