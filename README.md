@@ -16,6 +16,32 @@
 제작 (23.04. ~ 23.)<br>
 시험비행 (23. ~ 23.)<br>
 
+## ⌨ How To Use?
+1. 파이썬 2.7 설치
+chomod +x installpython.sh
+./installpython.sh
+
+2.dronekit 설치
+chomod +x dronekit.sh
+./dronekit.sh
+
+3. 헤더파일 설치 (Linux)
+sudo make install
+
+4. 컴파일 (Linux)
+sudo make
+
+5. 실행
+sudo make exedrone (드론 실행파일)
+sudo make exevhicle (차량 실행파일)
+
+6. 실행파일 지우기
+sudo make clean
+
+
+
+
+
 ## 😀 함께한 사람들
 경상대학교 항공우주 및 소프트웨어공학과 18학번 이재성<br>
 경상대학교 항공우주 및 소프트웨어공학과 18학번 이선호<br>
