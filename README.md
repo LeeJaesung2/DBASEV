@@ -19,7 +19,6 @@
 ## ⌨ How To Use?
 
 1. 파이썬 2.7 설치
-
 chomod +x installpython.sh
 ./installpython.sh
 
