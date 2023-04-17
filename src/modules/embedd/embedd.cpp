@@ -69,7 +69,7 @@ int embedd(const char *src,const char *func, int arg, ...){
     
 }
 
-int embedd_msg(const char *src,const char *func, message msg, carDage car_data, droneData drone_data ){
+int embedd_msg(const char *src,const char *func, message msg, carData car_data, droneData drone_data ){
     PyObject *pName, *pModule, *pFunc;
     PyObject *pArgs, *pValue;
     int i;
@@ -88,13 +88,22 @@ int embedd_msg(const char *src,const char *func, message msg, carDage car_data, 
 
         if (pFunc && PyCallable_Check(pFunc)) {
 
-            
-
-            /*value setting here*/
-
-            /*get return value here*/
-
-
+            va_list ap;
+            va_start(ap,arg);
+            pArgs = PyTuple_New(arg);
+            for (i = 0; i < arg; ++i) {
+                pValue = PyInt_FromLong(va_arg(ap,int));
+                if (!pValue) {
+                    Py_DECREF(pArgs);
+                    Py_DECREF(pModule);
+                    fprintf(stderr, "Cannot convert argument\n");
+                    return 1;
+                }
+                /* pValue reference stolen here: */
+                PyTuple_SetItem(pArgs, i, pValue);
+            }
+            pValue = PyObject_CallObject(pFunc, pArgs); // call function with argument
+            Py_DECREF(pArgs);
             /*value checking*/
             if (pValue != NULL) {
                 printf("Result of call: %ld\n", PyInt_AsLong(pValue));
