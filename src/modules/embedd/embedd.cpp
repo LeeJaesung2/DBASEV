@@ -1,7 +1,7 @@
 #include <DBASEV/embedd.h>
 #include <python2.7/Python.h>
 
-int embedd(const char *src,const char *func, int arg, ...){
+int callPython(const char *src,const char *func, int arg, ...){
     PyObject *pName, *pModule, *pFunc;
     PyObject *pArgs, *pValue;
     int i;
@@ -69,7 +69,7 @@ int embedd(const char *src,const char *func, int arg, ...){
     
 }
 
-int embedd_msg(const char *src,const char *func, message msg, carData car_data, droneData drone_data ){
+int callPythonStruct(const char *src,const char *func, message msg, carData car_data, droneData drone_data ){
     PyObject *pName, *pModule, *pFunc;
     PyObject *pArgs, *pValue;
     int i;
