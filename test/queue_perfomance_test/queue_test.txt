@@ -1,0 +1,5 @@
+install ttb using ttb.sh
+
+copile option
+g++ concurrentqueue.cpp -lpthread -ltbb
+g++ queue.cpp -pthread -ltbb -std=c++14
