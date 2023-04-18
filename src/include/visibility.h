@@ -10,9 +10,23 @@
 #include <stdbool.h>
 #include <time.h>
 #include <tbb/concurrent_queue.h>
-//#include <concurrent_queue.h>
-
-//using namespace Concurrency; //Concurrency Queue define.
 
 
 #endif
+
+struct carData{
+    int road_id;
+    int waypoint_id;
+    float velocity;
+};
+
+struct droneData{
+    int road_id;
+    int waypoint_id;
+    float velocity;
+    float will_go_waypoint[100];
+};
+
+struct message{
+    char msg[100];
+};

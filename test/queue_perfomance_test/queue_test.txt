@@ -1,0 +1,7 @@
+install ttb using ttb.sh
+
+copile option
+g++ concurrent_queue.cpp -pthread -ltbb -std=c++14
+
+
+change Max and test
