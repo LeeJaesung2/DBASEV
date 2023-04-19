@@ -12,8 +12,6 @@
 #include <tbb/concurrent_queue.h>
 
 
-#endif
-
 struct carData{
     int road_id;
     int waypoint_id;
@@ -27,6 +25,6 @@ struct droneData{
     float will_go_waypoint[100];
 };
 
-struct message{
-    char msg[100];
-};
+
+#endif
+
