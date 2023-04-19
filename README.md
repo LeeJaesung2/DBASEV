@@ -20,9 +20,9 @@
 
 ## ⌨ How To Use?
 
-### 1. 파이썬 2.7 설치
-chomod +x installpython.sh
-./installpython.sh
+### 1. 파이썬 2.7, ttb 설치
+chomod +x install.sh
+./install.sh
 
 ### 2. 드론킷(droneKit) 설치
 chomod +x dronekit.sh
