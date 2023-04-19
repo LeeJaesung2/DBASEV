@@ -11,6 +11,14 @@
 #include <time.h>
 #include <tbb/concurrent_queue.h>
 
+struct waypoint{
+    int id;
+    float latitude;
+    float longitude;
+    float altitude;
+    int countable;
+    int last_point
+};
 
 struct carData{
     int road_id;
@@ -22,8 +30,10 @@ struct droneData{
     int road_id;
     int waypoint_id;
     float velocity;
-    float will_go_waypoint[100];
+    waypoint will_go_waypoint[100];
 };
+
+
 
 
 #endif
