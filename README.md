@@ -21,11 +21,11 @@
 ## ⌨ How To Use?
 
 ### 1. 파이썬 2.7, ttb 설치
-chomod +x install.sh
+chomod +x install.sh <br />
 ./install.sh
 
 ### 2. 드론킷(droneKit) 설치
-chomod +x dronekit.sh
+chomod +x dronekit.sh <br />
 ./dronekit.sh
 
 ### 3. 헤더파일 설치 (Linux)
@@ -35,7 +35,7 @@ sudo make install
 sudo make
 
 ### 5. 실행
-sudo make exedrone (드론 실행파일)
+sudo make exedrone (드론 실행파일) <br />
 sudo make exevhicle (차량 실행파일)
 
 ### 6. 실행파일 지우기
