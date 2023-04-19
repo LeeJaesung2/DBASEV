@@ -5,7 +5,7 @@
 
 
 
-#define NUM_THREADS 2
+#define NUM_THREADS 1
 
 void main_thred_func(){
     int i = 0;
@@ -33,10 +33,10 @@ int main()
     }
 
     //두번째 스레드 생성
-    thr_id = pthread_create(&threads[1], NULL, &sender, NULL);
-    if(thr_id < 0){
-        perror("failure create thread");
-    }
+    // thr_id = pthread_create(&threads[1], NULL, &sender, NULL);
+    // if(thr_id < 0){
+    //     perror("failure create thread");
+    // }
 
     // //세번째 스레드 생성
     // thr_id = pthread_create(&threads[2], NULL, &thread_func3, (void *)&begin);

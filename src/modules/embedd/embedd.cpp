@@ -69,10 +69,9 @@ int callPython(const char *src,const char *func, int arg, ...){
     
 }
 
-int callPythonStruct(const char *src,const char *func, message msg, carData car_data, droneData drone_data ){
+int callPythonStruct(const char *src,const char *func, const char * msg, carData car_data, droneData drone_data ){
     PyObject *pName, *pModule, *pFunc;
     PyObject *pArgs, *pValue;
-    int i;
 
     Py_Initialize();
     PyRun_SimpleString("import sys");
@@ -85,25 +84,19 @@ int callPythonStruct(const char *src,const char *func, message msg, carData car_
 
     if (pModule != NULL) {
         pFunc = PyObject_GetAttrString(pModule, func);
-
         if (pFunc && PyCallable_Check(pFunc)) {
 
-            va_list ap;
-            va_start(ap,arg);
-            pArgs = PyTuple_New(arg);
-            for (i = 0; i < arg; ++i) {
-                pValue = PyInt_FromLong(va_arg(ap,int));
-                if (!pValue) {
-                    Py_DECREF(pArgs);
-                    Py_DECREF(pModule);
-                    fprintf(stderr, "Cannot convert argument\n");
-                    return 1;
-                }
-                /* pValue reference stolen here: */
-                PyTuple_SetItem(pArgs, i, pValue);
-            }
-            pValue = PyObject_CallObject(pFunc, pArgs); // call function with argument
+            pArgs = PyTuple_New(2);
+            pValue = Py_BuildValue("s", msg);
+            PyTuple_SetItem(pArgs, 0, pValue);
+            pValue = Py_BuildValue("iif", car_data.road_id, car_data.waypoint_id, car_data.velocity);
+            PyTuple_SetItem(pArgs, 1, pValue);
+            // pValue = Py_BuildValue("iiff[100]", drone_data.road_id, drone_data.waypoint_id, drone_data.velocity, drone_data.will_go_waypoint);
+            // PyTuple_SetItem(pArgs, 2, pValue);
+            pValue = PyObject_CallObject(pFunc, pArgs);
             Py_DECREF(pArgs);
+            
+
             /*value checking*/
             if (pValue != NULL) {
                 printf("Result of call: %ld\n", PyInt_AsLong(pValue));
@@ -117,7 +110,6 @@ int callPythonStruct(const char *src,const char *func, message msg, carData car_
                 fprintf(stderr,"Call failed\n");
                 return 1;
             }
-            va_end(ap);
         }
         else {
             if (PyErr_Occurred())
