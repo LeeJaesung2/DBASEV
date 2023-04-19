@@ -71,7 +71,7 @@ int callPython(const char *src,const char *func, int arg, ...){
 
 int callPythonStruct(const char *src,const char *func, const char * msg, carData car_data, droneData drone_data ){
     PyObject *pName, *pModule, *pFunc;
-    PyObject *pArgs, *pValue;
+    PyObject *pArgs, *pValue, *pDict;
 
     Py_Initialize();
     PyRun_SimpleString("import sys");
@@ -99,8 +99,21 @@ int callPythonStruct(const char *src,const char *func, const char * msg, carData
 
             /*value checking*/
             if (pValue != NULL) {
-                printf("Result of call: %ld\n", PyInt_AsLong(pValue));
+                pDict = PyDict_Copy(pValue);
                 Py_DECREF(pValue);
+
+                // Extract values from dictionary
+                PyObject *pRoadID = PyDict_GetItemString(pDict, "road_id");
+                int road_id = PyLong_AsLong(pRoadID);
+
+                PyObject *pWaypointID = PyDict_GetItemString(pDict, "waypoint_id");
+                int waypoint_id = PyLong_AsLong(pWaypointID);
+
+                PyObject *pVelocity = PyDict_GetItemString(pDict, "velocity");
+                float velocity = PyFloat_AsDouble(pVelocity);
+
+                printf("Road ID: %d, Waypoint ID: %d, Velocity: %.2f\n", road_id, waypoint_id, velocity);
+                Py_DECREF(pDict);
             }
             /*No return value*/
             else {
