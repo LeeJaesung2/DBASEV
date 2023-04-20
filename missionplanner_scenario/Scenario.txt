@@ -1,0 +1,6 @@
+Change_of_waypoint_about_velocity(임의 설정) : 차량의 속도를 임의 설정일때 waypoint의 변화
+							(30km/h 3sec -> 15km/h 1sec -> 40km/h 2sec -> 5km/h 2sec -> 15km/h 5sec -> 30km/h 3sec -> 40km/h 5sec -> 30km/h 4sec -> 15km/h 3sec -> 5km/h 2sec) 총 30sec
+
+Change_of_waypoint_during_30km_h : 차량의 속도 30km/h로 일정할 때 waypoint값의 변화
+
+waypoint_50_scenario : 하나의 roadid 즉 직선구간의 50개의 waypoint 생성
