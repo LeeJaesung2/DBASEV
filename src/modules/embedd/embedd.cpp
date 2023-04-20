@@ -130,19 +130,43 @@ carAndDroneData callPythonStruct(const char *src,const char *func, const char * 
                 Py_DECREF(pValue);
 
                 // Extract values from dictionary
-                PyObject *pRoadID = PyDict_GetItemString(pDict, "road_id");
-                car_data.road_id = PyLong_AsLong(pRoadID);
+                PyObject *pCarRoadID = PyDict_GetItemString(PyDict_GetItemString(pDict, "car"), "road_id");
+                car_data.road_id = PyLong_AsLong(pCarRoadID);
+                PyObject *pCarWaypointID = PyDict_GetItemString(PyDict_GetItemString(pDict, "car"), "waypoint_id");
+                car_data.waypoint_id = PyLong_AsLong(pCarWaypointID);
+                PyObject *pCarVelocity = PyDict_GetItemString(PyDict_GetItemString(pDict, "car"), "velocity");
+                car_data.velocity = PyFloat_AsDouble(pCarVelocity);
+                
+                PyObject *pDroneRoadID = PyDict_GetItemString(PyDict_GetItemString(pDict, "done"), "road_id");
+                drone_data.road_id = PyLong_AsLong(pDroneRoadID);
+                PyObject *pDroneWaypointID = PyDict_GetItemString(PyDict_GetItemString(pDict, "done"), "waypoint_id");
+                drone_data.waypoint_id = PyLong_AsLong(pDroneWaypointID);
+                PyObject *pDroneVelocity = PyDict_GetItemString(PyDict_GetItemString(pDict, "done"), "velocity");
+                drone_data.velocity = PyFloat_AsDouble(pDroneVelocity);
+                PyObject* pDroneWillGoWaypointList = PyDict_GetItemString(PyDict_GetItemString(pDict, "done"), "will_go_waypoint");
+                // Loop through the list and extract each waypoint's latitude and longitude
+                for (int i = 0; i < PyList_Size(pDroneWillGoWaypointList); i++) {
+                    PyObject* pWaypoint = PyList_GetItem(pDroneWillGoWaypointList, i);
+                    PyObject* pId = PyDict_GetItemString(pWaypoint, "id");
+                    drone_data.will_go_waypoint[i].id = PyLong_AsLong(pId);
+                    PyObject* pLatitude = PyDict_GetItemString(pWaypoint, "latitude");
+                    drone_data.will_go_waypoint[i].latitude = PyFloat_AsDouble(pLatitude);
+                    PyObject* pLongitude = PyDict_GetItemString(pWaypoint, "longitude");
+                    drone_data.will_go_waypoint[i].longitude = PyFloat_AsDouble(pLongitude);
+                    PyObject* pAltitude = PyDict_GetItemString(pWaypoint, "altitude");
+                    drone_data.will_go_waypoint[i].altitude = PyFloat_AsDouble(pAltitude);
+                    PyObject* pCountable = PyDict_GetItemString(pWaypoint, "countable");
+                    drone_data.will_go_waypoint[i].countable = PyLong_AsLong(pCountable);
+                    PyObject* pLast_point = PyDict_GetItemString(pWaypoint, "last_point");
+                    drone_data.will_go_waypoint[i].last_point = PyLong_AsLong(pLast_point);
+                }
 
-                PyObject *pWaypointID = PyDict_GetItemString(pDict, "waypoint_id");
-                car_data.waypoint_id = PyLong_AsLong(pWaypointID);
-
-                PyObject *pVelocity = PyDict_GetItemString(pDict, "velocity");
-                car_data.velocity = PyFloat_AsDouble(pVelocity);
-
-                printf("Road ID: %d, Waypoint ID: %d, Velocity: %.2f\n", car_data.road_id, car_data.waypoint_id, car_data.velocity);
-                Py_DECREF(pDict);
                 reval.car = car_data;
                 reval.drone = drone_data;
+                printf("Road ID: %d, Waypoint ID: %d, Velocity: %.2f\n", reval.car.road_id, reval.car.waypoint_id, reval.car.velocity);
+                printf("Road ID: %d, Waypoint ID: %d, Velocity: %.2f, Latitude : %.2f\n", reval.drone.road_id, reval.drone.waypoint_id, reval.drone.velocity, reval.drone.will_go_waypoint[0].latitude);
+                Py_DECREF(pDict);
+                
             }
             /*No return value*/
             else {

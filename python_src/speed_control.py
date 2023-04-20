@@ -11,4 +11,16 @@ def speed_control(msg, car_data, drone_data):
     car_data["road_id"] = 123
     car_data["waypoint_id"] = 55555
     car_data["velocity"] = 10.36
-    return car_data
+
+
+    drone_data["road_id"] = 54545
+    drone_data["waypoint_id"] = 1212
+    drone_data["velocity"] = 80.2
+    drone_data['will_go_waypoint'][0]['latitude'] = 0.12
+
+
+    car_drone_data = {
+        'car' : car_data,
+        'done' : drone_data
+    }
+    return car_drone_data
