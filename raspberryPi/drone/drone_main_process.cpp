@@ -32,20 +32,20 @@ int main()
         perror("failure create thread");
     }
 
-    //두번째 스레드 생성
-    thr_id = pthread_create(&threads[1], NULL, &sender, NULL);
-    if(thr_id < 0){
-        perror("failure create thread");
-    }
+    // //두번째 스레드 생성
+    // thr_id = pthread_create(&threads[1], NULL, &sender, NULL);
+    // if(thr_id < 0){
+    //     perror("failure create thread");
+    // }
 
-    //세번째 스레드 생성
-    thr_id = pthread_create(&threads[2], NULL, &thread_func3, (void *)&begin);
-    if(thr_id < 0){
-        perror("failure create thread");
-    }
+    // //세번째 스레드 생성
+    // thr_id = pthread_create(&threads[2], NULL, &thread_func3, (void *)&begin);
+    // if(thr_id < 0){
+    //     perror("failure create thread");
+    // }
 
-    //스레드 종료전 메인스레드 기능
-    main_thred_func();    
+    // //스레드 종료전 메인스레드 기능
+    // main_thred_func();    
 
     // 각각의 스레드가 종료될 때까지 대기
     for (i = 0; i < NUM_THREADS; i++) {

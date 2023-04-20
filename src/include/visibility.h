@@ -17,7 +17,7 @@ struct waypoint{
     float longitude;
     float altitude;
     int countable;
-    int last_point
+    int last_point;
 };
 
 struct carData{
