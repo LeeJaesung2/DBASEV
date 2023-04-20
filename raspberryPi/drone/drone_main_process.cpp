@@ -1,7 +1,7 @@
 #include <DBASEV/visibility.h>
 #include <DBASEV/collision_avoidance.h>
 #include <DBASEV/communication.h>
-#include <DBASEV/speed_control.h>
+#include <DBASEV/drone_control.h>
 
 
 
@@ -17,11 +17,10 @@ void main_thred_func(){
 
 int main()
 {
-    int i;
     void *status;
     int thr_id;
     time_t begin = clock();
-    tbb::concurrent_queue<int> cq; // concurrent queue
+    tbb::concurrent_queue<const char*> cq; // concurrent queue
     
     // 각각의 스레드를 생성
     pthread_t threads[NUM_THREADS];
@@ -31,12 +30,17 @@ int main()
     if(thr_id < 0){
         perror("failure create thread");
     }
-
-    //두번째 스레드 생성
-    thr_id = pthread_create(&threads[1], NULL, &sender, NULL);
+    // 두번째 스레드 생성
+    thr_id = pthread_create(&threads[1], NULL, &thread_func2, (void *)&cq);
     if(thr_id < 0){
         perror("failure create thread");
     }
+
+    // create communicate thread
+    // thr_id = pthread_create(&threads[1], NULL, &sender, NULL);
+    // if(thr_id < 0){
+    //     perror("failure create thread");
+    // }
 
     // //세번째 스레드 생성
     // thr_id = pthread_create(&threads[2], NULL, &thread_func3, (void *)&begin);
@@ -48,7 +52,7 @@ int main()
     // main_thred_func();    
 
     // 각각의 스레드가 종료될 때까지 대기
-    for (i = 0; i < NUM_THREADS; i++) {
+    for (int i = 0; i < NUM_THREADS; i++) {
         pthread_join(threads[i], &status);
     }
 
