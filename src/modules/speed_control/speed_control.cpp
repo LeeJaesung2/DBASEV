@@ -17,8 +17,13 @@ void * thread_func1(void *arg)
         if (cq->try_pop(msg)) { // try to pop item from the concurrent queue
             /*call python source code with struct*/
             carAndDroneData data = callPythonStruct(src, func, msg, car_data, drone_data);
-            car_data = data.car;
-            drone_data = data.drone;
+            if(data.error==1){
+                printf("error : no return value");
+            }
+            else{
+                car_data = data.car;
+                drone_data = data.drone;
+            }
         } else {
             printf("Concurrent queue is empty\n");
         }

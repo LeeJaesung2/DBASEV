@@ -72,7 +72,7 @@ int callPython(const char *src,const char *func, int arg, ...){
 carAndDroneData callPythonStruct(const char *src,const char *func, const char * msg, carData car_data, droneData drone_data){
     PyObject *pName, *pModule, *pFunc;
     PyObject *pArgs, *pValue;
-    carAndDroneData reval = {car_data, drone_data};
+    carAndDroneData reval = {car_data, drone_data, 0};
     //printf("Before Change Car value Road ID: %d, Waypoint ID: %d, Velocity: %.2f\n", reval.car.road_id, reval.car.waypoint_id, reval.car.velocity);
     //printf("Before Change Drone value Road ID: %d, Waypoint ID: %d, Velocity: %.2f, Latitude : %.2f, Longitude : %.2f, Altitude : %.2f, Countable: %d, last_point: %d\n", reval.drone.road_id, reval.drone.waypoint_id, reval.drone.velocity, reval.drone.will_go_waypoint[0].latitude, reval.drone.will_go_waypoint[0].longitude, reval.drone.will_go_waypoint[0].altitude, reval.drone.will_go_waypoint[0].countable, reval.drone.will_go_waypoint[0].last_point);       
     Py_Initialize();
@@ -146,7 +146,7 @@ carAndDroneData callPythonStruct(const char *src,const char *func, const char * 
                 PyObject *pDroneVelocity = PyDict_GetItemString(PyDict_GetItemString(pDict, "done"), "velocity");
                 drone_data.velocity = PyFloat_AsDouble(pDroneVelocity);
                 PyObject* pDroneWillGoWaypointList = PyDict_GetItemString(PyDict_GetItemString(pDict, "done"), "will_go_waypoint");
-                // Loop through the list and extract each waypoint's latitude and longitude
+                // Loop through the list and extract each waypoint's data
                 for (int i = 0; i < PyList_Size(pDroneWillGoWaypointList); i++) {
                     PyObject* pWaypoint = PyList_GetItem(pDroneWillGoWaypointList, i);
                     PyObject* pId = PyDict_GetItemString(pWaypoint, "id");
@@ -163,6 +163,7 @@ carAndDroneData callPythonStruct(const char *src,const char *func, const char * 
                     drone_data.will_go_waypoint[i].last_point = PyLong_AsLong(pLast_point);
                 }
 
+                //save all of data at return value
                 reval.car = car_data;
                 reval.drone = drone_data;
                 //printf("After Change Car value Road ID: %d, Waypoint ID: %d, Velocity: %.2f\n", reval.car.road_id, reval.car.waypoint_id, reval.car.velocity);
@@ -176,6 +177,7 @@ carAndDroneData callPythonStruct(const char *src,const char *func, const char * 
                 Py_DECREF(pModule);
                 PyErr_Print();
                 fprintf(stderr,"Call failed\n");
+                reval.error = 0;
                 return reval;
             }
         }
@@ -190,6 +192,7 @@ carAndDroneData callPythonStruct(const char *src,const char *func, const char * 
     else {
         PyErr_Print();
         fprintf(stderr, "Failed to load \"%s\"\n", src);
+        reval.error = 0;
         return reval;
     }
     Py_Finalize();
