@@ -25,7 +25,7 @@ void * thread_func1(void *arg)
     }
 
     
-    
+    //func = "embedd";
     //callPython(src, func, 1, 1);   
     
     return 0;
