@@ -2,15 +2,18 @@
 #include <DBASEV/embedd.h>
 void * thread_func1(void *arg)
 {   
-    // tbb::concurrent_queue<int>* cq = static_cast<tbb::concurrent_queue<int>*>(arg);
-    // int item;
-    // for (int i = 0; i < 15; i++) {
-    //     if (cq->try_pop(item)) { // try to pop item from the concurrent queue
-    //         printf("Popped item %d\n", item);
-    //     } else {
-    //         printf("Concurrent queue is empty\n");
-    //     }
-    // }
+    /*get data from queue*/
+    tbb::concurrent_queue<const char*>* cq = static_cast<tbb::concurrent_queue<const char*>*>(arg);
+    const char* item;
+    for (int i = 0; i < 15; i++) {
+        if (cq->try_pop(item)) { // try to pop item from the concurrent queue
+            printf("%s\n", item);
+        } else {
+            printf("Concurrent queue is empty\n");
+        }
+    }
+
+    /*call python source code with struct*/
     const char* src = "struct_embedd_test";
     const char* func = "sturct_embedd";
     const char* msg = "struct argument test success";

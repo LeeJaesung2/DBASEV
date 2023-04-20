@@ -2,9 +2,11 @@
 
 void * thread_func2(void *arg)
 {
-    tbb::concurrent_queue<int>* cq = static_cast<tbb::concurrent_queue<int>*>(arg);
+    /*send data with queue*/
+    tbb::concurrent_queue<const char*>* cq = static_cast<tbb::concurrent_queue<const char*>*>(arg);
     for (int i = 0; i < 10; i++) {
-        cq->push(i); // push item into the concurrent queue
+        const char* msg = "struct argument test success";
+        cq->push(msg); // push item into the concurrent queue
     }
     return 0;
 
