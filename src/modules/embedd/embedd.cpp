@@ -177,7 +177,7 @@ carAndDroneData callPythonStruct(const char *src,const char *func, const char * 
                 Py_DECREF(pModule);
                 PyErr_Print();
                 fprintf(stderr,"Call failed\n");
-                reval.error = 0;
+                reval.error = 1;
                 return reval;
             }
         }
@@ -185,6 +185,8 @@ carAndDroneData callPythonStruct(const char *src,const char *func, const char * 
             if (PyErr_Occurred())
                 PyErr_Print();
             fprintf(stderr, "Cannot find function \"%s\"\n", func);
+            reval.error = 1;
+            return reval;
         }
         Py_XDECREF(pFunc);
         Py_DECREF(pModule);
@@ -192,7 +194,7 @@ carAndDroneData callPythonStruct(const char *src,const char *func, const char * 
     else {
         PyErr_Print();
         fprintf(stderr, "Failed to load \"%s\"\n", src);
-        reval.error = 0;
+        reval.error = 1;
         return reval;
     }
     Py_Finalize();
