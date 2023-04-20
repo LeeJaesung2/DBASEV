@@ -69,10 +69,10 @@ int callPython(const char *src,const char *func, int arg, ...){
     
 }
 
-int callPythonStruct(const char *src,const char *func, const char * msg, carData car_data, droneData drone_data){
+carAndDroneData callPythonStruct(const char *src,const char *func, const char * msg, carData car_data, droneData drone_data){
     PyObject *pName, *pModule, *pFunc;
     PyObject *pArgs, *pValue, *pDict;
-
+    carAndDroneData reval = {car_data, drone_data};
     Py_Initialize();
     PyRun_SimpleString("import sys");
     PyRun_SimpleString("sys.path.append(\"./python_src\")"); //set python src path
@@ -87,26 +87,34 @@ int callPythonStruct(const char *src,const char *func, const char * msg, carData
         if (pFunc && PyCallable_Check(pFunc)) {
 
             pArgs = PyTuple_New(3);
+
+            /*set msg as python value*/
             pValue = Py_BuildValue("s", msg);
             PyTuple_SetItem(pArgs, 0, pValue);
-            pValue = Py_BuildValue("iif", car_data.road_id, car_data.waypoint_id, car_data.velocity);
-            PyTuple_SetItem(pArgs, 1, pValue);
+            
+            /*set car data as dictionary*/
+            PyObject* py_car_data = PyDict_New();
+            PyDict_SetItemString(py_car_data, "road_id", PyInt_FromLong(car_data.road_id));
+            PyDict_SetItemString(py_car_data, "waypoint_id", PyInt_FromLong(car_data.waypoint_id));
+            PyDict_SetItemString(py_car_data, "velocity", PyFloat_FromDouble(car_data.velocity));
+            PyTuple_SetItem(pArgs, 1, py_car_data);
 
+            /*set drone data as dictionary*/
             PyObject* py_drone_data = PyDict_New();
-            PyDict_SetItemString(py_drone_data, "road_id", PyLong_FromLong(drone_data.road_id));
-            PyDict_SetItemString(py_drone_data, "waypoint_id", PyLong_FromLong(drone_data.waypoint_id));
+            PyDict_SetItemString(py_drone_data, "road_id", PyInt_FromLong(drone_data.road_id));
+            PyDict_SetItemString(py_drone_data, "waypoint_id", PyInt_FromLong(drone_data.waypoint_id));
             PyDict_SetItemString(py_drone_data, "velocity", PyFloat_FromDouble(drone_data.velocity));
             int listsize = sizeof(drone_data.will_go_waypoint)/sizeof(waypoint);
             PyObject* py_waypoint_list = PyList_New(listsize);
             for (int i = 0; i < listsize; i++) {
                 waypoint wp = drone_data.will_go_waypoint[i];
                 PyObject* py_waypoint = PyDict_New();
-                PyDict_SetItemString(py_waypoint, "id", PyLong_FromLong(wp.id));
+                PyDict_SetItemString(py_waypoint, "id", PyInt_FromLong(wp.id));
                 PyDict_SetItemString(py_waypoint, "latitude", PyFloat_FromDouble(wp.latitude));
                 PyDict_SetItemString(py_waypoint, "longitude", PyFloat_FromDouble(wp.longitude));
                 PyDict_SetItemString(py_waypoint, "altitude", PyFloat_FromDouble(wp.altitude));
-                PyDict_SetItemString(py_waypoint, "countable", PyLong_FromLong(wp.countable));
-                PyDict_SetItemString(py_waypoint, "last_point", PyLong_FromLong(wp.last_point));
+                PyDict_SetItemString(py_waypoint, "countable", PyInt_FromLong(wp.countable));
+                PyDict_SetItemString(py_waypoint, "last_point", PyInt_FromLong(wp.last_point));
                 PyList_SetItem(py_waypoint_list, i, py_waypoint);
             }
             PyDict_SetItemString(py_drone_data, "will_go_waypoint", py_waypoint_list);
@@ -133,6 +141,8 @@ int callPythonStruct(const char *src,const char *func, const char * msg, carData
 
                 printf("Road ID: %d, Waypoint ID: %d, Velocity: %.2f\n", car_data.road_id, car_data.waypoint_id, car_data.velocity);
                 Py_DECREF(pDict);
+                reval.car = car_data;
+                reval.drone = drone_data;
             }
             /*No return value*/
             else {
@@ -140,7 +150,7 @@ int callPythonStruct(const char *src,const char *func, const char * msg, carData
                 Py_DECREF(pModule);
                 PyErr_Print();
                 fprintf(stderr,"Call failed\n");
-                return 1;
+                return reval;
             }
         }
         else {
@@ -154,9 +164,9 @@ int callPythonStruct(const char *src,const char *func, const char * msg, carData
     else {
         PyErr_Print();
         fprintf(stderr, "Failed to load \"%s\"\n", src);
-        return 1;
+        return reval;
     }
     Py_Finalize();
-    return PyInt_AsLong(pValue);
     
+    return reval;
 }

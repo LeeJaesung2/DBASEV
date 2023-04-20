@@ -33,7 +33,10 @@ struct droneData{
     waypoint will_go_waypoint[100];
 };
 
-
+struct carAndDroneData{
+    carData car;
+    droneData drone;
+};
 
 
 #endif
