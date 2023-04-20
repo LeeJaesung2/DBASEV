@@ -1,8 +1,8 @@
-def speed_control1(a, b):
+def embedd(a, b):
     print(a+b)
     return a+b
 
-def speed_control(msg, car_data, drone_data):
+def sturct_embedd(msg, car_data, drone_data):
     print(msg)
     print(car_data["road_id"], car_data["waypoint_id"], car_data["velocity"])
     print(drone_data['road_id'], drone_data['waypoint_id'], drone_data['velocity'])
@@ -16,7 +16,11 @@ def speed_control(msg, car_data, drone_data):
     drone_data["road_id"] = 54545
     drone_data["waypoint_id"] = 1212
     drone_data["velocity"] = 80.2
-    drone_data['will_go_waypoint'][0]['latitude'] = 0.12
+    drone_data['will_go_waypoint'][0]['latitude'] = 132.5
+    drone_data['will_go_waypoint'][0]['longitude'] = 56.21
+    drone_data['will_go_waypoint'][0]['altitude'] = 11.2
+    drone_data['will_go_waypoint'][0]['countable'] = 1
+    drone_data['will_go_waypoint'][0]['last_point'] = 0
 
 
     car_drone_data = {

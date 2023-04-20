@@ -73,6 +73,8 @@ carAndDroneData callPythonStruct(const char *src,const char *func, const char * 
     PyObject *pName, *pModule, *pFunc;
     PyObject *pArgs, *pValue, *pDict;
     carAndDroneData reval = {car_data, drone_data};
+    //printf("Before Change Car value Road ID: %d, Waypoint ID: %d, Velocity: %.2f\n", reval.car.road_id, reval.car.waypoint_id, reval.car.velocity);
+    //printf("Before Change Drone value Road ID: %d, Waypoint ID: %d, Velocity: %.2f, Latitude : %.2f, Longitude : %.2f, Altitude : %.2f, Countable: %d, last_point: %d\n", reval.drone.road_id, reval.drone.waypoint_id, reval.drone.velocity, reval.drone.will_go_waypoint[0].latitude, reval.drone.will_go_waypoint[0].longitude, reval.drone.will_go_waypoint[0].altitude, reval.drone.will_go_waypoint[0].countable, reval.drone.will_go_waypoint[0].last_point);       
     Py_Initialize();
     PyRun_SimpleString("import sys");
     PyRun_SimpleString("sys.path.append(\"./python_src\")"); //set python src path
@@ -163,8 +165,8 @@ carAndDroneData callPythonStruct(const char *src,const char *func, const char * 
 
                 reval.car = car_data;
                 reval.drone = drone_data;
-                printf("Road ID: %d, Waypoint ID: %d, Velocity: %.2f\n", reval.car.road_id, reval.car.waypoint_id, reval.car.velocity);
-                printf("Road ID: %d, Waypoint ID: %d, Velocity: %.2f, Latitude : %.2f\n", reval.drone.road_id, reval.drone.waypoint_id, reval.drone.velocity, reval.drone.will_go_waypoint[0].latitude);
+                //printf("After Change Car value Road ID: %d, Waypoint ID: %d, Velocity: %.2f\n", reval.car.road_id, reval.car.waypoint_id, reval.car.velocity);
+                //printf("After Change Drone value Road ID: %d, Waypoint ID: %d, Velocity: %.2f, Latitude : %.2f, Longitude : %.2f, Altitude : %.2f, Countable: %d, last_point: %d\n", reval.drone.road_id, reval.drone.waypoint_id, reval.drone.velocity, reval.drone.will_go_waypoint[0].latitude, reval.drone.will_go_waypoint[0].longitude, reval.drone.will_go_waypoint[0].altitude, reval.drone.will_go_waypoint[0].countable, reval.drone.will_go_waypoint[0].last_point);
                 Py_DECREF(pDict);
                 
             }
