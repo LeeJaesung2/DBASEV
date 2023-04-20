@@ -36,6 +36,7 @@ struct droneData{
 struct carAndDroneData{
     carData car;
     droneData drone;
+    int error;
 };
 
 
