@@ -27,7 +27,7 @@ $(shell mkdir -p $(OBJ_DIR)/drivers/radar)
 $(shell mkdir -p $(OBJ_DIR)/modules/collision_avoidance)
 $(shell mkdir -p $(OBJ_DIR)/modules/communication)
 $(shell mkdir -p $(OBJ_DIR)/modules/embedd)
-$(shell mkdir -p $(OBJ_DIR)/modules/speed_control)
+$(shell mkdir -p $(OBJ_DIR)/modules/drone_control)
 
 # List all objcet files to be compiled
 SRC=$(wildcard $(SRC_DIR)/**/**/*.cpp)
@@ -72,7 +72,9 @@ clean:
 
 install:
 	mkdir -p $(INSTALL_DIR)
+	$(shell mkdir -p $(INSTALL_DIR)/telemetry)
 	cp -r src/include/*.h $(INSTALL_DIR)
+	cp -r src/include/telemetry/*.h $(INSTALL_DIR)/telemetry
 
 #program start command
 exedrone:

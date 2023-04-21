@@ -1,1 +1,0 @@
-from test2 import init_setting
