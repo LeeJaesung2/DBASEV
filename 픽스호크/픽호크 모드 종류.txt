@@ -1,0 +1,8 @@
+https://evergray.kr/%ED%94%BD%EC%8A%A4%ED%98%B8%ED%81%ACpixhawk-%EB%B9%84%ED%96%89-%EB%AA%A8%EB%93%9C-%EC%9D%BC%EB%9E%8C%ED%91%9C/
+
+주요 모드 : GUIDED | GUIDED_NOGPS | ALTHOLD | LAND
+<기본 비행 모드>
+    * Stabilize
+        - 피치 롤 요 스로틀 모두 사용자가 조작
+            
+    
