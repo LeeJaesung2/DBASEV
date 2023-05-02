@@ -88,6 +88,7 @@ carAndDroneData callPythonStruct(const char *src,const char *func, const char * 
         pFunc = PyObject_GetAttrString(pModule, func);
         if (pFunc && PyCallable_Check(pFunc)) {
 
+            //set argument to sent python
             pArgs = PyTuple_New(3);
 
             /*set msg as python value*/
@@ -127,6 +128,7 @@ carAndDroneData callPythonStruct(const char *src,const char *func, const char * 
             
 
             /*value checking*/
+            //get return value from pyton
             if (pValue != NULL) {
                 PyObject *pDict = PyDict_Copy(pValue);
                 Py_DECREF(pValue);
