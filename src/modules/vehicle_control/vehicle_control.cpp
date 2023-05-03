@@ -104,7 +104,7 @@ GPSData extract_gps_data(const string& gps_str) {
     return gps_data;
 }
 
-double calc_distance(double lat1, double lon1, double lat2, double lon2); {
+double calc_distance(double lat1, double lon1, double lat2, double lon2) {
     const double R = 6371e3; // 지구 반지름
     double phi1 = lat1 * M_PI / 180; // 위도 1
     double phi2 = lat2 * M_PI / 180; // 위도 2
