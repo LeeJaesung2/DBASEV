@@ -1,4 +1,5 @@
 #include <DBASEV/visibility.h>
+#include <DBASEV/communication.h>
 
 
 
@@ -12,7 +13,7 @@ void main_thred_func(){
     }
 }
 
-void * thread_func1(void * arg)
+void * thread_func4(void * arg)
 {
   while(true){
 
@@ -21,7 +22,7 @@ void * thread_func1(void * arg)
     return 0;
 }
 
-void * thread_func2(void * arg)
+void * thread_func5(void * arg)
 {
   while(true){
 
@@ -30,7 +31,7 @@ void * thread_func2(void * arg)
     return 0;
 }
 
-void * thread_func3(void * arg)
+void * thread_func6(void * arg)
 {
   while(true){
 
@@ -50,19 +51,19 @@ int main()
     pthread_t threads[NUM_THREADS];
 
     //첫번째 스레드 생성
-    thr_id = pthread_create(&threads[0], NULL, thread_func1, &begin);
+    thr_id = pthread_create(&threads[0], NULL, &receiver, NULL);
     if(thr_id < 0){
         perror("failure create thread");
     }
 
     //두번째 스레드 생성
-    thr_id = pthread_create(&threads[1], NULL, thread_func2, &begin);
+    thr_id = pthread_create(&threads[1], NULL, thread_func4, &begin);
     if(thr_id < 0){
         perror("failure create thread");
     }
 
     //세번째 스레드 생성
-    thr_id = pthread_create(&threads[2], NULL, thread_func3, &begin);
+    thr_id = pthread_create(&threads[2], NULL, thread_func5, &begin);
     if(thr_id < 0){
         perror("failure create thread");
     }
