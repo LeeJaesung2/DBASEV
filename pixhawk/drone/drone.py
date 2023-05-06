@@ -4,7 +4,7 @@ from geopy.distance import geodesic
 class Drone:
     def __init__(self, drone):
         self.vehicle = drone
-        
+
         self.waypoint_dist = 5.0
         self.waypoint_num = int(round(100 / self.waypoint_dist))
         
@@ -65,11 +65,29 @@ class Drone:
             else:
                 self.ishovering = True
 
-
     def update_drone_velocity(self, car_data):
+        # 같은 도로에 있는 경우
         if car_data.road_id == self.road_id:
-            if car_data.waypoint <= self.waypoint
-    
+
+            # 거리가 멀어져서 속도 조절이 필요한 상황
+            if car_data.waypoint <= self.waypoint - self.waypoint_num:
+                ideal_velocity = car_data.velocity - ((16.5 * (self.waypoint - car_data.waypoint - self.waypoint_num))/1000)
+
+                if ideal_velocity < 0:
+                    ideal_velocity = 0
+                elif ideal_velocity > self.max_speed:
+                    ideal_velocity = self.max_speed
+                
+                self.velocity = ideal_velocity
+
+            # 거리가 가까워서 최대 속도를 내야하는 경우
+            else:
+                self.velocity = self.max_speed
+        
+        # 다른 도로에 있어 최대 속도를 내야하는 경우
+        else:
+            self.velocity = self.max_speed
+            
     def update_will_go_waypoint(self, car_data):
         pass
 
