@@ -1,8 +1,8 @@
 from collections import deque
 from geopy.distance import geodesic
 from dronekit import connect, VehicleMode, LocationGlobalRelative
+from pymavlink import mavutil
 import time
-
 
 class Drone:
     def __init__(self, drone):
@@ -18,12 +18,7 @@ class Drone:
         self.max_speed = 11.11
 
         # 현재 gps
-        self.gps =  {
-            "latitude": self.vehicle.gps_0.latitude, #위도
-            "longitude" : self.vehicle.gps_0.longitude, #경도
-            "altitude" : self.vehicle.gps_0.altitude, #해발고도 
-            "relative_alt" : self.vehicle.gps_0.realtive_alt #기체의 상대적 고도
-        }
+        self.gps = self.vehicle.location.global_relative_frame
 
         # 현재 waypoint
         self.waypoint = 0
@@ -31,38 +26,38 @@ class Drone:
 
         # 목표 waypoint
         self.target_waypoint = 1,
-        self.target_waypoint_gps = (0.0, 0.0)
+        self.target_waypoint_gps = LocationGlobalRelative(*(0.0, 0.0, 3.3))
         
         self.will_go_waypoint = deque()
         
     def update_drone_data(self):
-        drone_gps = self.vehicle.gps_0
-
         self.velocity= self.vehicle.airspeed
-        self.gps ={ 
-            "latitude": drone_gps.latitude, #위도
-            "longitude" : drone_gps.longitude, #경도
-            "altitude" : drone_gps.altitude, #해발고도 
-            "relative_alt" : drone_gps.realtive_alt #기체의 상대적 고도
-        }
+        self.gps = self.vehicle.location.global_relative_frame
 
+    # 업데이트 드론 타겟 다시 짜야 겄다...
     def update_drone_target(self):
-        # hovering 상태에서 target 어떻게 업데이트 할지 생각하셔야 해요
+
+        # hovering 상태면 will go waypoint에 값이 있는지 확인
+        # 있으면 will go way point에서 pop 해서 target 
         if self.ishovering:
             if self.will_go_waypoint:
                 temp = self.will_go_waypoint.popleft()
-                self.target_waypoint = temp[0]
-                self.target_waypoint_gps = temp[1]
+
+                self.target_waypoint = temp[1]
+
+                target_waypoint_gps = (temp[2], temp[3], temp[4])
+                self.target_waypoint_gps = LocationGlobalRelative(*target_waypoint_gps)
                 self.ishovering = False
         # target waypoint gps 와 드론 gps 사이 거리
-        dist = geodesic((self.gps["latitude"], self.gps["longitude"])
-                        ,self.target_waypoint_gps).meters
+        dist = self.gps.distance_to(self.target_waypoint)
         
         if dist < 1.5:
             if self.will_go_waypoint:
                 temp = self.will_go_waypoint.popleft()
-                self.target_waypoint = temp[0]
-                self.target_waypoint_gps = temp[1]
+
+                self.target_waypoint = temp[1]
+                target_waypoint_gps = (temp[2], temp[3], temp[4])
+                self.target_waypoint_gps = LocationGlobalRelative(*target_waypoint_gps)
                 self.ishovering = False
             else:
                 self.ishovering = True
@@ -95,7 +90,7 @@ class Drone:
             self.will_go_waypoint.append(waypoint)
         
     #드론 pixhawk 연결함수
-    def connect_to_pixhawk():
+    def connect_to_pixhawk(self):
         # 연결할 시리얼 포트의 경로를 지정합니다.
         port = "/dev/ttyAMA0" #USB : '/dev/ttyACM0' 
         connection_string = 'com{}'.format(port)
@@ -107,20 +102,17 @@ class Drone:
         print('Connected to vehicle on: {}'.format(connection_string))
         print('Vehicle mode: {}'.format(vehicle.mode.name))
 
-        # 기체를 안전한 모드로 설정합니다.
-        vehicle.mode = VehicleMode('STABILIZE')
-
-        return vehicle
+        self.vehicle = vehicle
 
     # 드론에게 waypoint 리스트를 전달하여 추가하는 함수
-    def add_waypoints(self, waypoint_list):
+    def add_waypoints_to_pixhawk(self, waypoint_list):
         """
         waypoint_list의 format :
 
         waypoint_list = [
-            [latitude1, longitude1, altitude1],
-            [latitude2, longitude2, altitude2],
-            [latitude3, longitude3, altitude3],
+            (latitude1, longitude1, altitude1),
+            (latitude2, longitude2, altitude2),
+            (latitude3, longitude3, altitude3),
             ...
         ]
         """
@@ -131,8 +123,20 @@ class Drone:
             self.vehicle.commands.add(wp)
         self.vehicle.flush()
 
+    # 드론 속도 변화 
+    def set_airspeed(self, airspeed):
+        """
+        드론의 airspeed 값을 설정합니다.
+        """
+        msg = self.vehicle.message_factory.command_long_encode(
+            0, 0,                                           # target system, target component
+            mavutil.mavlink.MAV_CMD_DO_CHANGE_SPEED,         # command
+            0,                                              # confirmation
+            1, airspeed, -1, 0, 0, 0)                        # params
+        self.vehicle.send_mavlink(msg)
+        self.vehicle.flush()
     # 이륙 함수
-    def arm_and_takeoff(self, aTargetAltitude):
+    def arm_and_takeoff_to_pixhawk(self, aTargetAltitude):
         print("드론 이륙준비...")
         # 드론 arm
         while not self.vehicle.is_armable:
@@ -159,12 +163,11 @@ class Drone:
             time.sleep(1)
 
     # 착륙 함수
-    def land(self):
-        print("드론 착륙 준비...")
-        # RTL 모드 설정
-        self.vehicle.mode = VehicleMode("RTL")
-        # 착륙 대기
-        while self.vehicle.location.global_relative_frame.alt > 0.1:
-            print("현재 고도: ", self.vehicle.location.global_relative_frame.alt)
+    def land_to_pixhawk(self):
+        self.vehicle.mode = VehicleMode("LAND") # 드론 착륙
+        while not self.vehicle.mode.name=='LAND':
+            print("Waiting for drone to land...")
             time.sleep(1)
-        print("드론 착륙")
+
+        self.vehicle.armed = False # 드론 시동 종료
+        self.vehicle.close() # 드론 연결 종료
