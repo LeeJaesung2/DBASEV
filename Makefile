@@ -24,6 +24,7 @@ INSTALL_DIR=/usr/include/DBASEV
 $(shell mkdir -p $(OBJ_DIR))
 $(shell mkdir -p $(OBJ_DIR)/drivers/gps)
 $(shell mkdir -p $(OBJ_DIR)/drivers/radar)
+$(shell mkdir -p $(OBJ_DIR)/drivers/telemetry)
 $(shell mkdir -p $(OBJ_DIR)/modules/collision_avoidance)
 $(shell mkdir -p $(OBJ_DIR)/modules/communication)
 $(shell mkdir -p $(OBJ_DIR)/modules/embedd)
@@ -50,8 +51,8 @@ $(DRONE_EXECUTABLE): $(OBJ) $(DRONE_MAIN)
 		$(CC) $^ -o $(DRONE_EXECUTABLE) $(LDFLAGS) $(PYFLAGS)
 
 #make vehicle.exe
-$(VEHICLE_EXECUTABLE): $(OBJS) $(VEHICLE_MAIN)
-		$(CC) $^ -o $(VEHICLE_EXECUTABLE) $(LDFLAGS)
+$(VEHICLE_EXECUTABLE): $(OBJ) $(VEHICLE_MAIN)
+		$(CC) $^ -o $(VEHICLE_EXECUTABLE) $(LDFLAGS) $(PYFLAGS)
 
 #make dreon_main_process.o
 $(DRONE_MAIN) : $(DRONE_DIR)/drone_main_process.cpp
