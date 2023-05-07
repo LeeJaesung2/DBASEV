@@ -1,0 +1,3 @@
+g++  -c -Wall GPS_functions.cpp
+g++  -c -Wall vehicle_control.cpp
+g++ vehicle_control.o GPS_functions.o -o main

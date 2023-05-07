@@ -2,7 +2,6 @@
 #include <sstream>
 #include <string>
 #include <cmath>
-#include <corecrt_math_defines.h>
 
 #include "GPS_functions.h"
 
@@ -24,7 +23,7 @@ std::string rawGps2degGps(int type, std::string token) {
 
     double deg_minutes = minutes / 60;
     std::string str_minutes = std::to_string(deg_minutes);
-    str_minutes.erase(std::remove(str_minutes.begin(), str_minutes.end(), '.'), str_minutes.end()); // °ø¹é Á¦°Å
+    str_minutes.replace(str_minutes.find("."), 1, "");
 
     std::string what3words = std::to_string(degrees).append(".").append(str_minutes);
 
@@ -34,42 +33,42 @@ std::string rawGps2degGps(int type, std::string token) {
 GPSData extract_gps_data(const std::string& gps_str) {
     GPSData gps_data;
 
-    // ¹®ÀÚ¿­À» ','·Î ±¸ºĞÇÏ¿© ¹®ÀÚ¿­ ½ºÆ®¸²¿¡ »ğÀÔ
+    // ë¬¸ìì—´ì„ ','ë¡œ êµ¬ë¶„í•˜ì—¬ ë¬¸ìì—´ ìŠ¤íŠ¸ë¦¼ì— ì‚½ì…
     std::stringstream ss(gps_str);
     std::string token;
 
-    // GPGGA ÅÂ±× Á¦°Å
+    // GPGGA íƒœê·¸ ì œê±°
     getline(ss, token, ',');
 
-    // ½Ã°£ Á¤º¸ ÃßÃâ
+    // ì‹œê°„ ì •ë³´ ì¶”ì¶œ
     getline(ss, token, ',');
     gps_data.time = std::stod(token);
 
-    // À§µµ Á¤º¸ ÃßÃâ
+    // ìœ„ë„ ì •ë³´ ì¶”ì¶œ
     getline(ss, token, ',');
     std::string latitude = rawGps2degGps(LATITUDE, token);
     gps_data.latitude = std::stod(latitude);
 
-    // ºÏÀ§/³²À§ Á¤º¸ ÃßÃâ
+    // ë¶ìœ„/ë‚¨ìœ„ ì •ë³´ ì¶”ì¶œ
     getline(ss, token, ',');
 
-    // °æµµ Á¤º¸ ÃßÃâ
+    // ê²½ë„ ì •ë³´ ì¶”ì¶œ
     getline(ss, token, ',');
     std::string longitude = rawGps2degGps(LONGITUDE, token);
     gps_data.longitude = std::stod(longitude);
 
-    // µ¿°æ/¼­°æ Á¤º¸ ÃßÃâ
+    // ë™ê²½/ì„œê²½ ì •ë³´ ì¶”ì¶œ
     getline(ss, token, ',');
 
     return gps_data;
 }
 
 double calc_distance(double lat1, double lon1, double lat2, double lon2) {
-    const double R = 6371e3; // Áö±¸ ¹İÁö¸§
-    double phi1 = lat1 * M_PI / 180; // À§µµ 1
-    double phi2 = lat2 * M_PI / 180; // À§µµ 2
-    double delta_phi = (lat2 - lat1) * M_PI / 180; // À§µµ Â÷ÀÌ
-    double delta_lambda = (lon2 - lon1) * M_PI / 180; // °æµµ Â÷ÀÌ
+    const double R = 6371e3; // ì§€êµ¬ ë°˜ì§€ë¦„
+    double phi1 = lat1 * M_PI / 180; // ìœ„ë„ 1
+    double phi2 = lat2 * M_PI / 180; // ìœ„ë„ 2
+    double delta_phi = (lat2 - lat1) * M_PI / 180; // ìœ„ë„ ì°¨ì´
+    double delta_lambda = (lon2 - lon1) * M_PI / 180; // ê²½ë„ ì°¨ì´
 
     double a = sin(delta_phi / 2) * sin(delta_phi / 2) +
         cos(phi1) * cos(phi2) *
