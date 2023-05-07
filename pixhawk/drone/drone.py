@@ -1,5 +1,8 @@
 from collections import deque
 from geopy.distance import geodesic
+from dronekit import connect, VehicleMode, LocationGlobalRelative
+import time
+
 
 class Drone:
     def __init__(self, drone):
@@ -21,7 +24,6 @@ class Drone:
             "altitude" : self.vehicle.gps_0.altitude, #해발고도 
             "relative_alt" : self.vehicle.gps_0.realtive_alt #기체의 상대적 고도
         }
-        
 
         # 현재 waypoint
         self.waypoint = 0
@@ -88,7 +90,81 @@ class Drone:
         else:
             self.velocity = self.max_speed
             
-    def update_will_go_waypoint(self, car_data):
-        pass
-
+    def update_will_go_waypoint(self, waypoints):
+        for waypoint in waypoints:
+            self.will_go_waypoint.append(waypoint)
         
+    #드론 pixhawk 연결함수
+    def connect_to_pixhawk():
+        # 연결할 시리얼 포트의 경로를 지정합니다.
+        port = "/dev/ttyAMA0" #USB : '/dev/ttyACM0' 
+        connection_string = 'com{}'.format(port)
+
+        # 연결합니다.
+        vehicle = connect(connection_string, baud=57600, wait_ready=True)
+
+        # 연결된 기체의 정보를 출력합니다.
+        print('Connected to vehicle on: {}'.format(connection_string))
+        print('Vehicle mode: {}'.format(vehicle.mode.name))
+
+        # 기체를 안전한 모드로 설정합니다.
+        vehicle.mode = VehicleMode('STABILIZE')
+
+        return vehicle
+
+    # 드론에게 waypoint 리스트를 전달하여 추가하는 함수
+    def add_waypoints(self, waypoint_list):
+        """
+        waypoint_list의 format :
+
+        waypoint_list = [
+            [latitude1, longitude1, altitude1],
+            [latitude2, longitude2, altitude2],
+            [latitude3, longitude3, altitude3],
+            ...
+        ]
+        """
+        
+        # LocationGlobalRelative 객체를 이용해 waypoint 추가
+        for waypoint in waypoint_list:
+            wp = LocationGlobalRelative(*waypoint)
+            self.vehicle.commands.add(wp)
+        self.vehicle.flush()
+
+    # 이륙 함수
+    def arm_and_takeoff(self, aTargetAltitude):
+        print("드론 이륙준비...")
+        # 드론 arm
+        while not self.vehicle.is_armable:
+            print("드론 arm 가능 대기 중...")
+            time.sleep(1)
+
+        print("드론 arm")
+        self.vehicle.mode = VehicleMode("GUIDED")
+        self.vehicle.armed = True
+
+        # 이륙 고도 도달 대기
+        while not self.vehicle.armed:
+            print("드론 arming 중...")
+            time.sleep(1)
+
+        print("드론 이륙")
+        self.vehicle.simple_takeoff(aTargetAltitude)
+
+        while True:
+            print("현재 고도: ", self.vehicle.location.global_relative_frame.alt)
+            if self.vehicle.location.global_relative_frame.alt >= aTargetAltitude * 0.95:
+                print("목표 고도 도달")
+                break
+            time.sleep(1)
+
+    # 착륙 함수
+    def land(self):
+        print("드론 착륙 준비...")
+        # RTL 모드 설정
+        self.vehicle.mode = VehicleMode("RTL")
+        # 착륙 대기
+        while self.vehicle.location.global_relative_frame.alt > 0.1:
+            print("현재 고도: ", self.vehicle.location.global_relative_frame.alt)
+            time.sleep(1)
+        print("드론 착륙")

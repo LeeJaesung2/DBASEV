@@ -1,6 +1,5 @@
 from collections import deque
 
-
 # 드론의 데이터를 초기화
 def inint_drone_data(drone):
     drone_data = {

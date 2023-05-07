@@ -1,6 +1,8 @@
-from drone_setting import *
+from drone import Drone
+from car import Car
+from pixhawk import *
+from roadMap import roadMap
+import time
 
-def main():
-    pass
 
 

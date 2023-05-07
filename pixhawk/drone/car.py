@@ -1,3 +1,5 @@
+# 통신 메세지를 디코딩하고 자동차의 상태를 저장하는 객체
+
 class Car:
     def __init__(self) :
         self.waypoint = 0
