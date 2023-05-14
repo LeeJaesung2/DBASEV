@@ -36,29 +36,27 @@ class Drone:
 
     # 업데이트 드론 타겟 다시 짜야 겄다...
     def update_drone_target(self):
-
-        # hovering 상태면 will go waypoint에 값이 있는지 확인
-        # 있으면 will go way point에서 pop 해서 target 
-        if self.ishovering:
-            if self.will_go_waypoint:
-                temp = self.will_go_waypoint.popleft()
-
-                self.target_waypoint = temp[1]
-
-                target_waypoint_gps = (temp[2], temp[3], temp[4])
-                self.target_waypoint_gps = LocationGlobalRelative(*target_waypoint_gps)
-                self.ishovering = False
         # target waypoint gps 와 드론 gps 사이 거리
-        dist = self.gps.distance_to(self.target_waypoint)
+        dist = self.gps.distance_to(self.target_waypoint_gps)
         
-        if dist < 1.5:
+        if nxt_target:
+            if dist < 1.5:
+                nxt_target = True
+            else:
+                nxt_target = False
+                
+        # 다음 waypoint update
+        if nxt_target:
             if self.will_go_waypoint:
-                temp = self.will_go_waypoint.popleft()
-
-                self.target_waypoint = temp[1]
-                target_waypoint_gps = (temp[2], temp[3], temp[4])
-                self.target_waypoint_gps = LocationGlobalRelative(*target_waypoint_gps)
                 self.ishovering = False
+                cur_target_waypoint = self.will_go_waypoint.popleft()
+
+                self.road_id = cur_target_waypoint[0]
+                self.target_waypoint = cur_target_waypoint[1]
+
+                target_waypoint_gps = (cur_target_waypoint[2], cur_target_waypoint[3], cur_target_waypoint[4])
+                self.target_waypoint_gps = LocationGlobalRelative(*target_waypoint_gps)
+
             else:
                 self.ishovering = True
 
