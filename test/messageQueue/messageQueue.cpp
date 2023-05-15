@@ -103,39 +103,39 @@ int mq_init(key_t key){
 
 void push(int key_id,msqid_ds buf, MsgBuf msg){
     
-    while (buf.msg_qnum >= 1) {
-        // Remove existing message before pushing a new one
-        MsgBuf rcvmsg;
-        if (msgrcv(key_id, &rcvmsg, sizeof(rcvmsg), 0, IPC_NOWAIT) == -1) {
-            std::cerr << "Failed to remove existing message from the queue!" << std::endl;
-            return;
-        }
-    }
 
     pushcount++;
-    printf("num of data in the queue is %ld\n",buf.msg_qnum);
-    if (msgsnd(key_id, &msg, sizeof(msg), IPC_NOWAIT) == -1) {
-            cerr << "Message Sending Failed!" << endl;
-            exit(EXIT_FAILURE);
-        }
-    // Check the number of messages currently in the queue
     if (msgctl(key_id, IPC_STAT, &buf) == -1) {
         std::cerr << "Failed to get message queue status!" << std::endl;
         return;
     }
+    //Check queue is full
     if (buf.msg_qnum >= 409) {
         std::cerr << "Message queue is full. Skipping message send." << std::endl;
-        fullcount++;
         usleep(1);
         return;
     }
+    // Check the number of messages currently in the queue
+    printf("num of data in the queue is %ld\n",buf.msg_qnum);
+    while (buf.msg_qnum >0 ) {
+        // Remove existing message before pushing a new one
+        if (msgrcv(key_id, &msg, sizeof(msg), 0, IPC_NOWAIT) == -1) {
+            std::cerr << "Failed to remove existing message from the queue!" << std::endl;
+            return;
+        }
+    }
+    cout << "message to send is" << msg.value << endl;
+    if (msgsnd(key_id, &msg, sizeof(msg), IPC_NOWAIT) == -1) {
+            cerr << "Message Sending Failed!" << endl;
+            exit(EXIT_FAILURE);
+        }
 }
 
 void * comm(void *arg){
     int cnt = 0;
     MsgBuf msg;
     msg.msgtype = 1;
-    int key_id = mq_init((key_t)1234);
+    int key_id = mq_init((key_t)5656);
 
     struct msqid_ds buf;
     while(1){

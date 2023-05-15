@@ -40,7 +40,7 @@ def consumer(a):
     msgcount = 0
 
     # Get message queue ID using same key as C++ program
-    key = 1234
+    key = 5656
     mq = mq_init(key)
 
     print("Message queue created with ID:", mq)
@@ -55,7 +55,7 @@ def consumer(a):
         if (value!=-1):
             msgcount+=1
 
-        if value >= 99999:
+        if value >= 9:
             print("All messages received!")
             break
 
