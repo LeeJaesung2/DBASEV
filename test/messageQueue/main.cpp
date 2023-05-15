@@ -1,15 +1,18 @@
 #include <stdio.h>
 #include <pthread.h>
+#include <iostream>
+#include <time.h>
 #include "messageQueue.h"
 
 
 #define NUM_THREADS 2
+using namespace std;
 
 int main()
 {
     void *status;
     int thr_id;
-    
+    clock_t start = clock();
     // 각각의 스레드를 생성
     pthread_t threads[NUM_THREADS];
 
@@ -31,7 +34,8 @@ int main()
     }
 
     //모든 스레드 종료시 메인스레드 기능
-    printf("all of threads are dead");
+    printf("all of threads are dead\n");
 
+    cout << ((clock()-start)/CLOCKS_PER_SEC) << "sec" << endl;
     return 0;
 }

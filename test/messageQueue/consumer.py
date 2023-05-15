@@ -27,7 +27,7 @@ def pop(mq):
         time.sleep(1)
 
 
-    string_data = data[0][4:28]
+    string_data = data[0][4:21] #change this part as a message format
     # Decode the string
     msg = str(string_data.decode('utf-8'))
     value = struct.unpack('<i', data[0][:4])[0]
@@ -37,10 +37,10 @@ def pop(mq):
 
 def consumer(a):
     BUFFER_SIZE = 26
-
+    msgcount = 0
 
     # Get message queue ID using same key as C++ program
-    key = 6161
+    key = 1234
     mq = mq_init(key)
 
     print("Message queue created with ID:", mq)
@@ -52,15 +52,15 @@ def consumer(a):
         # Print message contents
         print("Received value:", value)
         print("Message data:", msg)
-        if msg is None:
-            print("empty")
-            break
+        if (value!=-1):
+            msgcount+=1
 
-        if value >= 9999:
+        if value >= 99999:
             print("All messages received!")
             break
 
     # Clean up message queue
     #mq.close()
     #sysv_ipc.unlink_message_queue(key)
+    print("received message number is ", msgcount)
     return 0
