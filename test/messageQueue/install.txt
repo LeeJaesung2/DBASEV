@@ -1,0 +1,4 @@
+pip install posix_ipc==1.0.4
+pip install sysv-ipc==1.0.1
+
+https://github.com/kiyoon/C_python_ipc/blob/master/receiver.py
