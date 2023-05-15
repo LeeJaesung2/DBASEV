@@ -55,12 +55,12 @@ def consumer(a):
         if (value!=-1):
             msgcount+=1
 
-        if value >= 9:
+        if value >= 999999:
             print("All messages received!")
             break
 
     # Clean up message queue
-    #mq.close()
-    #sysv_ipc.unlink_message_queue(key)
+    mq.close()
+    sysv_ipc.unlink_message_queue(key)
     print("received message number is ", msgcount)
     return 0

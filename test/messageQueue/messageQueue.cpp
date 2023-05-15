@@ -124,7 +124,6 @@ void push(int key_id,msqid_ds buf, MsgBuf msg){
             return;
         }
     }
-    cout << "message to send is" << msg.value << endl;
     if (msgsnd(key_id, &msg, sizeof(msg), IPC_NOWAIT) == -1) {
             cerr << "Message Sending Failed!" << endl;
             exit(EXIT_FAILURE);
@@ -140,7 +139,7 @@ void * comm(void *arg){
     struct msqid_ds buf;
     while(1){
         msg.value = ++cnt;
-        if (cnt >= 10) {
+        if (cnt >= 1000000) {
             cout << "Message Sending Finished!" << endl;
             break;
         }
