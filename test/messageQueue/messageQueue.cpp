@@ -11,6 +11,10 @@
 
 
 #define BUFFER_SIZE 26
+
+int pushcount = 0;
+int fullcount = 0;
+
 int callPython(const char *src,const char *func, int arg, ...){
     PyObject *pName, *pModule, *pFunc;
     PyObject *pArgs, *pValue;
@@ -98,6 +102,22 @@ int mq_init(key_t key){
 }
 
 void push(int key_id,msqid_ds buf, MsgBuf msg){
+    
+    while (buf.msg_qnum >= 1) {
+        // Remove existing message before pushing a new one
+        MsgBuf rcvmsg;
+        if (msgrcv(key_id, &rcvmsg, sizeof(rcvmsg), 0, IPC_NOWAIT) == -1) {
+            std::cerr << "Failed to remove existing message from the queue!" << std::endl;
+            return;
+        }
+    }
+
+    pushcount++;
+    printf("num of data in the queue is %ld\n",buf.msg_qnum);
+    if (msgsnd(key_id, &msg, sizeof(msg), IPC_NOWAIT) == -1) {
+            cerr << "Message Sending Failed!" << endl;
+            exit(EXIT_FAILURE);
+        }
     // Check the number of messages currently in the queue
     if (msgctl(key_id, IPC_STAT, &buf) == -1) {
         std::cerr << "Failed to get message queue status!" << std::endl;
@@ -105,72 +125,69 @@ void push(int key_id,msqid_ds buf, MsgBuf msg){
     }
     if (buf.msg_qnum >= 409) {
         std::cerr << "Message queue is full. Skipping message send." << std::endl;
-        sleep(1);
+        fullcount++;
+        usleep(1);
         return;
     }
-
-    printf("num of data in the queue is %ld\n",buf.msg_qnum);
-    if (msgsnd(key_id, &msg, sizeof(msg), IPC_NOWAIT) == -1) {
-            cerr << "Message Sending Failed!" << endl;
-            exit(EXIT_FAILURE);
-        }
 }
 
 void * comm(void *arg){
     int cnt = 0;
     MsgBuf msg;
     msg.msgtype = 1;
-    int key_id = mq_init((key_t)6161);
+    int key_id = mq_init((key_t)1234);
 
     struct msqid_ds buf;
     while(1){
         msg.value = ++cnt;
-        if (cnt >= 10000) {
+        if (cnt >= 10) {
             cout << "Message Sending Finished!" << endl;
             break;
         }
-        strcpy(msg.buf, "Hello from C++ producer!");
+        strcpy(msg.buf, "Message received!]");
         push(key_id,buf, msg);
         cout << "value: " << msg.value << endl;
         //sleep(1);
 
     }
-
+    //sleep(10);
+    cout <<"full counter" << fullcount << endl;
+    cout <<"push counter" << pushcount << endl;
     return 0;
 }
 
 
 void * producer(void *arg){
-    int cnt = 0;
-    int key_id;
-    MsgBuf msg;
-    msg.msgtype = 1;
+    // int cnt = 0;
+    // int key_id;
+    // MsgBuf msg;
+    // msg.msgtype = 1;
 
-    key_id = msgget((key_t) 7777, IPC_CREAT|0666);
-    printf("queue key id is %d\n",key_id);
-    if (key_id == -1) {
-        cerr << "Message Get Failed!" << endl;
-        exit(EXIT_FAILURE);
-    }
+    // key_id = msgget((key_t) 7777, IPC_CREAT|0666);
+    // printf("queue key id is %d\n",key_id);
+    // if (key_id == -1) {
+    //     cerr << "Message Get Failed!" << endl;
+    //     exit(EXIT_FAILURE);
+    // }
     
-    while (1) {
-        msg.value = ++cnt;
+    // while (1) {
+    //     msg.value = ++cnt;
     
-        if (cnt >= 10) {
-            cout << "Message Sending Finished!" << endl;
-            break;
-        }
-        strcpy(msg.buf, "Hello from C++ producer!");
-        if (msgsnd(key_id, &msg, sizeof(msg), IPC_NOWAIT) == -1) {
-            cerr << "Message Sending Failed!" << endl;
-            exit(EXIT_FAILURE);
-        }
+    //     if (cnt >= 10) {
+    //         cout << "Message Sending Finished!" << endl;
+    //         break;
+    //     }
+    //     strcpy(msg.buf, "Hello from C++ producer!");
+    //     if (msgsnd(key_id, &msg, sizeof(msg), IPC_NOWAIT) == -1) {
+    //         cerr << "Message Sending Failed!" << endl;
+    //         exit(EXIT_FAILURE);
+    //     }
         
-        cout << "value: " << msg.value << endl;
-        sleep(1);
-    }
-    exit(EXIT_SUCCESS);
-    return 0;
+    //     cout << "value: " << msg.value << endl;
+    //     sleep(1);
+    // }
+    // exit(EXIT_SUCCESS);
+     return 0;
 }
 
 void * consumer(void *arg){
