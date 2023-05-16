@@ -6,17 +6,19 @@ void * thread_func2(void *arg)
     int cnt = 0;
     MsgBuf msg;
     msg.msgtype = 1;
-    int key_id = mq_init((key_t)5656);
+    key_t key = 5656;
+    int key_id = mq_init(key);
 
     struct msqid_ds buf;
     while(1){
         msg.value = ++cnt;
-        if (cnt >= 1000000) {
+        if (cnt >= 100000) {
             cout << "Message Sending Finished!" << endl;
             break;
         }
         strcpy(msg.buf, "Message received!]");
         push(key_id,buf, msg);
+        //usleep(1);
         cout << "value: " << msg.value << endl;
     }
 
