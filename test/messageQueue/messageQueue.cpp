@@ -1,7 +1,7 @@
 #include "messageQueue.h"
-#include <python2.7/Python.h>
+#include <python2.7/Python.h> //embedding
 
-#include <iostream>
+#include <iostream> //cout
 #include <string>
 #include <cstring>
 #include <cstdlib>
