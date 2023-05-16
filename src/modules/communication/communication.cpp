@@ -2,16 +2,24 @@
 
 void * thread_func2(void *arg)
 {
-    /*send data with queue*/
-    tbb::concurrent_queue<const char*>* cq = static_cast<tbb::concurrent_queue<const char*>*>(arg);
-    const char* tmp;
-    for (int i = 0; i < 10; i++) {
-        const char* msg = "Enter_new_road nxt velocity 42.6 nxt road_id 5 nxt way_points : nxt 0 35.18413 128.0713 3.3 1 0 nxt 1 35.18413 128.0713 3.3 1 0 nxt 2 35.18513 128.0673 3.3 1 0 nxt 3 35.18603 128.0653 3.3 1 0 nxt 4 35.18413 128.0713 3.3 1 0 nxt 5 35.18413 128.0713 3.3 1 0 nxt 6 35.18413 128.0713 3.3 1 0 nxt 7 35.18413 128.0713 3.3 1 0 nxt 8 35.18413 128.0713 3.3 1 0 nxt 9 35.18413 128.0713 3.3 1 0 nxt 10 35.18413 128.0713 3.3 1 1";
-        while (cq->try_pop(tmp)) {
-        // empty queue before push
+    
+    int cnt = 0;
+    MsgBuf msg;
+    msg.msgtype = 1;
+    int key_id = mq_init((key_t)5656);
+
+    struct msqid_ds buf;
+    while(1){
+        msg.value = ++cnt;
+        if (cnt >= 1000000) {
+            cout << "Message Sending Finished!" << endl;
+            break;
         }
-        cq->push(msg); // push item into the concurrent queue
+        strcpy(msg.buf, "Message received!]");
+        push(key_id,buf, msg);
+        cout << "value: " << msg.value << endl;
     }
+
     return 0;
 
 }
