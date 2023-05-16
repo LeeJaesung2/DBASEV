@@ -29,6 +29,7 @@ $(shell mkdir -p $(OBJ_DIR)/modules/collision_avoidance)
 $(shell mkdir -p $(OBJ_DIR)/modules/communication)
 $(shell mkdir -p $(OBJ_DIR)/modules/embedd)
 $(shell mkdir -p $(OBJ_DIR)/modules/drone_control)
+$(shell mkdir -p $(OBJ_DIR)/modules/messagequeue)
 
 # List all objcet files to be compiled
 SRC=$(wildcard $(SRC_DIR)/**/**/*.cpp)
