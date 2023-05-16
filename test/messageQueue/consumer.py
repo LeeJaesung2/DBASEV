@@ -60,7 +60,7 @@ def consumer(a):
             break
 
     # Clean up message queue
-    mq.close()
-    sysv_ipc.unlink_message_queue(key)
+    #mq.close()
+    #sysv_ipc.unlink_message_queue(key)
     print("received message number is ", msgcount)
     return 0
