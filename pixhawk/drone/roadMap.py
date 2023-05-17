@@ -6,6 +6,7 @@ class roadMap:
 
         self.getData()
         self.createRoadmap()
+        print(self.roadmap)
 
 
     def getData(self):
@@ -22,3 +23,5 @@ class roadMap:
                     waypoints.append([int(row['road_id']), int(row['waypoint_id']), row['lat'], row['lon'], row['alt']])
             waypoints = sorted(waypoints, key=lambda x: x[1])
             self.roadmap[road_id] = waypoints
+
+roadMap()
