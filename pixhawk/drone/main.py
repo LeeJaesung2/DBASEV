@@ -24,10 +24,11 @@ def update(msg):
     if pre_car_road_id != car.road_id:
         waypoints = road_map.roadmap[car.road_id]
         drone.update_will_go_waypoint(waypoints)
+        drone.add_waypoints_to_pixhawk(waypoints)
     
     drone.update_drone_target()
     drone.update_drone_velocity()
-
+    drone.set_airspeed_to_pixhawk(drone.velocity)
 
     
     

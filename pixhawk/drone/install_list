@@ -1,0 +1,14 @@
+sudo apt-get update #
+# sudo apt-get upgrade # 모든 패키지를 최신 버전으로 만듬
+sudo apt-get install pyton2.7 # 파이썬 설치
+sudo apt-get install python-pip #pip install 해주는것
+sudo pip install future #파이썬2 에서도 파이썬3 문법 사용하게 해주는것
+sudo pip install pyserial # 시리얼 통신을 위한 Python 라이브러리.  Python 프로그램에서 시리얼 포트로 데이터를 보내고 받을 수 있습니다
+sudo pip install dronekit
+# sudo pip install MAVProxy # dronekit 설치하면 자동 설치됨
+pip install geopy # 두 gps 값 사이 거리 계산하기 위한 모듈
+pip install pandas # 엑셀 파일을 파이썬 데이터로 만들기 위한 모듈
+
+# 해당 셀스크리트는 아래 명령어로 실행 가능...
+chmod +x install_packages.sh
+./install_packages.sh
