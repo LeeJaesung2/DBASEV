@@ -12,7 +12,7 @@ void * thread_func1(void *arg)
     // droneData drone_data = {5, 8, 60.8, {point1,point2, point3}};
     // /*get data from queue*/
     // tbb::concurrent_queue<const char*>* cq = static_cast<tbb::concurrent_queue<const char*>*>(arg);
-    const char* msg;
+    //const char* msg;
     for (int i = 0; i < 15; i++) {
         // if (cq->try_pop(msg)) { // try to pop item from the concurrent queue
         //     /*call python source code with struct*/

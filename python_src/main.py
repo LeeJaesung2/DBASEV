@@ -1,4 +1,4 @@
-from drone import Drone
+#from drone import Drone
 # from car import Car
 import time
 from messagequeue import mq_init, pop
@@ -44,8 +44,13 @@ def init():
 
 def main(a):
     init()
-
+    temp="a"
     while True:
+        
         msg = pop(mq)
-        print(msg)
+        if msg != "error":
+            if temp != msg:
+                temp = msg
+                print(msg)
+
         #update(msg)

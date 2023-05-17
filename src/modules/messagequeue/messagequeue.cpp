@@ -24,7 +24,7 @@ void push(int key_id,msqid_ds buf, MsgBuf msg){
         return;
     }
     // Check the number of messages currently in the queue
-    printf("num of data in the queue is %ld\n",buf.msg_qnum);
+    //printf("num of data in the queue is %ld\n",buf.msg_qnum);
     while (buf.msg_qnum >0 ) {
         // Remove existing message before pushing a new one
         if (msgrcv(key_id, &msg, sizeof(msg), 0, IPC_NOWAIT) == -1) {

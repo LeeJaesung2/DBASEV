@@ -18,7 +18,8 @@ def mq_init(key):
 
 def pop(mq):
     while mq.current_messages == 0:
-        time.sleep(1)
+        return "error"
+        # time.sleep(1)
     try:
         data = mq.receive()
     except sysv_ipc.BusyError:

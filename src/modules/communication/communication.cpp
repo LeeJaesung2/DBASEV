@@ -1,25 +1,56 @@
 #include <DBASEV/communication.h>
 
+
+
 void * thread_func2(void *arg)
 {
+    int road_id = 1;
+    int waypoint = 0;
+    float speed = 5;
+    char sndmsg[100];
+
+
     
-    int cnt = 0;
+    //int cnt = 0;
     MsgBuf msg;
     msg.msgtype = 1;
     key_t key = 5656;
     int key_id = mq_init(key);
 
     struct msqid_ds buf;
-    while(1){
-        msg.value = ++cnt;
-        if (cnt >= 10) {
-            cout << "Message Sending Finished!" << endl;
-            break;
+    // while(1){
+    //     msg.value = ++cnt;
+    //     if (cnt >= 10) {
+    //         cout << "Message Sending Finished!" << endl;
+    //         break;
+    //     }
+    //     strcpy(msg.buf, sndmsg);
+    //     push(key_id,buf, msg);
+    //     //usleep(1);
+    //     //cout << "value: " << msg.value << endl;
+    // }
+    for(int i=0; i<93; i++){
+        waypoint++;
+        if (waypoint<38){
+            road_id = 1;
         }
-        strcpy(msg.buf, "37.8 1 6");
-        push(key_id,buf, msg);
-        //usleep(1);
-        //cout << "value: " << msg.value << endl;
+        else if(waypoint<79){
+            road_id = 2;
+        }
+        else{
+            road_id = 3;
+        }
+        for(int x=0; x<20; x++){
+            
+            snprintf(sndmsg,sizeof(sndmsg),"%.2f %d %d", speed, waypoint, road_id);
+            strcpy(msg.buf, sndmsg);
+            //printf(sndmsg);
+            //printf("\n");
+            usleep(50000);
+            push(key_id,buf, msg);
+            
+
+        }
     }
 
     return 0;
