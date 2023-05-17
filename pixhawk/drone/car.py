@@ -15,4 +15,10 @@ class Car:
         self.velocity = float(msg_list[0])
         self.road_id = int(msg_list[1])
         self.waypoint = int(msg_list[2])
+
+    def get_car_data(self):
+        return {"waypoint" : self.waypoint,
+                "road_id" : self.road_id,
+                "velocity" : self.velocity
+        }
         

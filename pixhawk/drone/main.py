@@ -27,7 +27,10 @@ def update(msg):
         drone.add_waypoints_to_pixhawk(waypoints)
     
     drone.update_drone_target()
-    drone.update_drone_velocity()
+
+    car_data = car.get_car_data()
+    drone.update_drone_velocity(car_data)
+    
     drone.set_airspeed_to_pixhawk(drone.velocity)
 
     

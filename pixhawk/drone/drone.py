@@ -63,11 +63,11 @@ class Drone:
             return
         
         # 같은 도로에 있는 경우
-        if car_data.road_id == self.road_id:
+        if car_data["road_id"] == self.road_id:
 
             # 거리가 멀어져서 속도 조절이 필요한 상황
-            if car_data.waypoint <= self.waypoint - self.waypoint_num:
-                ideal_velocity = car_data.velocity - ((5 * (self.waypoint - car_data.waypoint - self.waypoint_num))/1000)
+            if car_data["waypoint"] <= self.waypoint - self.waypoint_num:
+                ideal_velocity = car_data["velocity"] - (self.waypoint_dist * (self.waypoint - car_data.waypoint - self.waypoint_num))
 
                 if ideal_velocity < 0:
                     ideal_velocity = 0
