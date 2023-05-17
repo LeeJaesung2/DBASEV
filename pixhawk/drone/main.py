@@ -18,7 +18,7 @@ def update(msg):
     drone.update_drone_data()
 
     pre_car_road_id = car.road_id
-    car.readmsg(msg)
+    car.update_car_data(msg)
 
     # 자동차의 예전 road와 다른 경우 will go waypoint update
     if pre_car_road_id != car.road_id:

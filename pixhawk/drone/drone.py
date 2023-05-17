@@ -1,5 +1,4 @@
 from collections import deque
-from geopy.distance import geodesic
 from dronekit import connect, VehicleMode, LocationGlobalRelative
 from pymavlink import mavutil
 import time
@@ -34,17 +33,16 @@ class Drone:
         self.velocity= self.vehicle.airspeed
         self.gps = self.vehicle.location.global_relative_frame
 
-    # 업데이트 드론 타겟 다시 짜야 겄다...
+
     def update_drone_target(self):
         # target waypoint gps 와 드론 gps 사이 거리
         dist = self.gps.distance_to(self.target_waypoint_gps)
         
-        if nxt_target:
-            if dist < 1.5:
-                nxt_target = True
-            else:
-                nxt_target = False
-                
+        if dist < 1.5:
+            nxt_target = True
+        else:
+            nxt_target = False
+            
         # 다음 waypoint update
         if nxt_target:
             if self.will_go_waypoint:
@@ -66,7 +64,7 @@ class Drone:
 
             # 거리가 멀어져서 속도 조절이 필요한 상황
             if car_data.waypoint <= self.waypoint - self.waypoint_num:
-                ideal_velocity = car_data.velocity - ((16.5 * (self.waypoint - car_data.waypoint - self.waypoint_num))/1000)
+                ideal_velocity = car_data.velocity - ((5 * (self.waypoint - car_data.waypoint - self.waypoint_num))/1000)
 
                 if ideal_velocity < 0:
                     ideal_velocity = 0

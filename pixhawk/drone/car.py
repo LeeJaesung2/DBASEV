@@ -6,7 +6,7 @@ class Car:
         self.road_id = 0
         self.velocity = 0.0
     
-    def readmsg(self, msg):
+    def update_car_data(self, msg):
         if msg == "error":
             return None
         
