@@ -1,7 +1,7 @@
-# 통신 메세지를 디코딩하고 자동차의 상태를 저장하는 객체
+# Object that decodes communication messages and stores the state of the car
 
 class Car:
-    def __init__(self) :
+    def __init__(self):
         self.waypoint = 0
         self.road_id = 0
         self.velocity = 0.0
@@ -17,8 +17,8 @@ class Car:
         self.waypoint = int(msg_list[2])
 
     def get_car_data(self):
-        return {"waypoint" : self.waypoint,
-                "road_id" : self.road_id,
-                "velocity" : self.velocity
+        return {
+            "waypoint": self.waypoint,
+            "road_id": self.road_id,
+            "velocity": self.velocity
         }
-        
