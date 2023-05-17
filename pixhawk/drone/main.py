@@ -21,6 +21,7 @@ def update(msg):
     drone.update_drone_data()
 
     pre_car_road_id = car.road_id
+
     car.update_car_data(msg)
 
     # 자동차의 예전 road와 다른 경우 will go waypoint update
@@ -35,6 +36,3 @@ def update(msg):
     drone.update_drone_velocity(car_data)
     
     drone.set_airspeed_to_pixhawk(drone.velocity)
-
-    
-    
