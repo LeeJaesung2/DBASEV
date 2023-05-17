@@ -12,14 +12,14 @@ void * thread_func2(void *arg)
     struct msqid_ds buf;
     while(1){
         msg.value = ++cnt;
-        if (cnt >= 100000) {
+        if (cnt >= 10) {
             cout << "Message Sending Finished!" << endl;
             break;
         }
-        strcpy(msg.buf, "Message received!]");
+        strcpy(msg.buf, "37.8 1 6");
         push(key_id,buf, msg);
         //usleep(1);
-        cout << "value: " << msg.value << endl;
+        //cout << "value: " << msg.value << endl;
     }
 
     return 0;
