@@ -3,8 +3,8 @@
 void * thread_func1(void *arg)
 {   
 
-    const char* src = "struct_embedd_test";
-    const char* func = "consumer";
+    const char* src = "main";
+    const char* func = "main";
     // carData car_data = {1, 55, 87.4};
     // waypoint point1 = {1,10.0,5.2,8.6,6,1};
     // waypoint point2 = {3,2.0,7.2,9.6,8,0};
