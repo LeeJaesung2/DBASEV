@@ -1,7 +1,5 @@
 from collections import deque
-from geopy.distance import geodesic
 from dronekit import connect, VehicleMode, LocationGlobalRelative
-from pymavlink import mavutil
 import time
 
 class Drone:
@@ -34,41 +32,42 @@ class Drone:
         self.velocity= self.vehicle.airspeed
         self.gps = self.vehicle.location.global_relative_frame
 
-    # 업데이트 드론 타겟 다시 짜야 겄다...
+
     def update_drone_target(self):
-
-        # hovering 상태면 will go waypoint에 값이 있는지 확인
-        # 있으면 will go way point에서 pop 해서 target 
-        if self.ishovering:
-            if self.will_go_waypoint:
-                temp = self.will_go_waypoint.popleft()
-
-                self.target_waypoint = temp[1]
-
-                target_waypoint_gps = (temp[2], temp[3], temp[4])
-                self.target_waypoint_gps = LocationGlobalRelative(*target_waypoint_gps)
-                self.ishovering = False
         # target waypoint gps 와 드론 gps 사이 거리
-        dist = self.gps.distance_to(self.target_waypoint)
+        dist = self.gps.distance_to(self.target_waypoint_gps)
         
         if dist < 1.5:
+            nxt_target = True
+        else:
+            nxt_target = False
+            
+        # 다음 waypoint update
+        if nxt_target:
             if self.will_go_waypoint:
-                temp = self.will_go_waypoint.popleft()
-
-                self.target_waypoint = temp[1]
-                target_waypoint_gps = (temp[2], temp[3], temp[4])
-                self.target_waypoint_gps = LocationGlobalRelative(*target_waypoint_gps)
                 self.ishovering = False
+                cur_target_waypoint = self.will_go_waypoint.popleft()
+
+                self.road_id = cur_target_waypoint[0]
+                self.target_waypoint = cur_target_waypoint[1]
+
+                target_waypoint_gps = (cur_target_waypoint[2], cur_target_waypoint[3], cur_target_waypoint[4])
+                self.target_waypoint_gps = LocationGlobalRelative(*target_waypoint_gps)
+
             else:
                 self.ishovering = True
 
     def update_drone_velocity(self, car_data):
+        if self.ishovering:
+            self.velocity = 0
+            return
+        
         # 같은 도로에 있는 경우
-        if car_data.road_id == self.road_id:
+        if car_data["road_id"] == self.road_id:
 
             # 거리가 멀어져서 속도 조절이 필요한 상황
-            if car_data.waypoint <= self.waypoint - self.waypoint_num:
-                ideal_velocity = car_data.velocity - ((16.5 * (self.waypoint - car_data.waypoint - self.waypoint_num))/1000)
+            if car_data["waypoint"] <= self.waypoint - self.waypoint_num:
+                ideal_velocity = car_data["velocity"] - (self.waypoint_dist * (self.waypoint - car_data.waypoint - self.waypoint_num))
 
                 if ideal_velocity < 0:
                     ideal_velocity = 0
@@ -89,11 +88,15 @@ class Drone:
         for waypoint in waypoints:
             self.will_go_waypoint.append(waypoint)
         
+
+    """--------------------------------------------------------------------------------------------------------"""
+
+    
+
     #드론 pixhawk 연결함수
     def connect_to_pixhawk(self):
         # 연결할 시리얼 포트의 경로를 지정합니다.
-        port = "/dev/ttyAMA0" #USB : '/dev/ttyACM0' 
-        connection_string = 'com{}'.format(port)
+        connection_string = "/dev/ttyAMA0" #USB : '/dev/ttyACM0' 
 
         # 연결합니다.
         vehicle = connect(connection_string, baud=57600, wait_ready=True)
@@ -104,37 +107,6 @@ class Drone:
 
         self.vehicle = vehicle
 
-    # 드론에게 waypoint 리스트를 전달하여 추가하는 함수
-    def add_waypoints_to_pixhawk(self, waypoint_list):
-        """
-        waypoint_list의 format :
-
-        waypoint_list = [
-            (latitude1, longitude1, altitude1),
-            (latitude2, longitude2, altitude2),
-            (latitude3, longitude3, altitude3),
-            ...
-        ]
-        """
-        
-        # LocationGlobalRelative 객체를 이용해 waypoint 추가
-        for waypoint in waypoint_list:
-            wp = LocationGlobalRelative(*waypoint)
-            self.vehicle.commands.add(wp)
-        self.vehicle.flush()
-
-    # 드론 속도 변화 
-    def set_airspeed(self, airspeed):
-        """
-        드론의 airspeed 값을 설정합니다.
-        """
-        msg = self.vehicle.message_factory.command_long_encode(
-            0, 0,                                           # target system, target component
-            mavutil.mavlink.MAV_CMD_DO_CHANGE_SPEED,         # command
-            0,                                              # confirmation
-            1, airspeed, -1, 0, 0, 0)                        # params
-        self.vehicle.send_mavlink(msg)
-        self.vehicle.flush()
     # 이륙 함수
     def arm_and_takeoff_to_pixhawk(self, aTargetAltitude):
         print("드론 이륙준비...")
@@ -161,6 +133,30 @@ class Drone:
                 print("목표 고도 도달")
                 break
             time.sleep(1)
+
+
+    # 드론에게 waypoint 리스트를 전달하여 추가하는 함수
+    def add_waypoints_to_pixhawk(self, waypoint_list):
+        # LocationGlobalRelative 객체를 이용해 waypoint 추가
+        for waypoint in waypoint_list:
+            waypoint_gps = waypoint[2:]
+            wp = LocationGlobalRelative(*waypoint_gps)
+            self.vehicle.commands.add(wp)
+        self.vehicle.flush()
+
+    # 드론 속도 변화 
+    def set_airspeed_to_pixhawk(self, airspeed):
+        self.vehicle.airspeed = airspeed
+        # """
+        # 드론의 airspeed 값을 설정합니다.
+        # """
+        # msg = self.vehicle.message_factory.command_long_encode(
+        #     0, 0,                                           # target system, target component
+        #     mavutil.mavlink.MAV_CMD_DO_CHANGE_SPEED,         # command
+        #     0,                                              # confirmation
+        #     1, airspeed, -1, 0, 0, 0)                        # params
+        # self.vehicle.send_mavlink(msg)
+        # self.vehicle.flush()
 
     # 착륙 함수
     def land_to_pixhawk(self):

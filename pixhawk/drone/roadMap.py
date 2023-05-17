@@ -1,18 +1,27 @@
+import pandas as pd
 class roadMap:
     def __init__(self) :
-        self.roadmap = {
-            1 : [(1, 0, 127.1234000, 34.1234000, 3.3), (1, 1, 123,1234001, 34.1234000, 3.3), (1, 2, 123,1234002, 34.1234000, 3.3)],
-            2 : [(2, 0, 127.1234000, 34.1233000, 3.3), (2, 1, 127.1234001, 34.1233000, 3.3), (2, 2, 127.1234002, 34.1233000, 3.3)]
-        }
+        self.roadmap = {}
+        self.roadDf = None
 
-    def create(self):
-        pass
+        self.getData()
+        self.createRoadmap()
+        print(self.roadmap)
+
+
+    def getData(self):
+        excel_file = 'roadData/road_data.xlsx'
+        self.roadDf = pd.read_excel(excel_file)
         
-    def delete(self):
-        pass
+    def createRoadmap(self):
+        road_ids = self.roadDf['road_id'].unique()
 
-    def check_roadid(self):
-        pass
+        for road_id in road_ids:
+            waypoints = []
+            for index, row in self.roadDf.iterrows():
+                if row['road_id'] == road_id:
+                    waypoints.append([int(row['road_id']), int(row['waypoint_id']), row['lat'], row['lon'], row['alt']])
+            waypoints = sorted(waypoints, key=lambda x: x[1])
+            self.roadmap[road_id] = waypoints
 
-    def modify(self):
-        pass
+roadMap()
