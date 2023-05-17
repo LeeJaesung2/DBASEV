@@ -42,20 +42,38 @@ GPSData extract_gps_data(const std::string& gps_str) {
 
     // 시간 정보 추출
     getline(ss, token, ',');
-    gps_data.time = std::stod(token);
+    try {
+        gps_data.time = std::stod(token);
+    }
+    catch (std::invalid_argument& e) {
+        std::cerr << "Invalid argument: " << e.what() << std::endl;
+        gps_data.time = 0.0;
+    }
 
     // 위도 정보 추출
     getline(ss, token, ',');
-    std::string latitude = rawGps2degGps(LATITUDE, token);
-    gps_data.latitude = std::stod(latitude);
+    try {
+        std::string latitude = rawGps2degGps(LATITUDE, token);
+        gps_data.latitude = std::stod(latitude);
+    }
+    catch (std::invalid_argument& e) {
+        std::cerr << "Invalid argument: " << e.what() << std::endl;
+        gps_data.latitude = 0.0;
+    }
 
     // 북위/남위 정보 추출
     getline(ss, token, ',');
 
     // 경도 정보 추출
     getline(ss, token, ',');
-    std::string longitude = rawGps2degGps(LONGITUDE, token);
-    gps_data.longitude = std::stod(longitude);
+    try {
+        std::string longitude = rawGps2degGps(LONGITUDE, token);
+        gps_data.longitude = std::stod(longitude);
+    }
+    catch (std::invalid_argument& e) {
+        std::cerr << "Invalid argument: " << e.what() << std::endl;
+        gps_data.longitude = 0.0;
+    }
 
     // 동경/서경 정보 추출
     getline(ss, token, ',');

@@ -1,36 +1,65 @@
 #include <iostream>
-
-#include "GPSData.h"
-#include "GPS_functions.h"
+#include <vector>
 
 using namespace std;
 
-int main() { // main í•¨ìˆ˜ëŠ” ì°¨ëŸ‰ì˜ ê¸°ëŠ¥ë§Œ ìˆëŠ” í•¨ìˆ˜ë¡œ ë§Œë“¤ê¸°
-    // 0. src/drivers/gpsì— init í•¨ìˆ˜(GPS ê°’ ë°›ì•„ì˜¤ê¸°, (ì‹œê°„,ì†ë„,ê±°ë¦¬)ì¶”ì¶œ í•˜ê¸°)
-    // 1. gps Data ë°›ì•„ì˜¤ëŠ” ëª¨ë“ˆ ë§Œë“¤ê¸°
-    string gps_data1 = "$GPGGA,114455.532,3591.0291,N,12860.1963,E,1,03,50.0,0.0,M,19.6,M,0.0,0000*4F";
-    string gps_data2 = "$GPGGA,114465.532,3590.6390,N,12860.5123,E,1,03,50.0,0.0,M,19.6,M,0.0,0000*4F";
+#define WAYPOINT_DISTANCE 5 // unit: Meter
 
-    // 2. ë°›ì•„ì˜¨ gps Dataì—ì„œ ì¶”ì¶œí•˜ëŠ” í•¨ìˆ˜ ë”°ë¡œ ë¹¼ê¸°
-    GPSData gps_data1_parsed = extract_gps_data(gps_data1);
-    GPSData gps_data2_parsed = extract_gps_data(gps_data2);
+double getVelocity() {
+    return 12.0;
+}
 
-    // 3. map Data í™•ì¸ í•˜ê¸°
+vector<int> getWaypoints() { // ÃÊ±â road_id´Â 1¹øÀ¸·Î ¼¼ÆÃÇÏ±â
+    vector<int> waypoints;
 
-    // 4. ê±°ë¦¬, ì†ë„, ì‹œê°„ ì¶œë ¥ í•¨ìˆ˜ ë§Œë“¤ê¸°
-    if (gps_data1_parsed.latitude != 0.0 && gps_data1_parsed.longitude != 0.0 &&
-        gps_data2_parsed.latitude != 0.0 && gps_data2_parsed.longitude != 0.0) {
-
-        double distance = calc_distance(gps_data1_parsed.latitude, gps_data1_parsed.longitude, gps_data2_parsed.latitude, gps_data2_parsed.longitude);
-        double time_interval = gps_data2_parsed.time - gps_data1_parsed.time;
-        double speed = distance / time_interval;
-
-        std::cout << "Distance: " << distance << " meters" << std::endl;
-        std::cout << "Time Interval: " << time_interval << " seconds" << std::endl;
-        std::cout << "Speed: " << speed << " meters/second" << std::endl;
+    //map¿¡¼­ waypoint ºÒ·¯¿À±â
+    //¿ì¼± 20°³ÀÇ waypoint ÀÖ´Ù°í °¡Á¤
+    for (int i = 1; i <= 20; i++) {
+        waypoints.push_back(i);
     }
-    else {
-        std::cout << "Failed to extract GPS data from input string" << std::endl;
+    return waypoints;
+}
+
+int main() {
+    double vehicle_velocity = 0.0, remain_distance = 0.0;
+    int total_passed_waypoint = 0, passed_num_waypoint = 0, sum_remain_distance = 0;
+
+    vector<int> waypoints = getWaypoints(); // waypoint °¡Á®¿À´Â ÇÔ¼ö ±¸Çö ÇÊ¿ä
+
+    int remain_waypoints = waypoints.size();
+
+    while (remain_waypoints > 0) {
+        vehicle_velocity = getVelocity();// ´ÜÀ§ : m/s => ¼Óµµ °¡Á®¿À´Â ÇÔ¼ö ±¸Çö ÇÊ¿ä
+
+        passed_num_waypoint = static_cast<int>(vehicle_velocity / WAYPOINT_DISTANCE);  // ¿şÀÌÆ÷ÀÎÆ®¸¦ Áö³ª°£ °³¼ö
+
+        // ¿şÀÌÆ÷ÀÎÆ®°¡ Á¤È®È÷ ³ª´©¾î ¶³¾îÁöÁö ¾ÊÀ¸¸é
+        remain_distance = vehicle_velocity - (passed_num_waypoint * WAYPOINT_DISTANCE);  // ³²Àº °Å¸®
+        if (remain_distance > 0) {
+            sum_remain_distance += remain_distance;
+            cout << "sum_remain_distance: " << sum_remain_distance << "\n";
+            if (sum_remain_distance >= WAYPOINT_DISTANCE) {
+                passed_num_waypoint++;
+                sum_remain_distance -= WAYPOINT_DISTANCE;
+            }
+        }
+
+        total_passed_waypoint += passed_num_waypoint;
+        if (total_passed_waypoint > waypoints.size()) {
+            total_passed_waypoint = waypoints.size();
+        }
+        cout << "ÇöÀç " << total_passed_waypoint << "°³ÀÇ ¿şÀÌÆ÷ÀÎÆ®¸¦ Áö³µ½À´Ï´Ù.\n";
+ 
+
+        remain_waypoints -= passed_num_waypoint;
+        cout << "remain_waypoints: " << remain_waypoints << "\n\n";
+
+        if (remain_waypoints > 4) {
+            // GPS ¾²·¹µå ±ú¿ì±â¿ë if¹® 
+            // GPS_main.cpp·Î road_id Ã£¾Æ¾ßÇÔ
+        }
+
+        vehicle_velocity += 4;
     }
 
     return 0;
