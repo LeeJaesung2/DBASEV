@@ -8,35 +8,16 @@
 #include <iostream>
 #include <pthread.h>
 #include <stdbool.h>
+#include <cstring>
+#include <cstdlib>
 #include <time.h>
-#include <tbb/concurrent_queue.h>
 
-struct waypoint{
-    int id;
-    float latitude;
-    float longitude;
-    float altitude;
-    int countable;
-    int last_point;
-};
+using namespace std;
 
-struct carData{
-    int road_id;
-    int waypoint_id;
-    float velocity;
-};
-
-struct droneData{
-    int road_id;
-    int waypoint_id;
-    float velocity;
-    waypoint will_go_waypoint[100];
-};
-
-struct carAndDroneData{
-    carData car;
-    droneData drone;
-    int error;
+struct MsgBuf {
+    long msgtype; // message type, must be > 0
+    int value;
+    char buf[26];
 };
 
 

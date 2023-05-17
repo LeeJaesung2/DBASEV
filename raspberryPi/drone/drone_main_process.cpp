@@ -20,18 +20,18 @@ int main()
     void *status;
     int thr_id;
     time_t begin = clock();
-    tbb::concurrent_queue<const char*> cq; // concurrent queue
+    //tbb::concurrent_queue<const char*> cq; // concurrent queue
     
     // 각각의 스레드를 생성
     pthread_t threads[NUM_THREADS];
 
     //첫번째 스레드 생성
-    thr_id = pthread_create(&threads[0], NULL, &thread_func1, (void *)&cq);
+    thr_id = pthread_create(&threads[0], NULL, &thread_func1, NULL);
     if(thr_id < 0){
         perror("failure create thread");
     }
     // 두번째 스레드 생성
-    thr_id = pthread_create(&threads[1], NULL, &thread_func2, (void *)&cq);
+    thr_id = pthread_create(&threads[1], NULL, &thread_func2, NULL);
     if(thr_id < 0){
         perror("failure create thread");
     }

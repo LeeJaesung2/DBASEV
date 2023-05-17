@@ -1,3 +1,4 @@
+from messagequeue import *
 def embedd(a, b):
     print(a+b)
     return a+b
@@ -28,3 +29,33 @@ def sturct_embedd(msg, car_data, drone_data):
         'done' : drone_data
     }
     return car_drone_data
+
+def consumer(a):
+    BUFFER_SIZE = 26
+    msgcount = 0
+
+    # Get message queue ID using same key as C++ program
+    key = 5656
+    mq = mq_init(key)
+
+    print("Message queue created with ID:", mq)
+    # Read messages from queue
+    while True:
+        # Read message from queue
+        value, msg = pop(mq)
+
+        # Print message contents
+        print("Received value:", value)
+        print("Message data:", msg)
+        if (value!=-1):
+            msgcount+=1
+
+        if value >= 99999:
+            print("All messages received!")
+            break
+
+    # Clean up message queue
+    #mq.close()
+    #sysv_ipc.unlink_message_queue(key)
+    print("received message number is ", msgcount)
+    return 0
