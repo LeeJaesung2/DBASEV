@@ -18,7 +18,6 @@ def mq_init(key):
 
 def pop(mq):
     while mq.current_messages == 0:
-        print(".")
         time.sleep(1)
     try:
         data = mq.receive()
