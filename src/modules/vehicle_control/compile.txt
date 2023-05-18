@@ -1,0 +1,7 @@
+g++  -c -Wall GPS_functions.cpp
+g++  -c -Wall vehicle_control.cpp
+g++ vehicle_control.o GPS_functions.o -o main
+
+
+라즈베리파이
+g++ gps.o GPS_functions.o -o gps -lwiringPi -pthread
