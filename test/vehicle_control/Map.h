@@ -12,6 +12,8 @@ struct Vertex {
     int id;
     vector<int> waypoints;
     vector<int> connectedRoads;
+    vector<float> latitude;  
+    vector<float> longitude;
 };
 
 unordered_map<int, Vertex> creatingMap();

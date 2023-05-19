@@ -13,23 +13,23 @@ unordered_map<int, Vertex> creatingMap() {
     unordered_map<int, Vertex> graph; // Hashmap to store the graph
 
     // Excel file data
-    vector<vector<double>> excelData = {
-        {1, 1, 35.1535098, 128.1002861, 5},
-        {1, 2, 35.1535017, 128.1003405, 5},
-        {1, 3, 35.153494, 128.1003952, 5},
-        {1, 4, 35.1534847, 128.1004491, 5},
-        {1, 5, 35.153477, 128.1005038, 5},
-        {1, 6, 35.1534693, 128.1005578, 5},
-        {1, 7, 35.1534608, 128.1006118, 5},
-        {2, 38, 35.1532566, 128.1022536, 5},
-        {2, 39, 35.153301, 128.102264, 5},
-        {2, 40, 35.1533454, 128.1022747, 5},
-        {3, 79, 35.1550369, 128.1026779, 5},
-        {3, 80, 35.1550296, 128.102732, 5},
-        {3, 81, 35.1550217, 128.1027867, 5},
-        {3, 82, 35.1550144, 128.1028408, 5},
-        {3, 83, 35.1550073, 128.1028952, 5},
-        {3, 84, 35.1549995, 128.1029496, 5}
+    vector<vector<float>> excelData = {
+        {1, 1, 35.1535098f, 128.1002861f, 5},
+        {1, 2, 35.1535017f, 128.1003405f, 5},
+        {1, 3, 35.153494f, 128.1003952f, 5},
+        {1, 4, 35.1534847f, 128.1004491f, 5},
+        {1, 5, 35.153477f, 128.1005038f, 5},
+        {1, 6, 35.1534693f, 128.1005578f, 5},
+        {1, 7, 35.1534608f, 128.1006118f, 5},
+        {2, 38, 35.1532566f, 128.1022536f, 5},
+        {2, 39, 35.153301f, 128.102264f, 5},
+        {2, 40, 35.1533454f, 128.1022747f, 5},
+        {3, 79, 35.1550369f, 128.1026779f, 5},
+        {3, 80, 35.1550296f, 128.102732f, 5},
+        {3, 81, 35.1550217f, 128.1027867f, 5},
+        {3, 82, 35.1550144f, 128.1028408f, 5},
+        {3, 83, 35.1550073f, 128.1028952f, 5},
+        {3, 84, 35.1549995f, 128.1029496f, 5}
         // ... Remaining data
     };
 
@@ -37,9 +37,9 @@ unordered_map<int, Vertex> creatingMap() {
     for (const auto& row : excelData) {
         int roadId = row[0];
         int waypointId = row[1];
-        int lat = row[2];
-        int lon = row[3];
-        int alt = row[4];
+        float lat = row[2];
+        float lon = row[3];
+        //int alt = row[4];
 
         // Add a new vertex if the road ID doesn't exist in the graph
         if (graph.find(roadId) == graph.end()) {
@@ -50,6 +50,8 @@ unordered_map<int, Vertex> creatingMap() {
 
         // Add waypoint ID to the corresponding road's vertex
         graph[roadId].waypoints.push_back(waypointId);
+        graph[roadId].latitude.push_back(lat);
+        graph[roadId].longitude.push_back(lon);
     }
 
     // Connect roads
