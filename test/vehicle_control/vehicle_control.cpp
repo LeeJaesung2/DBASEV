@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 
-#include <DBASEV/CreatingMap.h>
+#include "CreatingMap.h"
 
 using namespace std;
 
@@ -11,11 +11,11 @@ double getVelocity() {
     return 12.0;
 }
 
-vector<int> getWaypoints() { // ï¿½Ê±ï¿½ road_idï¿½ï¿½ 1ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½
+vector<int> getWaypoints() { // ÃÊ±â road_id´Â 1¹øÀ¸·Î ¼¼ÆÃÇÏ±â
     vector<int> waypoints;
 
-    //mapï¿½ï¿½ï¿½ï¿½ waypoint ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½
-    //ï¿½ì¼± 20ï¿½ï¿½ï¿½ï¿½ waypoint ï¿½Ö´Ù°ï¿½ ï¿½ï¿½ï¿½ï¿½
+    //map¿¡¼­ waypoint ºÒ·¯¿À±â
+    //¿ì¼± 20°³ÀÇ waypoint ÀÖ´Ù°í °¡Á¤
     for (int i = 1; i <= 20; i++) {
         waypoints.push_back(i);
     }
@@ -29,17 +29,17 @@ int main() {
     double vehicle_velocity = 0.0, remain_distance = 0.0;
     int total_passed_waypoint = 0, passed_num_waypoint = 0, sum_remain_distance = 0;
 
-    vector<int> waypoints = getWaypoints(); // waypoint ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½
+    vector<int> waypoints = getWaypoints(); // waypoint °¡Á®¿À´Â ÇÔ¼ö ±¸Çö ÇÊ¿ä
 
     int remain_waypoints = waypoints.size();
 
     while (remain_waypoints > 0) {
-        vehicle_velocity = getVelocity();// ï¿½ï¿½ï¿½ï¿½ : m/s => ï¿½Óµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½
+        vehicle_velocity = getVelocity();// ´ÜÀ§ : m/s => ¼Óµµ °¡Á®¿À´Â ÇÔ¼ö ±¸Çö ÇÊ¿ä
 
-        passed_num_waypoint = static_cast<int>(vehicle_velocity / WAYPOINT_DISTANCE);  // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        passed_num_waypoint = static_cast<int>(vehicle_velocity / WAYPOINT_DISTANCE);  // ¿þÀÌÆ÷ÀÎÆ®¸¦ Áö³ª°£ °³¼ö
 
-        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½È®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-        remain_distance = vehicle_velocity - (passed_num_waypoint * WAYPOINT_DISTANCE);  // ï¿½ï¿½ï¿½ï¿½ ï¿½Å¸ï¿½
+        // ¿þÀÌÆ÷ÀÎÆ®°¡ Á¤È®È÷ ³ª´©¾î ¶³¾îÁöÁö ¾ÊÀ¸¸é
+        remain_distance = vehicle_velocity - (passed_num_waypoint * WAYPOINT_DISTANCE);  // ³²Àº °Å¸®
         if (remain_distance > 0) {
             sum_remain_distance += remain_distance;
             cout << "sum_remain_distance: " << sum_remain_distance << "\n";
@@ -53,15 +53,15 @@ int main() {
         if (total_passed_waypoint > waypoints.size()) {
             total_passed_waypoint = waypoints.size();
         }
-        cout << "ï¿½ï¿½ï¿½ï¿½ " << total_passed_waypoint << "ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.\n";
+        cout << "ÇöÀç " << total_passed_waypoint << "°³ÀÇ ¿þÀÌÆ÷ÀÎÆ®¸¦ Áö³µ½À´Ï´Ù.\n";
  
 
         remain_waypoints -= passed_num_waypoint;
         cout << "remain_waypoints: " << remain_waypoints << "\n\n";
 
         if (remain_waypoints > 4) {
-            // GPS ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ifï¿½ï¿½ 
-            // GPS_main.cppï¿½ï¿½ road_id Ã£ï¿½Æ¾ï¿½ï¿½ï¿½
+            // GPS ¾²·¹µå ±ú¿ì±â¿ë if¹® 
+            // GPS_main.cpp·Î road_id Ã£¾Æ¾ßÇÔ
         }
 
         vehicle_velocity += 4;
