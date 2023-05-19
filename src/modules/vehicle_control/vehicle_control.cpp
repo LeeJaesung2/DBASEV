@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 
+#include "CreatingMap.h"
+
 using namespace std;
 
 #define WAYPOINT_DISTANCE 5 // unit: Meter
@@ -21,6 +23,9 @@ vector<int> getWaypoints() { // 초기 road_id는 1번으로 세팅하기
 }
 
 int main() {
+
+    creatingMap();
+
     double vehicle_velocity = 0.0, remain_distance = 0.0;
     int total_passed_waypoint = 0, passed_num_waypoint = 0, sum_remain_distance = 0;
 
