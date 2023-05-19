@@ -8,7 +8,9 @@
 #define LATITUDE 1
 #define LONGITUDE 2
 
-std::string rawGps2degGps(int type, std::string token) {
+using namespace std;
+
+string rawGps2degGps(int type, string token) {
     int degrees;
     double minutes;
 
@@ -22,20 +24,20 @@ std::string rawGps2degGps(int type, std::string token) {
     }
 
     double deg_minutes = minutes / 60;
-    std::string str_minutes = std::to_string(deg_minutes);
+    string str_minutes = to_string(deg_minutes);
     str_minutes.replace(str_minutes.find("."), 1, "");
 
-    std::string what3words = std::to_string(degrees).append(".").append(str_minutes);
+    string what3words = to_string(degrees).append(".").append(str_minutes);
 
     return what3words;
 }
 
-GPSData extract_gps_data(const std::string& gps_str) {
+GPSData extract_gps_data(const string& gps_str) {
     GPSData gps_data;
 
     // 문자열을 ','로 구분하여 문자열 스트림에 삽입
-    std::stringstream ss(gps_str);
-    std::string token;
+    stringstream ss(gps_str);
+    string token;
 
     // GPGGA 태그 제거
     getline(ss, token, ',');
@@ -43,21 +45,21 @@ GPSData extract_gps_data(const std::string& gps_str) {
     // 시간 정보 추출
     getline(ss, token, ',');
     try {
-        gps_data.time = std::stod(token);
+        gps_data.time = stod(token);
     }
-    catch (std::invalid_argument& e) {
-        std::cerr << "Invalid argument: " << e.what() << std::endl;
+    catch (invalid_argument& e) {
+        cerr << "Invalid argument: " << e.what() << endl;
         gps_data.time = 0.0;
     }
 
     // 위도 정보 추출
     getline(ss, token, ',');
     try {
-        std::string latitude = rawGps2degGps(LATITUDE, token);
-        gps_data.latitude = std::stod(latitude);
+        string latitude = rawGps2degGps(LATITUDE, token);
+        gps_data.latitude = stod(latitude);
     }
-    catch (std::invalid_argument& e) {
-        std::cerr << "Invalid argument: " << e.what() << std::endl;
+    catch (invalid_argument& e) {
+        cerr << "Invalid argument: " << e.what() << endl;
         gps_data.latitude = 0.0;
     }
 
@@ -67,11 +69,11 @@ GPSData extract_gps_data(const std::string& gps_str) {
     // 경도 정보 추출
     getline(ss, token, ',');
     try {
-        std::string longitude = rawGps2degGps(LONGITUDE, token);
-        gps_data.longitude = std::stod(longitude);
+        string longitude = rawGps2degGps(LONGITUDE, token);
+        gps_data.longitude = stod(longitude);
     }
-    catch (std::invalid_argument& e) {
-        std::cerr << "Invalid argument: " << e.what() << std::endl;
+    catch (invalid_argument& e) {
+        cerr << "Invalid argument: " << e.what() << endl;
         gps_data.longitude = 0.0;
     }
 
@@ -94,4 +96,26 @@ double calc_distance(double lat1, double lon1, double lat2, double lon2) {
     double c = 2 * atan2(sqrt(a), sqrt(1 - a));
 
     return R * c; // in meters
+}
+
+float getDistance(string gps_data1, string gps_data2){
+    GPSData gps_data1_parsed = extract_gps_data(gps_data1);
+    GPSData gps_data2_parsed = extract_gps_data(gps_data2);
+
+    float distance = calc_distance(gps_data1_parsed.latitude, gps_data1_parsed.longitude, 
+        gps_data2_parsed.latitude, gps_data2_parsed.longitude);
+
+    return distance;
+}
+
+float getSpeed(float distance, string gps_data1, string gps_data2){
+    GPSData gps_data1_parsed = extract_gps_data(gps_data1);
+    GPSData gps_data2_parsed = extract_gps_data(gps_data2);
+
+    float speed = 0.0;
+
+    float time_interval = gps_data2_parsed.time - gps_data1_parsed.time;
+    speed = distance / time_interval;
+
+    return speed;
 }
