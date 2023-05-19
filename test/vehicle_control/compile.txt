@@ -1,6 +1,8 @@
-g++  -c -Wall GPS_functions.cpp
-g++  -c -Wall vehicle_control.cpp
-g++ vehicle_control.o GPS_functions.o -o main
+g++ -c -Wall GPS_functions.cpp
+g++ -c -Wall vehicle_control.cpp
+g++ -c -Wall CreatingMap.cpp
+g++ -c -Wall MyIMU.cpp
+g++ vehicle_control.o GPS_functions.o CreatingMap.o MyIMU.o -o main
 
 
 라즈베리파이
