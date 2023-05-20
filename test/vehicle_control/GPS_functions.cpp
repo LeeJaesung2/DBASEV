@@ -12,7 +12,7 @@ using namespace std;
 
 string rawGps2degGps(int type, string token) {
     int degrees;
-    double minutes;
+    float minutes;
 
     if (type == LATITUDE) { // latitude 
         degrees = stoi(token.substr(0, 2));
@@ -23,7 +23,7 @@ string rawGps2degGps(int type, string token) {
         minutes = stod(token.substr(3));
     }
 
-    double deg_minutes = minutes / 60;
+    float deg_minutes = minutes / 60;
     string str_minutes = to_string(deg_minutes);
     str_minutes.replace(str_minutes.find("."), 1, "");
 
@@ -95,7 +95,9 @@ double calc_distance(double lat1, double lon1, double lat2, double lon2) {
         sin(delta_lambda / 2) * sin(delta_lambda / 2);
     double c = 2 * atan2(sqrt(a), sqrt(1 - a));
 
-    return R * c; // in meters
+    double distance = R * c; // in meters
+    
+    return distance;
 }
 
 float getDistance(string gps_data1, string gps_data2){
