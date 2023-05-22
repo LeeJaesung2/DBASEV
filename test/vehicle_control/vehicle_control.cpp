@@ -69,12 +69,12 @@ int main()
         
         if (remain_waypoints < 2) {
             int pre_road_id = road_id;
+            road_id = findNextRoadId(road_id, current_latitude, current_longitude, graph);
 
-            while(pre_road_id == road_id){
-                road_id = findNextRoadId(road_id, current_latitude, current_longitude, graph);
+            if(pre_road_id != road_id){
+                pre_waypoint = 0;
             }
-            pre_waypoint = 0;
-            
+
             printf("now road: %d\n", road_id);
         }
 
