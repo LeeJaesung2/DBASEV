@@ -1,6 +1,6 @@
 #include <DBASEV/drone_control.h>
 #include <DBASEV/embedd.h>
-void * thread_func1(void *arg)
+void * flight_control(void *arg)
 {   
 
     const char* src = "main";
