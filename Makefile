@@ -31,6 +31,7 @@ $(shell mkdir -p $(OBJ_DIR)/modules/embedd)
 $(shell mkdir -p $(OBJ_DIR)/modules/drone_control)
 $(shell mkdir -p $(OBJ_DIR)/modules/messagequeue)
 $(shell mkdir -p $(OBJ_DIR)/modules/vehicle_control)
+$(shell mkdir -p $(OBJ_DIR)/modules/announce)
 
 # List all objcet files to be compiled
 SRC=$(wildcard $(SRC_DIR)/**/**/*.cpp)
