@@ -2,19 +2,13 @@
 #include <DBASEV/collision_avoidance.h>
 #include <DBASEV/communication.h>
 #include <DBASEV/drone_control.h>
+#include <DBASEV/announce.h>
 
 
 
 #define NUM_THREADS 2
 
-//control led and piezo buzzer
-void ledAndpiezoControl(){
-    int i = 0;
-    while(i<1000){
-        i++;
-        printf("B");
-    }
-}
+
 
 int main()
 {
@@ -44,7 +38,7 @@ int main()
     // }
 
     // run on main thread
-    ledAndpiezoControl();    
+    announceOn();    
 
     // wait for all of thread dead
     for (int i = 0; i < NUM_THREADS; i++) {
@@ -53,6 +47,7 @@ int main()
 
     //after dead all of thread
     printf("all of threads are dead");
+    announceOff();
 
     return 0;
 }

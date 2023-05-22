@@ -1,6 +1,6 @@
 #include <limits.h>
 
-#include <DBASEV/GPS_functions.h>
+#include <DBASEV/gps.h>
 #include <DBASEV/Map.h>
 
 using namespace std;

@@ -6,7 +6,7 @@
 #include <unordered_map>
 #include <limits>
 
-#include "GPS_functions.h"
+#include "gps.h"
 
 using namespace std;
 
