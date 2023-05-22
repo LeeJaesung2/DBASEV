@@ -93,16 +93,25 @@ unordered_map<int, Vertex> creatingMap() {
         int roadId = pair.first;
         const Vertex& vertex = pair.second;
         cout << "Road ID: " << roadId << endl;
+        #ifndef DEBUG
+            cout << "Map.cpp" << endl;
+        #endif
         cout << "Waypoints: ";
         for (int waypointId : vertex.waypoints) {
             cout << waypointId << " ";
         }
         cout << endl;
+        #ifndef DEBUG
+            cout << "Map.cpp" << endl;
+        #endif
         cout << "Connected Roads: ";
         for (int connectedRoad : vertex.connectedRoads) {
             cout << connectedRoad << " ";
         }
         cout << endl << endl;
+        #ifndef DEBUG
+            cout << "Map.cpp" << endl;
+        #endif
     }
 
     return graph;
@@ -131,6 +140,9 @@ int calculateClosestWaypoint(int road_id, int pre_waypoint, float current_latitu
         float distance = calc_distance(current_latitude, current_longitude, waypoint_latitude[i], waypoint_longitude[i]);
 
         cout << "waypoint " << i+1 << " distance: " << distance << endl;
+        #ifndef DEBUG
+            cout << "Map.cpp" << endl;
+        #endif
 
         if (distance < min_distance) {
             min_distance = distance;
@@ -160,6 +172,9 @@ int findNextRoadId(int road_id, float current_latitude, float current_longitude,
             int first_waypoint_id = connected_waypoints[0];
 
             cout << " first_waypoint_id: " << first_waypoint_id << " of road: " << connected_road;
+            #ifndef DEBUG
+                cout << "Map.cpp" << endl;
+            #endif
 
             float waypoint_latitude = graph.at(connected_road).latitude[0];
             float waypoint_longitude = graph.at(connected_road).longitude[0];
@@ -173,6 +188,9 @@ int findNextRoadId(int road_id, float current_latitude, float current_longitude,
             }
 
             cout << "     distance: " << distance << "\n";
+            #ifndef DEBUG
+                cout << "Map.cpp" << endl;
+            #endif
         }
     }
 

@@ -88,19 +88,29 @@ void * receiver(void *arg)
     
     //Wait for messages
     while (true) {
-        printf("start while\n");
-        
+        #ifndef DEBUG
+            printf("start while\n");
+        #endif
         bool message_received = receiveMessage(fd, msg, status, channel, message);
         
         if (message_received) {
             printf("%s\n",message.c_str());
+            #ifndef DEBUG
+                cout << "communication.cpp" << endl;
+            #endif
 
             strcpy(qmsg.buf, message.c_str());
             push(key_id,buf, qmsg);
         } else {
             message = "ERR";
             printf("%s\n",message.c_str());
+            #ifndef DEBUG
+                cout << "communication.cpp" << endl;
+            #endif
             printf("timeout occurred\n");
+            #ifndef DEBUG
+                cout << "communication.cpp" << endl;
+            #endif
         }
     }
     return 0;

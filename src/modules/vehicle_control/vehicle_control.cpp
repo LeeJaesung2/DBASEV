@@ -23,6 +23,9 @@ void vehicle_control()
     string pre_gps = "$GPGGA,114455.532,3592.1011,N,12860.2372,E,1,03,50.0,0.0,M,19.6,M,0.0,0000*4F";
     string current_gps = "$GPGGA,114456.532,3591.9281,N,12861.3479,E,1,03,50.0,0.0,M,19.6,M,0.0,0000*4F";
     cout << "speed: " << getSpeed(getDistance(pre_gps, current_gps), pre_gps, current_gps) << " m/s \n\n";
+    #ifndef DEBUG
+        cout << "vehicle_control.cpp" << endl;
+    #endif
 
     float current_latitude, current_longitude;
     current_latitude = extract_gps_data(current_gps).latitude;
