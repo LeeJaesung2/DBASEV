@@ -1,3 +1,3 @@
 #include "visibility.h"
 
-void *thread_func1(void *arg);
+void *flight_control(void *arg);
