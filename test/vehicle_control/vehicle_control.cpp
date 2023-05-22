@@ -13,7 +13,6 @@ using namespace std;
 
 #define WAYPOINT_DISTANCE 5 // unit: Meter
 
-
 int main()
 {
     //==================init====================
@@ -27,18 +26,19 @@ int main()
     
     // ============temp================
     queue<string> gps;
-
-    gps.push("$GPGGA,114452.532,3592.1011,N,12860.2372,E,1,03,50.0,0.0,M,19.6,M,0.0,0000*4F");
+    //3592.0011 / 3591.9529
+    gps.push("$GPGGA,114452.532,3592.0611,N,12860.2372,E,1,03,50.0,0.0,M,19.6,M,0.0,0000*4F");
     gps.push("$GPGGA,114453.542,3592.0511,N,12860.4058,E,1,03,50.0,0.0,M,19.6,M,0.0,0000*4F");
     gps.push("$GPGGA,114454.568,3592.0413,N,12860.6813,E,1,03,50.0,0.0,M,19.6,M,0.0,0000*4F");
-    gps.push("$GPGGA,114455.512,3592.0011,N,12861.0185,E,1,03,50.0,0.0,M,19.6,M,0.0,0000*4F");
+    gps.push("$GPGGA,114455.512,,N,12861.0185,E,1,03,50.0,0.0,M,19.6,M,0.0,0000*4F");
     gps.push("$GPGGA,114456.532,3591.9281,N,12861.3479,E,1,03,50.0,0.0,M,19.6,M,0.0,0000*4F");
-    gps.push("$GPGGA,114457.666,3591.9529,N,12861.3521,E,1,03,50.0,0.0,M,19.6,M,0.0,0000*4F");
+    gps.push("$GPGGA,114457.666,,N,12861.3521,E,1,03,50.0,0.0,M,19.6,M,0.0,0000*4F");
     gps.push("$GPGGA,114458.666,3592.0608,N,12861.3729,E,1,03,50.0,0.0,M,19.6,M,0.0,0000*4F");
     gps.push("$GPGGA,114459.158,3592.2285,N,12861.4110,E,1,03,50.0,0.0,M,19.6,M,0.0,0000*4F");
 
     // ============================
     string pre_gps="";
+    float pre_speed = 0.0, current_speed;
     float current_latitude, current_longitude;
     int pre_waypoint = 0, now_waypoint;
 
@@ -49,11 +49,21 @@ int main()
             continue;
         }
         
-
         string current_gps = gps.front();
         gps.pop();
-        if (pre_gps!=""){
-            cout << "speed: " << getSpeed(getDistance(pre_gps, current_gps), pre_gps, current_gps) << " m/s \n\n";
+
+        if (!isValidGPSData(current_gps)) {
+            pre_gps = "";
+            continue;
+        }
+
+        if (pre_gps == ""){
+            cout << "speed: " << pre_speed << " m/s \n";
+        } 
+        else{
+            current_speed = getSpeed(getDistance(pre_gps, current_gps), pre_gps, current_gps);
+            cout << "speed: " << current_speed << " m/s \n";
+            pre_speed = current_speed;
         }
 
         // ==================================
