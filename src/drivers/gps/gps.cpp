@@ -108,8 +108,8 @@ float getDistance(string gps_data1, string gps_data2){
 }
 
 float getSpeed(float distance, string gps_data1, string gps_data2){
-    /*GPSData gps_data1_parsed = extract_gps_data(gps_data1);
-    GPSData gps_data2_parsed = extract_gps_data(gps_data2);*/
+    GPSData gps_data1_parsed = extract_gps_data(gps_data1);
+    GPSData gps_data2_parsed = extract_gps_data(gps_data2);
     float speed = 0.0;
 
     float time_interval = gps_data2_parsed.time - gps_data1_parsed.time;

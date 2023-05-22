@@ -29,6 +29,9 @@ int callPython(const char *src,const char *func, int arg, ...){
                     Py_DECREF(pArgs);
                     Py_DECREF(pModule);
                     fprintf(stderr, "Cannot convert argument\n");
+                    #ifndef DEBUG
+                        cout << "embedd.cpp" << endl;
+                    #endif
                     return 1;
                 }
                 /* pValue reference stolen here: */
@@ -39,6 +42,9 @@ int callPython(const char *src,const char *func, int arg, ...){
             /*value checking*/
             if (pValue != NULL) {
                 printf("Result of call: %ld\n", PyInt_AsLong(pValue));
+                #ifndef DEBUG
+                    cout << "embedd.cpp" << endl;
+                #endif
                 Py_DECREF(pValue);
             }
             /*No return value*/
@@ -55,6 +61,9 @@ int callPython(const char *src,const char *func, int arg, ...){
             if (PyErr_Occurred())
                 PyErr_Print();
             fprintf(stderr, "Cannot find function \"%s\"\n", func);
+            #ifndef DEBUG
+                cout << "embedd.cpp" << endl;
+            #endif
         }
         Py_XDECREF(pFunc);
         Py_DECREF(pModule);
@@ -62,6 +71,9 @@ int callPython(const char *src,const char *func, int arg, ...){
     else {
         PyErr_Print();
         fprintf(stderr, "Failed to load \"%s\"\n", src);
+        #ifndef DEBUG
+            cout << "embedd.cpp" << endl;
+        #endif
         return 1;
     }
     Py_Finalize();
