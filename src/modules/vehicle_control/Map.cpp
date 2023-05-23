@@ -69,7 +69,6 @@ unordered_map<int, Vertex> creatingMap() {
         int waypointId = row[1];
         float lat = row[2];
         float lon = row[3];
-        //int alt = row[4];
 
         // Add a new vertex if the road ID doesn't exist in the graph
         if (graph.find(roadId) == graph.end()) {
@@ -136,21 +135,21 @@ int calculateClosestWaypoint(int road_id, int pre_waypoint, float current_latitu
     const vector<float>& waypoint_longitude = graph.at(road_id).longitude;
 
     float min_distance = numeric_limits<float>::max();
+
     for (int i = pre_waypoint; i < static_cast<int>(waypoints.size()); i++) {
         float distance = calc_distance(current_latitude, current_longitude, waypoint_latitude[i], waypoint_longitude[i]);
 
-        cout << "waypoint " << i+1 << " distance: " << distance << endl;
-        #ifndef DEBUG
-            cout << "Map.cpp" << endl;
-        #endif
+        cout << "waypoint " << waypoints[i] << " distance: " << distance << endl;
 
-        if (distance < min_distance) {
-            min_distance = distance;
-            now_waypoint = i;
+        if (distance > min_distance) {
+            break;
         }
+
+        min_distance = distance;
+        now_waypoint = i;
     }
 
-    return now_waypoint + 1;
+    return now_waypoint;
 }
 
 int findNextRoadId(int road_id, float current_latitude, float current_longitude, const unordered_map<int, Vertex> &graph)
@@ -172,9 +171,6 @@ int findNextRoadId(int road_id, float current_latitude, float current_longitude,
             int first_waypoint_id = connected_waypoints[0];
 
             cout << " first_waypoint_id: " << first_waypoint_id << " of road: " << connected_road;
-            #ifndef DEBUG
-                cout << "Map.cpp" << endl;
-            #endif
 
             float waypoint_latitude = graph.at(connected_road).latitude[0];
             float waypoint_longitude = graph.at(connected_road).longitude[0];
@@ -188,9 +184,6 @@ int findNextRoadId(int road_id, float current_latitude, float current_longitude,
             }
 
             cout << "     distance: " << distance << "\n";
-            #ifndef DEBUG
-                cout << "Map.cpp" << endl;
-            #endif
         }
     }
 
