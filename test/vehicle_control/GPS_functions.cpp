@@ -60,7 +60,9 @@ GPSData extract_gps_data(const string& gps_str) {
         gps_data.time = stod(token);
     }
     catch (invalid_argument& e) {
-        cerr << "Invalid argument: " << e.what() << endl;
+        #ifndef DEBUG
+            cerr << "Invalid argument: " << e.what() << endl;
+        #endif
         gps_data.time = 0.0;
     }
 
@@ -71,7 +73,9 @@ GPSData extract_gps_data(const string& gps_str) {
         gps_data.latitude = stod(latitude);
     }
     catch (invalid_argument& e) {
-        cerr << "Invalid argument: " << e.what() << endl;
+        #ifndef DEBUG
+            cerr << "Invalid argument: " << e.what() << endl;
+        #endif
         gps_data.latitude = 0.0;
     }
 
@@ -85,7 +89,9 @@ GPSData extract_gps_data(const string& gps_str) {
         gps_data.longitude = stod(longitude);
     }
     catch (invalid_argument& e) {
-        cerr << "Invalid argument: " << e.what() << endl;
+        #ifndef DEBUG
+            cerr << "Invalid argument: " << e.what() << endl;
+        #endif
         gps_data.longitude = 0.0;
     }
 
