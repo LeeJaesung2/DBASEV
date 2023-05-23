@@ -9,17 +9,13 @@
 #define SIDE_LED_COUNT 25
 #define BUZZER_RELAY_PIN 3
 
-ws2811_t ledStrip;
-
-uint32_t red = 0x00FF0000;
-uint32_t blue = 0x000000FF;
 
 enum{
     mode1,
     mode2
 };
-#endif
 
 //control led and piezo buzzer
 void announceOn();
 void announceOff();
+#endif
