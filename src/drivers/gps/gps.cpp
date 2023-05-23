@@ -3,6 +3,44 @@
 #define LATITUDE 1
 #define LONGITUDE 2
 
+#include <wiringSerial.h> // g++ -o file file.cpp -lwiringPi
+
+void getGPS(){
+    int fd = serialOpen("/dev/serial0", 9600);
+
+    while (1) {
+        if (serialDataAvail(fd)) {
+            char temp = (char)serialGetchar(fd);
+
+            if (temp == '$') {
+                std::string sentence;
+                sentence += temp;
+
+                while (temp != '\n') {
+                    temp = (char)serialGetchar(fd);
+                    sentence += temp;
+                }
+
+                if (sentence.find("GPGGA") != std::string::npos) {
+                    std::cout << sentence;
+                }
+            }
+        }
+    }
+}
+
+bool isValidGPSData(const string& gpsData) {
+    // GPS 데이터 파싱
+    GPSData gpsDataParsed = extract_gps_data(gpsData);
+
+    // 위도 또는 경도가 0.0인 경우 유효하지 않은 GPS 데이터로 판단
+    if (gpsDataParsed.latitude == 0.0 || gpsDataParsed.longitude == 0.0) {
+        return false;
+    }
+
+    return true;
+}
+
 std::string rawGps2degGps(int type, std::string token) {
     int degrees;
     double minutes;

@@ -10,6 +10,18 @@
 
 using namespace std;
 
+bool isValidGPSData(const string& gpsData) {
+    // GPS 데이터 파싱
+    GPSData gpsDataParsed = extract_gps_data(gpsData);
+
+    // 위도 또는 경도가 0.0인 경우 유효하지 않은 GPS 데이터로 판단
+    if (gpsDataParsed.latitude == 0.0 || gpsDataParsed.longitude == 0.0) {
+        return false;
+    }
+
+    return true;
+}
+
 string rawGps2degGps(int type, string token) {
     int degrees;
     float minutes;
@@ -48,7 +60,9 @@ GPSData extract_gps_data(const string& gps_str) {
         gps_data.time = stod(token);
     }
     catch (invalid_argument& e) {
-        cerr << "Invalid argument: " << e.what() << endl;
+        #ifndef DEBUG
+            cerr << "Invalid argument: " << e.what() << endl;
+        #endif
         gps_data.time = 0.0;
     }
 
@@ -59,7 +73,9 @@ GPSData extract_gps_data(const string& gps_str) {
         gps_data.latitude = stod(latitude);
     }
     catch (invalid_argument& e) {
-        cerr << "Invalid argument: " << e.what() << endl;
+        #ifndef DEBUG
+            cerr << "Invalid argument: " << e.what() << endl;
+        #endif
         gps_data.latitude = 0.0;
     }
 
@@ -73,7 +89,9 @@ GPSData extract_gps_data(const string& gps_str) {
         gps_data.longitude = stod(longitude);
     }
     catch (invalid_argument& e) {
-        cerr << "Invalid argument: " << e.what() << endl;
+        #ifndef DEBUG
+            cerr << "Invalid argument: " << e.what() << endl;
+        #endif
         gps_data.longitude = 0.0;
     }
 
