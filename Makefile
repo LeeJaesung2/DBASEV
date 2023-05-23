@@ -10,8 +10,8 @@
 
 CC=g++
 CFLAGS=-c -Wall
-LDFLAGS=-lpthread -std=c++14 
-GPFLAGS = -lwiringPi -lws2811
+LDFLAGS=-lpthread -std=c++14
+GPFLAGS = -lws2811 -lwiringPi
 PYFLAGS = -I/usr/include/python2.7 -lpython2.7
 SRC_DIR=./src
 OBJ_DIR=./build
@@ -52,7 +52,7 @@ all : $(DRONE_EXECUTABLE) $(VEHICLE_EXECUTABLE)
 
 #make drone.exe
 $(DRONE_EXECUTABLE): $(OBJ) $(DRONE_MAIN)
-		$(CC) $^ -o $(DRONE_EXECUTABLE) $(LDFLAGS) $(PYFLAGS)
+		$(CC) $^ -o $(DRONE_EXECUTABLE) $(LDFLAGS) $(PYFLAGS) $(GPFLAGS)
 
 #make vehicle.exe
 $(VEHICLE_EXECUTABLE): $(OBJ) $(VEHICLE_MAIN)

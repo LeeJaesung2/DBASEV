@@ -1,5 +1,10 @@
 #include <DBASEV/announce.h>
 
+ws2811_t ledStrip;
+
+uint32_t red = 0x00FF0000;
+uint32_t blue = 0x000000FF;
+
 int initLed(){
     printf("LED init\n");
     #ifndef DEBUG
