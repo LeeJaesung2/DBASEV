@@ -34,10 +34,13 @@ Temporary Items
 # iCloud generated files
 *.icloud
 
-#github personal key
+# github personal key
 token.txt
 
-#object file and executable file
+# library files
+lib
+
+# object file and executable file
 *.pyc
 *.o
 *.exe

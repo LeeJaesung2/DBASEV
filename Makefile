@@ -10,7 +10,8 @@
 
 CC=g++
 CFLAGS=-c -Wall
-LDFLAGS=-lpthread -ltbb -std=c++14
+LDFLAGS=-lpthread -std=c++14 
+GPFLAGS = -lwiringPi -lws2811
 PYFLAGS = -I/usr/include/python2.7 -lpython2.7
 SRC_DIR=./src
 OBJ_DIR=./build
@@ -67,7 +68,7 @@ $(VEHICLE_MAIN) : $(VEHICLE_DIR)/vehicle_main_process.cpp
 
 #make all of object file from modules and drivers
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
-	$(CC) $(CFLAGS) $(PYFLAGS) $< -o $@ 
+	$(CC) $(CFLAGS) $(PYFLAGS) $(GPFLAGS) $< -o $@ 
 
 
 # Clean all object files and executable
@@ -82,7 +83,7 @@ install:
 
 #program start command
 exedrone:
-	./$(DRONE_EXECUTABLE)
+	sudo $(DRONE_EXECUTABLE)
 
 exevehicle:
-	./$(VEHICLE_EXECUTABLE)
+	$(VEHICLE_EXECUTABLE)
