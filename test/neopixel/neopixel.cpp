@@ -50,7 +50,6 @@ static char VERSION[] = "XX.YY.ZZ";
 #include <ws2811/dma.h>
 #include <ws2811/pwm.h>
 #include <ws2811/version.h>
-
 #include <ws2811/ws2811.h>
 
 
@@ -64,8 +63,8 @@ static char VERSION[] = "XX.YY.ZZ";
 #define STRIP_TYPE              WS2811_STRIP_GBR		// WS2812/SK6812RGB integrated chip+leds
 //#define STRIP_TYPE            SK6812_STRIP_RGBW		// SK6812RGBW (NOT SK6812RGB)
 
-#define WIDTH                   8
-#define HEIGHT                  8
+#define WIDTH                   1
+#define HEIGHT                  9
 #define LED_COUNT               (WIDTH * HEIGHT)
 
 int width = WIDTH;
@@ -195,16 +194,6 @@ static void ctrl_c_handler(int signum)
     running = 0;
 }
 
-// static void setup_handlers(void)
-// {
-//     struct sigaction sa =
-//     {
-//         sa_handler = ctrl_c_handler,
-//     };
-
-//     sigaction(SIGINT, &sa, NULL);
-//     sigaction(SIGTERM, &sa, NULL);
-// }
 
 
 void parseargs(int argc, char **argv, ws2811_t *ws2811)
@@ -372,6 +361,19 @@ void parseargs(int argc, char **argv, ws2811_t *ws2811)
 	}
 }
 
+void matrix_red(void)
+{
+    int x, y;
+
+    for (y = 0; y < height; y++)
+    {
+        for (x = 0; x < width; x++)
+        {
+            matrix[y * width + x] = 0x00200000;  // Red color
+        }
+    }
+}
+
 
 int main(int argc, char *argv[])
 {
@@ -383,8 +385,6 @@ int main(int argc, char *argv[])
 
     matrix = (ws2811_led_t*)malloc(sizeof(ws2811_led_t) * width * height);
 
-    //setup_handlers();
-
     if ((ret = ws2811_init(&ledstring)) != WS2811_SUCCESS)
     {
         fprintf(stderr, "ws2811_init failed: %s\n", ws2811_get_return_t_str(ret));
@@ -393,8 +393,7 @@ int main(int argc, char *argv[])
 
     while (running)
     {
-        matrix_raise();
-        matrix_bottom();
+        matrix_red();
         matrix_render();
 
         if ((ret = ws2811_render(&ledstring)) != WS2811_SUCCESS)
@@ -407,14 +406,16 @@ int main(int argc, char *argv[])
         usleep(1000000 / 15);
     }
 
-    if (clear_on_exit) {
-	matrix_clear();
-	matrix_render();
-	ws2811_render(&ledstring);
+    if (clear_on_exit)
+    {
+        matrix_clear();
+        matrix_render();
+        ws2811_render(&ledstring);
     }
 
     ws2811_fini(&ledstring);
 
-    printf ("\n");
+    printf("\n");
     return ret;
 }
+
