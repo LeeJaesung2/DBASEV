@@ -18,9 +18,9 @@ void* vehicle_control(void* arg)
     while (1) {  
         cout << "arg : " << arg << endl;
 
-        string gps = static_cast<char*>(arg); 
+        char* gps = static_cast<char*>(arg); 
 
-        //cout << "gps : " << arg << endl;
+        cout << "gps : " << gps << endl;
 
         if (!isValidGPSData(gps)) {
             pre_gps = "";
