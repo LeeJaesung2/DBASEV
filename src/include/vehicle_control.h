@@ -1,5 +1,3 @@
-#include <limits.h>
-
 #include <DBASEV/visibility.h>
 #include <DBASEV/Map.h>
 
