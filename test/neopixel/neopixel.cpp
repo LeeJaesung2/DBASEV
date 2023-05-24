@@ -26,13 +26,15 @@ static char VERSION[] = "XX.YY.ZZ";
 // defaults for cmdline options
 #define TARGET_FREQ             WS2811_TARGET_FREQ
 #define GPIO_PIN_18             18
-#define GPIO_PIN_23             12
+#define GPIO_PIN_12             12
 #define DMA                     10
 #define STRIP_TYPE              WS2811_STRIP_GBR     // WS2812/SK6812RGB integrated chip+leds
 #define LED_COUNT               9
 
 int led_count = LED_COUNT;
 int clear_on_exit = 0;
+ws2811_led_t red = 0x00000020;
+ws2811_led_t blue = 0x00200000;
 
 ws2811_t ledstring =
 {
@@ -50,7 +52,7 @@ ws2811_t ledstring =
         },
         [1] =
         {
-            .gpionum = GPIO_PIN_23,
+            .gpionum = GPIO_PIN_12,
             .invert = 0,
             .count = LED_COUNT,
             .strip_type = STRIP_TYPE,
@@ -64,14 +66,23 @@ ws2811_led_t *matrix2;
 
 static uint8_t running = 1;
 
-void matrix_render(void) {
+void matrix_render_red(void) {
     int x;
 
     for (x = 0; x < LED_COUNT; x++) {
         
-        ledstring.channel[0].leds[x] = matrix1[x]; // Pin 18
-        ledstring.channel[1].leds[x] = matrix2[x]; // Pin 15 
+        ledstring.channel[0].leds[x] = red; // Pin 18
+        ledstring.channel[1].leds[x] = blue; // Pin 15 
+    }
+}
+
+void matrix_render_blue(void) {
+    int x;
+
+    for (x = 0; x < LED_COUNT; x++) {
         
+        ledstring.channel[0].leds[x] = blue; // Pin 18
+        ledstring.channel[1].leds[x] = red; // Pin 15 
     }
 }
 
@@ -79,24 +90,26 @@ void matrix_clear(void) {
     int x;
 
     for (x = 0; x < LED_COUNT; x++) {
-        matrix1[x] = 0;
+        
+        ledstring.channel[0].leds[x] = 0; // Pin 18
+        ledstring.channel[1].leds[x] = 0; // Pin 15 
     }
 }
 
 
-void matrix_mode1(void){
-    for(int x=0; x<led_count; x++){
-        matrix1[x] = 0x00000020; //Red color
-        matrix2[x] = 0x00200000; //Blue color 
-    }
-}
+// void matrix_mode1(void){
+//     for(int x=0; x<led_count; x++){
+//         matrix1[x] = 0x00000020; //Red color
+//         matrix2[x] = 0x00200000; //Blue color 
+//     }
+// }
 
-void matrix_mode2(void){
-    for(int x=0; x<led_count; x++){
-        matrix1[x] = 0x00200000; //Blue color
-        matrix2[x] = 0x00000020; //Red color
-    }
-}
+// void matrix_mode2(void){
+//     for(int x=0; x<led_count; x++){
+//         matrix1[x] = 0x00200000; //Blue color
+//         matrix2[x] = 0x00000020; //Red color
+//     }
+// }
 
 
 int main(int argc, char *argv[]) {
@@ -104,8 +117,8 @@ int main(int argc, char *argv[]) {
 
     sprintf(VERSION, "%d.%d.%d", VERSION_MAJOR, VERSION_MINOR, VERSION_MICRO);
 
-    matrix1 = (ws2811_led_t*)malloc(sizeof(ws2811_led_t) * LED_COUNT);
-    matrix2 = (ws2811_led_t*)malloc(sizeof(ws2811_led_t) * LED_COUNT);
+    //matrix1 = (ws2811_led_t*)malloc(sizeof(ws2811_led_t) * LED_COUNT);
+    //matrix2 = (ws2811_led_t*)malloc(sizeof(ws2811_led_t) * LED_COUNT);
 
     if ((ret = ws2811_init(&ledstring)) != WS2811_SUCCESS) {
         fprintf(stderr, "ws2811_init failed: %s\n", ws2811_get_return_t_str(ret));
@@ -114,8 +127,8 @@ int main(int argc, char *argv[]) {
 
     while (running) {
 
-        matrix_mode1();
-        matrix_render();
+        //matrix_mode1();
+        matrix_render_red();
 
         if ((ret = ws2811_render(&ledstring)) != WS2811_SUCCESS) {
             fprintf(stderr, "ws2811_render failed: %s\n", ws2811_get_return_t_str(ret));
@@ -124,8 +137,8 @@ int main(int argc, char *argv[]) {
 
         usleep(1000000);
 
-        matrix_mode2();
-        matrix_render();
+        //matrix_mode2();
+        matrix_render_blue();
 
         if ((ret = ws2811_render(&ledstring)) != WS2811_SUCCESS) {
             fprintf(stderr, "ws2811_render failed: %s\n", ws2811_get_return_t_str(ret));
@@ -137,7 +150,6 @@ int main(int argc, char *argv[]) {
 
     if (clear_on_exit) {
         matrix_clear();
-        matrix_render();
         ws2811_render(&ledstring);
     }
 
