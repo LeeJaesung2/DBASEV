@@ -139,7 +139,7 @@ int calculateClosestWaypoint(int road_id, int pre_waypoint, float current_latitu
     for (int i = pre_waypoint; i < static_cast<int>(waypoints.size()); i++) {
         float distance = calc_distance(current_latitude, current_longitude, waypoint_latitude[i], waypoint_longitude[i]);
 
-        cout << "waypoint " << waypoints[i] << " distance: " << distance << endl;
+        //cout << "waypoint " << waypoints[i] << " distance: " << distance << endl;
 
         if (distance > min_distance) {
             break;
@@ -170,7 +170,7 @@ int findNextRoadId(int road_id, float current_latitude, float current_longitude,
         {
             int first_waypoint_id = connected_waypoints[0];
 
-            cout << " first_waypoint_id: " << first_waypoint_id << " of road: " << connected_road;
+            //cout << " first_waypoint_id: " << first_waypoint_id << " of road: " << connected_road;
 
             float waypoint_latitude = graph.at(connected_road).latitude[0];
             float waypoint_longitude = graph.at(connected_road).longitude[0];
@@ -183,7 +183,7 @@ int findNextRoadId(int road_id, float current_latitude, float current_longitude,
                 nearest_road_id = connected_road;
             }
 
-            cout << "     distance: " << distance << "\n";
+            //cout << "     distance: " << distance << "\n";
         }
     }
 
