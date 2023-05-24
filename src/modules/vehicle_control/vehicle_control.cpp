@@ -1,6 +1,6 @@
 #include <DBASEV/vehicle_control.h>
 
-void* vehicle_control(void* arg)
+void* vehicle_control(void* arg, void* temp)
 {
     //==================init====================
     unordered_map<int, Vertex> graph = creatingMap();
@@ -16,7 +16,7 @@ void* vehicle_control(void* arg)
     int pre_waypoint = 0, now_waypoint;
 
     while (1) {
-        cout << "arg: " << *arg << endl;
+        cout << "arg: " << arg << endl;
         cout << "temp: " << temp << endl;
         string gps = static_cast<char*>(arg); 
 
