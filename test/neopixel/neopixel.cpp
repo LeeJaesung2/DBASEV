@@ -380,16 +380,21 @@ int main(int argc, char *argv[])
     {
         matrix_red();
         matrix_render();
-        usleep(1000000);
-        matrix_blue();
-        matrix_render();
 
         if ((ret = ws2811_render(&ledstring)) != WS2811_SUCCESS)
         {
             fprintf(stderr, "ws2811_render failed: %s\n", ws2811_get_return_t_str(ret));
             break;
-        }
-
+        
+	}
+	usleep(1000000);
+	matrix_blue();
+	matrix_render();
+	if((ret = ws2811_render(&ledstring)) != WS2811_SUCCESS)
+	{
+		fprintf(stderr, "ws2811_render failed: %s\n", ws2811_get_return_t_str(ret));
+		break;
+	}
         // 15 frames /sec
         usleep(1000000);
     }
