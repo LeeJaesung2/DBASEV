@@ -15,10 +15,10 @@ struct GPSData {
     double time;
 };
 
-void *getGPS(void *arg);
-bool isValidGPSData(const std::string& gpsData);
-std::string rawGps2degGps(int type, std::string token);
-GPSData extract_gps_data(const std::string& gps_str);
+void *getGPS(string arg);
+bool isValidGPSData(const string& gpsData);
+string rawGps2degGps(int type, string token);
+GPSData extract_gps_data(const string& gps_str);
 double calc_distance(double lat1, double lon1, double lat2, double lon2);
 float getDistance(string gps_data1, string gps_data2);
 float getSpeed(float distance, string gps_data1, string gps_data2);
