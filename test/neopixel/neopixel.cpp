@@ -1,50 +1,142 @@
+static char VERSION[] = "XX.YY.ZZ";
+
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <sys/mman.h>
+#include <signal.h>
+#include <stdarg.h>
+#include <getopt.h>
 #include <iostream>
-#include <wiringPi.h>
+
+
+#include <ws2811/clk.h>
+#include <ws2811/gpio.h>
+#include <ws2811/dma.h>
+#include <ws2811/pwm.h>
+#include <ws2811/version.h>
 #include <ws2811/ws2811.h>
 
-#define LED_PIN_1 18         // GPIO pin connected to the first LED
-#define LED_PIN_2 15         // GPIO pin connected to the second LED
-#define LED_COUNT 1          // Number of LEDs in each strip
-#define LED_BRIGHTNESS 255   // Set the brightness (0-255)
 
-int main() {
-    if (wiringPiSetupGpio() == -1) {
-        std::cerr << "Failed to initialize WiringPi!" << std::endl;
-        return -1;
+// defaults for cmdline options
+#define TARGET_FREQ             WS2811_TARGET_FREQ
+#define GPIO_PIN_18             18
+#define GPIO_PIN_13             13
+#define DMA                     10
+#define STRIP_TYPE              WS2811_STRIP_GBR     // WS2812/SK6812RGB integrated chip+leds
+#define LED_COUNT               9
+
+int led_count = LED_COUNT;
+int clear_on_exit = 0;
+ws2811_led_t red = 0x00000020;
+ws2811_led_t blue = 0x00200000;
+
+ws2811_t ledstring =
+{
+    .freq = TARGET_FREQ,
+    .dmanum = DMA,
+    .channel =
+    {
+        [0] =
+        {
+            .gpionum = GPIO_PIN_18,
+            .invert = 0,
+            .count = LED_COUNT,
+            .strip_type = STRIP_TYPE,
+            .brightness = 255,
+        },
+        [1] =
+        {
+            .gpionum = GPIO_PIN_13,
+            .invert = 0,
+            .count = LED_COUNT,
+            .strip_type = STRIP_TYPE,
+            .brightness = 255,
+        },
+    },
+};
+
+static uint8_t running = 1;
+
+void matrix_render_red(void) {
+    int x;
+
+    for (x = 0; x < LED_COUNT; x++) {
+        
+        ledstring.channel[0].leds[x] = red; // Pin 18
+        ledstring.channel[1].leds[x] = blue; // Pin 15 
     }
-
-    ws2811_t ledStrip;
-    ledStrip.freq = WS2811_TARGET_FREQ;
-    ledStrip.dmanum = 5;
-    ledStrip.channel[0].gpionum = LED_PIN_1;
-    ledStrip.channel[0].count = LED_COUNT;
-    ledStrip.channel[0].brightness = LED_BRIGHTNESS;
-    ledStrip.channel[0].strip_type = WS2811_STRIP_GRB;
-    ledStrip.channel[1].gpionum = LED_PIN_2;
-    ledStrip.channel[1].count = LED_COUNT;
-    ledStrip.channel[1].brightness = LED_BRIGHTNESS;
-    ledStrip.channel[1].strip_type = WS2811_STRIP_GRB;
-
-    if (ws2811_init(&ledStrip) != WS2811_SUCCESS) {
-        std::cerr << "Failed to initialize WS2812 LED strip!" << std::endl;
-        return -1;
-    }
-
-    uint32_t redColor = 0x00FF0000;    // Red color
-    uint32_t blueColor = 0x000000FF;   // Blue color
-
-    while (true) {
-        ledStrip.channel[0].leds[0] = redColor;
-        ledStrip.channel[1].leds[0] = blueColor;
-        ws2811_render(&ledStrip);
-        delay(1000);  // Delay between toggling the pixels
-
-        ledStrip.channel[0].leds[0] = blueColor;
-        ledStrip.channel[1].leds[0] = redColor;
-        ws2811_render(&ledStrip);
-        delay(1000);  // Delay between toggling the pixels
-    }
-
-    ws2811_fini(&ledStrip);
-    return 0;
 }
+
+void matrix_render_blue(void) {
+    int x;
+
+    for (x = 0; x < LED_COUNT; x++) {
+        
+        ledstring.channel[0].leds[x] = blue; // Pin 18
+        ledstring.channel[1].leds[x] = red; // Pin 15 
+    }
+}
+
+void matrix_clear(void) {
+    int x;
+
+    for (x = 0; x < LED_COUNT; x++) {
+        
+        ledstring.channel[0].leds[x] = 0; // Pin 18
+        ledstring.channel[1].leds[x] = 0; // Pin 15 
+    }
+}
+
+
+
+
+int main(int argc, char *argv[]) {
+    ws2811_return_t ret;
+
+    sprintf(VERSION, "%d.%d.%d", VERSION_MAJOR, VERSION_MINOR, VERSION_MICRO);
+
+    if ((ret = ws2811_init(&ledstring)) != WS2811_SUCCESS) {
+        fprintf(stderr, "ws2811_init failed: %s\n", ws2811_get_return_t_str(ret));
+        return ret;
+    }
+
+    while (running) {
+
+        //matrix_mode1();
+        matrix_render_red();
+
+        if ((ret = ws2811_render(&ledstring)) != WS2811_SUCCESS) {
+            fprintf(stderr, "ws2811_render failed: %s\n", ws2811_get_return_t_str(ret));
+            break;
+        }
+
+        usleep(1000000);
+
+        //matrix_mode2();
+        matrix_render_blue();
+
+        if ((ret = ws2811_render(&ledstring)) != WS2811_SUCCESS) {
+            fprintf(stderr, "ws2811_render failed: %s\n", ws2811_get_return_t_str(ret));
+            break;
+        }
+
+        usleep(1000000);
+    }
+
+    if (clear_on_exit) {
+        matrix_clear();
+        ws2811_render(&ledstring);
+    }
+
+    ws2811_fini(&ledstring);
+
+    printf("\n");
+    return ret;
+}
+
