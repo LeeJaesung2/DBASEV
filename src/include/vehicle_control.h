@@ -2,4 +2,4 @@
 
 #define WAYPOINT_DISTANCE 5 // unit: Meter
 
-void* vehicle_control(string arg);
+void* vehicle_control(void* arg);

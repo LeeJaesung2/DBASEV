@@ -1,6 +1,6 @@
 #include <DBASEV/vehicle_control.h>
 
-void* vehicle_control(string arg)
+void* vehicle_control(void* arg)
 {
     //==================init====================
     unordered_map<int, Vertex> graph = creatingMap();
@@ -16,7 +16,11 @@ void* vehicle_control(string arg)
     int pre_waypoint = 0, now_waypoint;
 
     while (1) {
-        if (!isValidGPSData(arg)) {
+        cout << "arg: " << arg << endl;
+
+        string gps = static_cast<char*> arg; 
+
+        if (!isValidGPSData(gps)) {
             pre_gps = "";
             continue;
         }
@@ -25,13 +29,13 @@ void* vehicle_control(string arg)
             cout << "speed: " << pre_speed << " m/s \n";
         } 
         else{
-            current_speed = getSpeed(getDistance(pre_gps, arg), pre_gps, arg);
+            current_speed = getSpeed(getDistance(pre_gps, gps), pre_gps, gps);
             cout << "speed: " << current_speed << " m/s \n";
             pre_speed = current_speed;
         }
 
-        current_latitude = extract_gps_data(arg).latitude;
-        current_longitude = extract_gps_data(arg).longitude;
+        current_latitude = extract_gps_data(gps).latitude;
+        current_longitude = extract_gps_data(gps).longitude;
 
         now_waypoint = calculateClosestWaypoint(road_id, pre_waypoint, current_latitude, current_longitude, graph);
         pre_waypoint = now_waypoint;
@@ -50,7 +54,7 @@ void* vehicle_control(string arg)
             printf("now road: %d\n", road_id);
         }
 
-        pre_gps = arg;
+        pre_gps = gps;
 
         sleep(0.5);
     }

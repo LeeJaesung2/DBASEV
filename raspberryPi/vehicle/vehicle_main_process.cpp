@@ -3,9 +3,7 @@
 #include <DBASEV/vehicle_control.h>
 #include <DBASEV/communication.h>
 
-
-
-#define NUM_THREADS 1
+#define NUM_THREADS 2
 
 void main_thred_func(){
     int i = 0;
@@ -67,10 +65,10 @@ int main()
     }
 
     //세번째 스레드 생성
-    // thr_id = pthread_create(&threads[2], NULL, thread_func5, &begin);
-    // if(thr_id < 0){
-    //     perror("failure create thread");
-    // }
+    thr_id = pthread_create(&threads[1], NULL, &vehicle_control, &gps);
+    if(thr_id < 0){
+        perror("failure create thread");
+    }
 
     //스레드 종료전 메인스레드 기능
     //main_thred_func();    
