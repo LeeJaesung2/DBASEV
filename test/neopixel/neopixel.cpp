@@ -25,22 +25,20 @@ static char VERSION[] = "XX.YY.ZZ";
 #include <ws2811/ws2811.h>
 
 
-#define ARRAY_SIZE(stuff)       (sizeof(stuff) / sizeof(stuff[0]))
+
 
 // defaults for cmdline options
 #define TARGET_FREQ             WS2811_TARGET_FREQ
 #define GPIO_PIN                18
 #define DMA                     10
-//#define STRIP_TYPE            WS2811_STRIP_RGB		// WS2812/SK6812RGB integrated chip+leds
+
 #define STRIP_TYPE              WS2811_STRIP_GBR		// WS2812/SK6812RGB integrated chip+leds
-//#define STRIP_TYPE            SK6812_STRIP_RGBW		// SK6812RGBW (NOT SK6812RGB)
 
-#define WIDTH                   1
-#define HEIGHT                  9
-#define LED_COUNT               (WIDTH * HEIGHT)
 
-int width = WIDTH;
-int height = HEIGHT;
+#define LED_COUNT               9
+
+
+
 int led_count = LED_COUNT;
 
 int clear_on_exit = 0;
@@ -77,9 +75,9 @@ void matrix_render(void)
 {
     int x, y;
 
-    for (y = 0; y < height; y++)
+    for (y = 0; y < led_count; y++)
     {
-        ledstring.channel[0].leds[(y * width)] = matrix[y * width];
+        ledstring.channel[0].leds[y] = matrix[y];
     }
 
 }
@@ -88,12 +86,12 @@ void matrix_render(void)
 
 void matrix_clear(void)
 {
-    int x, y;
+    int y;
 
-    for (y = 0; y < (height ); y++)
+    for (y = 0; y < (led_count ); y++)
     {
         
-        matrix[y * width] = 0;
+        matrix[y] = 0;
         
     }
 }
@@ -204,27 +202,16 @@ void parseargs(int argc, char **argv, ws2811_t *ws2811)
 
 		case 'y':
 			if (optarg) {
-				height = atoi(optarg);
-				if (height > 0) {
-					ws2811->channel[0].count = height * width;
+				led_count = atoi(optarg);
+				if (led_count > 0) {
+					ws2811->channel[0].count = led_count ;
 				} else {
-					printf ("invalid height %d\n", height);
+					printf ("invalid led_count %d\n", led_count);
 					exit (-1);
 				}
 			}
 			break;
 
-		case 'x':
-			if (optarg) {
-				width = atoi(optarg);
-				if (width > 0) {
-					ws2811->channel[0].count = height * width;
-				} else {
-					printf ("invalid width %d\n", width);
-					exit (-1);
-				}
-			}
-			break;
 
 		case 's':
 			if (optarg) {
@@ -275,25 +262,25 @@ void parseargs(int argc, char **argv, ws2811_t *ws2811)
 
 void matrix_red(void)
 {
-    int x, y;
+    int y;
 
-    for (y = 0; y < height; y++)
+    for (y = 0; y < led_count; y++)
     {
         
         
-        matrix[y * width] = 0x00000020;  // Red color
+        matrix[y ] = 0x00000020;  // Red color
         
     }
 }
 
 void matrix_blue(void)
 {
-    int x, y;
+    int y;
 
-    for (y = 0; y < height; y++)
+    for (y = 0; y < led_count; y++)
     {
         
-        matrix[y * width] = 0x00200000;  // Blue color
+        matrix[y] = 0x00200000;  // Blue color
         
     }
 }
@@ -307,7 +294,7 @@ int main(int argc, char *argv[])
 
     parseargs(argc, argv, &ledstring);
 
-    matrix = (ws2811_led_t*)malloc(sizeof(ws2811_led_t) * width * height);
+    matrix = (ws2811_led_t*)malloc(sizeof(ws2811_led_t) * led_count);
 
     if ((ret = ws2811_init(&ledstring)) != WS2811_SUCCESS)
     {
