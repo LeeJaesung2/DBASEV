@@ -4,7 +4,7 @@ void *getGPS(void* arg){
     int fd = serialOpen("/dev/serial0", 9600);
 
     while (1) {
-        printf("connecting...");
+        //printf("connecting...");
         if (serialDataAvail(fd)) {
             printf("123123\n");
             char temp = (char)serialGetchar(fd);
