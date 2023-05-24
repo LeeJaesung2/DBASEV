@@ -380,7 +380,7 @@ int main(int argc, char *argv[])
     {
         matrix_red();
         matrix_render();
-        usleep(1000000 / 15);
+        usleep(1000000);
         matrix_blue();
         matrix_render();
 
@@ -391,7 +391,7 @@ int main(int argc, char *argv[])
         }
 
         // 15 frames /sec
-        usleep(1000000 / 15);
+        usleep(1000000);
     }
 
     if (clear_on_exit)
