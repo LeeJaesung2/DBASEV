@@ -1,5 +1,6 @@
 #include <DBASEV/visibility.h>
 #include <DBASEV/gps.h>
+#include <DBASEV/vehicle_control.h>
 #include <DBASEV/communication.h>
 
 
@@ -57,8 +58,10 @@ int main()
         perror("failure create thread");
     }
 
+    char* gps;
+
     //두번째 스레드 생성
-    thr_id = pthread_create(&threads[1], NULL, thread_func4, &begin);
+    thr_id = pthread_create(&threads[1], NULL, &getGPS, &gps);
     if(thr_id < 0){
         perror("failure create thread");
     }

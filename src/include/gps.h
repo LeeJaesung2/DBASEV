@@ -4,6 +4,10 @@
 #include <DBASEV/visibility.h>
 #include <cmath>
 #include <sstream>
+#include <wiringSerial.h> // g++ -o file file.cpp -lwiringPi
+
+#define LATITUDE 1
+#define LONGITUDE 2
 
 struct GPSData {
     double latitude;
@@ -11,7 +15,7 @@ struct GPSData {
     double time;
 };
 
-void getGPS();
+void *getGPS(void *arg);
 bool isValidGPSData(const std::string& gpsData);
 std::string rawGps2degGps(int type, std::string token);
 GPSData extract_gps_data(const std::string& gps_str);
