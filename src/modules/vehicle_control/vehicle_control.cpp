@@ -28,32 +28,32 @@ void* vehicle_control(void* arg)
         // }
 
         if (pre_gps ==""){
-            cout << "speed: " << pre_speed << " m/s \n";
+            //cout << "speed: " << pre_speed << " m/s \n";
         } 
         else{
             //current_speed = getSpeed(getDistance(pre_gps, gps), pre_gps, gps);
-            cout << "speed: " << current_speed << " m/s \n";
+            //cout << "speed: " << current_speed << " m/s \n";
             pre_speed = current_speed;
         }
 
         //current_latitude = extract_gps_data(gps).latitude;
         //current_longitude = extract_gps_data(gps).longitude;
 
-        now_waypoint = calculateClosestWaypoint(road_id, pre_waypoint, current_latitude, current_longitude, graph);
+        //now_waypoint = calculateClosestWaypoint(road_id, pre_waypoint, current_latitude, current_longitude, graph);
         pre_waypoint = now_waypoint;
-        printf("now_waypoint: %d\n\n", graph[road_id].waypoints[now_waypoint]);
+        //printf("now_waypoint: %d\n\n", graph[road_id].waypoints[now_waypoint]);
 
         int remain_waypoints = graph[road_id].waypoints.back() - now_waypoint;
         
         if (remain_waypoints < 2) {
             int pre_road_id = road_id;
-            road_id = findNextRoadId(road_id, current_latitude, current_longitude, graph);
+            //road_id = findNextRoadId(road_id, current_latitude, current_longitude, graph);
 
             if(pre_road_id != road_id){
                 pre_waypoint = 0;
             }
 
-            printf("now road: %d\n", road_id);
+            //printf("now road: %d\n", road_id);
         }
 
         pre_gps = gps;
