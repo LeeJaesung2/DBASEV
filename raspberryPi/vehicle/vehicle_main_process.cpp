@@ -61,7 +61,7 @@ int main()
     void* gps;
 
     //두번째 스레드 생성
-    thr_id = pthread_create(&threads[1], NULL, &getGPS, &gps);
+    thr_id = pthread_create(&threads[0], NULL, &getGPS, &gps);
     if(thr_id < 0){
         perror("failure create thread");
     }
@@ -73,7 +73,7 @@ int main()
     // }
 
     //스레드 종료전 메인스레드 기능
-    main_thred_func();    
+    //main_thred_func();    
 
     // 각각의 스레드가 종료될 때까지 대기
     for (i = 0; i < NUM_THREADS; i++) {
