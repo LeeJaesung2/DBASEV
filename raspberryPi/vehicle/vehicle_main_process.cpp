@@ -53,10 +53,10 @@ int main()
     pthread_t threads[NUM_THREADS];
 
     //첫번째 스레드 생성
-    thr_id = pthread_create(&threads[0], NULL, &receiver, NULL);
-    if(thr_id < 0){
-        perror("failure create thread");
-    }
+    // thr_id = pthread_create(&threads[0], NULL, &receiver, NULL);
+    // if(thr_id < 0){
+    //     perror("failure create thread");
+    // }
 
     char* gps;
 
@@ -67,10 +67,10 @@ int main()
     }
 
     //세번째 스레드 생성
-    thr_id = pthread_create(&threads[2], NULL, thread_func5, &begin);
-    if(thr_id < 0){
-        perror("failure create thread");
-    }
+    // thr_id = pthread_create(&threads[2], NULL, thread_func5, &begin);
+    // if(thr_id < 0){
+    //     perror("failure create thread");
+    // }
 
     //스레드 종료전 메인스레드 기능
     main_thred_func();    
