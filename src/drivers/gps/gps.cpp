@@ -1,6 +1,6 @@
 #include <DBASEV/gps.h>
 
-void *getGPS(string arg){
+void *getGPS(void* arg){
     int fd = serialOpen("/dev/serial0", 9600);
 
     while (1) {
