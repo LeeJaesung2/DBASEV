@@ -57,7 +57,6 @@ int main()
     }
 
     void* gps;
-    void* temp;
 
     //두번째 스레드 생성
     thr_id = pthread_create(&threads[1], NULL, &getGPS, &gps);
@@ -66,7 +65,7 @@ int main()
     }
 
     //세번째 스레드 생성
-    thr_id = pthread_create(&threads[2], NULL, &vehicle_control, &gps, &temp);
+    thr_id = pthread_create(&threads[2], NULL, &vehicle_control, &gps);
     if(thr_id < 0){
         perror("failure create thread");
     }
