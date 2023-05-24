@@ -15,7 +15,7 @@ struct GPSData {
     double time;
 };
 
-void *getGPS(string arg);
+void *getGPS(void* arg);
 bool isValidGPSData(const string& gpsData);
 string rawGps2degGps(int type, string token);
 GPSData extract_gps_data(const string& gps_str);
