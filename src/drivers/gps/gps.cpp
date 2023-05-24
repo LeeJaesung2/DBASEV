@@ -1,11 +1,6 @@
 #include <DBASEV/gps.h>
 
-#define LATITUDE 1
-#define LONGITUDE 2
-
-#include <wiringSerial.h> // g++ -o file file.cpp -lwiringPi
-
-void getGPS(){
+void *getGPS(void *arg){
     int fd = serialOpen("/dev/serial0", 9600);
 
     while (1) {
@@ -13,7 +8,7 @@ void getGPS(){
             char temp = (char)serialGetchar(fd);
 
             if (temp == '$') {
-                std::string sentence;
+                string sentence;
                 sentence += temp;
 
                 while (temp != '\n') {
@@ -21,8 +16,8 @@ void getGPS(){
                     sentence += temp;
                 }
 
-                if (sentence.find("GPGGA") != std::string::npos) {
-                    std::cout << sentence;
+                if (sentence.find("GPGGA") != string::npos) {
+                    arg = sentence;
                 }
             }
         }
@@ -30,10 +25,9 @@ void getGPS(){
 }
 
 bool isValidGPSData(const string& gpsData) {
-    // GPS 데이터 파싱
+    // GPS data parsing
     GPSData gpsDataParsed = extract_gps_data(gpsData);
 
-    // 위도 또는 경도가 0.0인 경우 유효하지 않은 GPS 데이터로 판단
     if (gpsDataParsed.latitude == 0.0 || gpsDataParsed.longitude == 0.0) {
         return false;
     }

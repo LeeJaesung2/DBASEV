@@ -1,14 +1,4 @@
-#include <limits.h>
-
-#include <DBASEV/visibility.h>
-#include <DBASEV/gps.h>
-#include <DBASEV/Map.h>
-
-using namespace std;
-
-#define WAYPOINT_DISTANCE 5 // unit: Meter
-
-void vehicle_control(string gps)
+void vehicle_control(void *arg)
 {
     //==================init====================
     unordered_map<int, Vertex> graph = creatingMap();
@@ -24,7 +14,7 @@ void vehicle_control(string gps)
     int pre_waypoint = 0, now_waypoint;
 
     while (1) {
-        if (!isValidGPSData(gps)) {
+        if (!isValidGPSData(arg)) {
             pre_gps = "";
             continue;
         }
@@ -33,13 +23,13 @@ void vehicle_control(string gps)
             cout << "speed: " << pre_speed << " m/s \n";
         } 
         else{
-            current_speed = getSpeed(getDistance(pre_gps, gps), pre_gps, gps);
+            current_speed = getSpeed(getDistance(pre_gps, arg), pre_gps, arg);
             cout << "speed: " << current_speed << " m/s \n";
             pre_speed = current_speed;
         }
 
-        current_latitude = extract_gps_data(gps).latitude;
-        current_longitude = extract_gps_data(gps).longitude;
+        current_latitude = extract_gps_data(arg).latitude;
+        current_longitude = extract_gps_data(arg).longitude;
 
         now_waypoint = calculateClosestWaypoint(road_id, pre_waypoint, current_latitude, current_longitude, graph);
         pre_waypoint = now_waypoint;
@@ -58,7 +48,7 @@ void vehicle_control(string gps)
             printf("now road: %d\n", road_id);
         }
 
-        pre_gps = gps;
+        pre_gps = arg;
 
         sleep(0.5);
     }
