@@ -1,6 +1,6 @@
 #include <DBASEV/gps.h>
 
-void *getGPS(char *arg){
+void *getGPS(string arg){
     int fd = serialOpen("/dev/serial0", 9600);
 
     while (1) {
@@ -8,7 +8,7 @@ void *getGPS(char *arg){
             char temp = (char)serialGetchar(fd);
 
             if (temp == '$') {
-                char* sentence;
+                string sentence;
                 sentence += temp;
 
                 while (temp != '\n') {
