@@ -57,7 +57,7 @@ $(DRONE_EXECUTABLE): $(OBJ) $(DRONE_MAIN)
 
 #make vehicle.exe
 $(VEHICLE_EXECUTABLE): $(OBJ) $(VEHICLE_MAIN)
-		$(CC) $^ -o $(VEHICLE_EXECUTABLE) $(LDFLAGS) $(PYFLAGS)
+		$(CC) $^ -o $(VEHICLE_EXECUTABLE) $(LDFLAGS) $(PYFLAGS) $(GPFLAGS)
 
 #make dreon_main_process.o
 $(DRONE_MAIN) : $(DRONE_DIR)/drone_main_process.cpp

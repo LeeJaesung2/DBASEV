@@ -1,5 +1,10 @@
 #include <DBASEV/neopixel.h>
-
+#include <ws2811/clk.h>
+#include <ws2811/gpio.h>
+#include <ws2811/dma.h>
+#include <ws2811/pwm.h>
+#include <ws2811/version.h>
+#include <ws2811/ws2811.h>
 
 ws2811_return_t ret;
 
@@ -34,7 +39,7 @@ ws2811_t initNeopixel(){
 
     if ((ret = ws2811_init(&ledstring)) != WS2811_SUCCESS) {
         fprintf(stderr, "ws2811_init failed: %s\n", ws2811_get_return_t_str(ret));
-        return ret;
+        return ledstring;
     }
     return ledstring;
 }
@@ -46,7 +51,7 @@ ws2811_t matrix_render_red(ws2811_t ledstring){
     }
     if ((ret = ws2811_render(&ledstring)) != WS2811_SUCCESS) {
         fprintf(stderr, "ws2811_render failed: %s\n", ws2811_get_return_t_str(ret));
-        break;
+        return ledstring;
     }
     return ledstring;
 }
@@ -58,7 +63,7 @@ ws2811_t matrix_render_blue(ws2811_t ledstring){
     }
     if ((ret = ws2811_render(&ledstring)) != WS2811_SUCCESS) {
         fprintf(stderr, "ws2811_render failed: %s\n", ws2811_get_return_t_str(ret));
-        break;
+        return ledstring;
     }
     return ledstring;
 }
