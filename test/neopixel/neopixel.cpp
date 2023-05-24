@@ -42,15 +42,16 @@ static char VERSION[] = "XX.YY.ZZ";
 #include <signal.h>
 #include <stdarg.h>
 #include <getopt.h>
+#include <iostream>
 
 
-#include "clk.h"
-#include "gpio.h"
-#include "dma.h"
-#include "pwm.h"
-#include "version.h"
+#include <ws2811/clk.h>
+#include <ws2811/gpio.h>
+#include <ws2811/dma.h>
+#include <ws2811/pwm.h>
+#include <ws2811/version.h>
 
-#include "ws2811.h"
+#include <ws2811/ws2811.h>
 
 
 #define ARRAY_SIZE(stuff)       (sizeof(stuff) / sizeof(stuff[0]))
@@ -194,16 +195,16 @@ static void ctrl_c_handler(int signum)
     running = 0;
 }
 
-static void setup_handlers(void)
-{
-    struct sigaction sa =
-    {
-        .sa_handler = ctrl_c_handler,
-    };
+// static void setup_handlers(void)
+// {
+//     struct sigaction sa =
+//     {
+//         sa_handler = ctrl_c_handler,
+//     };
 
-    sigaction(SIGINT, &sa, NULL);
-    sigaction(SIGTERM, &sa, NULL);
-}
+//     sigaction(SIGINT, &sa, NULL);
+//     sigaction(SIGTERM, &sa, NULL);
+// }
 
 
 void parseargs(int argc, char **argv, ws2811_t *ws2811)
@@ -380,9 +381,9 @@ int main(int argc, char *argv[])
 
     parseargs(argc, argv, &ledstring);
 
-    matrix = malloc(sizeof(ws2811_led_t) * width * height);
+    matrix = (ws2811_led_t*)malloc(sizeof(ws2811_led_t) * width * height);
 
-    setup_handlers();
+    //setup_handlers();
 
     if ((ret = ws2811_init(&ledstring)) != WS2811_SUCCESS)
     {
