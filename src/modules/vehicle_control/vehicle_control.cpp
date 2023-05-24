@@ -16,16 +16,16 @@ void* vehicle_control(void* arg)
     int pre_waypoint = 0, now_waypoint;
 
     while (1) {  
-        cout << "arg : " << arg << endl;
+        //cout << "arg : " << arg << endl;
 
         char* gps = static_cast<char*>(arg); 
 
-        cout << "gps : " << gps << endl;
+        //cout << "gps : " << gps << endl;
 
-        // if (!isValidGPSData(gps)) {
-        //     pre_gps = "";
-        //     continue;
-        // }
+        if (!isValidGPSData(gps)) {
+            pre_gps = "";
+            continue;
+        }
 
         if (pre_gps ==""){
             //cout << "speed: " << pre_speed << " m/s \n";
