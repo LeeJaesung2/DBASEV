@@ -1,4 +1,5 @@
 #include <DBASEV/visibility.h>
+#include <DBASEV/gps.h>
 #include <DBASEV/communication.h>
 
 
