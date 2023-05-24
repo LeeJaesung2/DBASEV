@@ -6,9 +6,9 @@ void *getGPS(void* arg){
     while (1) {
         //printf("connecting...");
         if (serialDataAvail(fd)) {
-            printf("123123\n");
-            char temp = (char)serialGetchar(fd);
 
+            char temp = (char)serialGetchar(fd);
+        
             if (temp == '$') {
                 string sentence;
                 sentence += temp;
@@ -19,6 +19,7 @@ void *getGPS(void* arg){
                 }
 
                 if (sentence.find("GPGGA") != string::npos) {
+                    cout << sentence << endl;
                     arg = static_cast<void*>(&sentence);
                 }
             }
