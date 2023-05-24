@@ -1,43 +1,5 @@
 #include <DBASEV/announce.h>
 
-ws2811_t ledStrip;
-
-uint32_t red = 0x00FF0000;
-uint32_t blue = 0x000000FF;
-
-int initLed(){
-    printf("LED init\n");
-    #ifndef DEBUG
-        cout << "announce.cpp" << endl;
-    #endif
-    ledStrip.freq = WS2811_TARGET_FREQ;
-    ledStrip.dmanum = 5;
-    ledStrip.channel[0].gpionum = LED_PIN1;
-    ledStrip.channel[0].count = SIDE_LED_COUNT;
-    ledStrip.channel[0].brightness = 255;
-    ledStrip.channel[0].strip_type = WS2811_STRIP_GRB;
-    ledStrip.channel[1].gpionum = LED_PIN1;
-    ledStrip.channel[1].count = SIDE_LED_COUNT;
-    ledStrip.channel[1].brightness = 255;
-    ledStrip.channel[1].strip_type = WS2811_STRIP_GRB;
-    ledStrip.channel[2].gpionum = LED_PIN1;
-    ledStrip.channel[2].count = UPSIDE_LED_COUNT;
-    ledStrip.channel[2].brightness = 255;
-    ledStrip.channel[2].strip_type = WS2811_STRIP_GRB;
-    ledStrip.channel[3].gpionum = LED_PIN1;
-    ledStrip.channel[3].count = UPSIDE_LED_COUNT;
-    ledStrip.channel[3].brightness = 255;
-    ledStrip.channel[3].strip_type = WS2811_STRIP_GRB;
-
-    if(ws2811_init(&ledStrip) != WS2811_SUCCESS){
-        std::cerr << "Failed to initialize WS2812 LED strip!" << std::endl;
-         #ifndef DEBUG
-            cout << "announce.cpp" << endl;
-        #endif
-        return -1;
-    }
-    return 0;
-}
 
 
 
@@ -49,26 +11,7 @@ void initBuzzer(){
     #endif
 }
 
-void ledOn(int flag){
-    printf("LED ON\n");
-    #ifndef DEBUG
-        cout << "announce.cpp" << endl;
-    #endif
-    if(flag == mode1){
-        ledStrip.channel[0].leds[0] = red;
-        ledStrip.channel[1].leds[0] = blue;
-        ledStrip.channel[2].leds[0] = red;
-        ledStrip.channel[3].leds[0] = blue;
-    }
-    else{
-        ledStrip.channel[0].leds[0] = blue;
-        ledStrip.channel[1].leds[0] = red;
-        ledStrip.channel[2].leds[0] = blue;
-        ledStrip.channel[3].leds[0] = red;
-    }
-    ws2811_render(&ledStrip);
-    usleep(1000);
-}
+
 
 void buzzerOn(){
     printf("buzzer ON\n");
@@ -77,12 +20,14 @@ void buzzerOn(){
     #endif
 }
 
-void ledOff(){
+void ledOff(ws2811_t ledstring){
     printf("LED OFF\n");
     #ifndef DEBUG
         cout << "announce.cpp" << endl;
     #endif
-    ws2811_fini(&ledStrip);
+    matrix_clear(ledstring);
+    ws2811_render(&ledstring);
+     ws2811_fini(&ledstring);
 }
 
 void buzzerOff(){
@@ -93,17 +38,43 @@ void buzzerOff(){
 }
 
 //control led and piezo buzzer
-void announceOn(){
-    initLed();
+int announceOn(){
+    ws2811_t ledstring = initNeopixel();
+    ws2811_return_t ret;
+
+    sprintf(VERSION, "%d.%d.%d", VERSION_MAJOR, VERSION_MINOR, VERSION_MICRO);
+
+    if ((ret = ws2811_init(&ledstring)) != WS2811_SUCCESS) {
+        fprintf(stderr, "ws2811_init failed: %s\n", ws2811_get_return_t_str(ret));
+        return ret;
+    }
+
     initBuzzer();
     while(true){
-        ledOn(mode1);
-        buzzerOn();
-        ledOn(mode2);
+        //matrix_mode1();
+        ledstring = matrix_render_red(ledstring);
+
+        if ((ret = ws2811_render(&ledstring)) != WS2811_SUCCESS) {
+            fprintf(stderr, "ws2811_render failed: %s\n", ws2811_get_return_t_str(ret));
+            break;
+        }
+
+        usleep(1000000);
+
+        //matrix_mode2();
+        ledstring = matrix_render_blue(ledstring);
+
+        if ((ret = ws2811_render(&ledstring)) != WS2811_SUCCESS) {
+            fprintf(stderr, "ws2811_render failed: %s\n", ws2811_get_return_t_str(ret));
+            break;
+        }
+
+        usleep(1000000);
     }
+    return 0;
 }
 
-void announceOff(){
-    ledOff();
+void announceOff(ws2811_t ledstring){
+    ledOff(ledstring);
     buzzerOff();
 }

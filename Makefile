@@ -26,6 +26,7 @@ $(shell mkdir -p $(OBJ_DIR))
 $(shell mkdir -p $(OBJ_DIR)/drivers/gps)
 $(shell mkdir -p $(OBJ_DIR)/drivers/radar)
 $(shell mkdir -p $(OBJ_DIR)/drivers/telemetry)
+$(shell mkdir -p $(OBJ_DIR)/drivers/neopixel)
 $(shell mkdir -p $(OBJ_DIR)/modules/collision_avoidance)
 $(shell mkdir -p $(OBJ_DIR)/modules/communication)
 $(shell mkdir -p $(OBJ_DIR)/modules/embedd)
@@ -80,7 +81,6 @@ install:
 	$(shell mkdir -p $(INSTALL_DIR)/telemetry)
 	cp -r src/include/*.h $(INSTALL_DIR)
 	cp -r src/include/telemetry/*.h $(INSTALL_DIR)/telemetry
-	cp -r src/include/neopixel/*.h $(INSTALL_DIR)/neopixel
 
 #program start command
 exedrone:

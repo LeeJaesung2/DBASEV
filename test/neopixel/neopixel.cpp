@@ -61,9 +61,6 @@ ws2811_t ledstring =
     },
 };
 
-ws2811_led_t *matrix1;
-ws2811_led_t *matrix2;
-
 static uint8_t running = 1;
 
 void matrix_render_red(void) {
@@ -97,28 +94,12 @@ void matrix_clear(void) {
 }
 
 
-// void matrix_mode1(void){
-//     for(int x=0; x<led_count; x++){
-//         matrix1[x] = 0x00000020; //Red color
-//         matrix2[x] = 0x00200000; //Blue color 
-//     }
-// }
-
-// void matrix_mode2(void){
-//     for(int x=0; x<led_count; x++){
-//         matrix1[x] = 0x00200000; //Blue color
-//         matrix2[x] = 0x00000020; //Red color
-//     }
-// }
 
 
 int main(int argc, char *argv[]) {
     ws2811_return_t ret;
 
     sprintf(VERSION, "%d.%d.%d", VERSION_MAJOR, VERSION_MINOR, VERSION_MICRO);
-
-    //matrix1 = (ws2811_led_t*)malloc(sizeof(ws2811_led_t) * LED_COUNT);
-    //matrix2 = (ws2811_led_t*)malloc(sizeof(ws2811_led_t) * LED_COUNT);
 
     if ((ret = ws2811_init(&ledstring)) != WS2811_SUCCESS) {
         fprintf(stderr, "ws2811_init failed: %s\n", ws2811_get_return_t_str(ret));
