@@ -19,7 +19,7 @@ void *getGPS(void* arg){
                 }
 
                 if (sentence.find("GPGGA") != string::npos) {
-                    cout << sentence << endl;
+                    //cout << sentence << endl;
                     arg = static_cast<void*>(&sentence);
                 }
             }
