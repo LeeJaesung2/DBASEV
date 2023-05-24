@@ -16,11 +16,11 @@ void* vehicle_control(void* arg)
     int pre_waypoint = 0, now_waypoint;
 
     while (1) {  
-        cout << "arg : " << arg << endl;
+        //cout << "arg : " << arg << endl;
 
         char* gps = static_cast<char*>(arg); 
 
-        cout << "gps : " << gps << endl;
+        //cout << "gps : " << gps << endl;
 
         if (!isValidGPSData(gps)) {
             pre_gps = "";
@@ -36,8 +36,8 @@ void* vehicle_control(void* arg)
             pre_speed = current_speed;
         }
 
-        current_latitude = extract_gps_data(gps).latitude;
-        current_longitude = extract_gps_data(gps).longitude;
+        //current_latitude = extract_gps_data(gps).latitude;
+        //current_longitude = extract_gps_data(gps).longitude;
 
         now_waypoint = calculateClosestWaypoint(road_id, pre_waypoint, current_latitude, current_longitude, graph);
         pre_waypoint = now_waypoint;
