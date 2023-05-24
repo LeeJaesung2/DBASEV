@@ -47,7 +47,7 @@ int main()
 
     //after dead all of thread
     printf("all of threads are dead");
-    announceOff();
+    //announceOff();
 
     return 0;
 }

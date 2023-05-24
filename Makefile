@@ -10,8 +10,8 @@
 
 CC=g++
 CFLAGS=-c -Wall
-LDFLAGS=-lpthread -std=c++14 
-GPFLAGS = -lwiringPi -lws2811
+LDFLAGS=-lpthread -std=c++14
+GPFLAGS = -lws2811 -lwiringPi
 PYFLAGS = -I/usr/include/python2.7 -lpython2.7
 SRC_DIR=./src
 OBJ_DIR=./build
@@ -26,6 +26,7 @@ $(shell mkdir -p $(OBJ_DIR))
 $(shell mkdir -p $(OBJ_DIR)/drivers/gps)
 $(shell mkdir -p $(OBJ_DIR)/drivers/radar)
 $(shell mkdir -p $(OBJ_DIR)/drivers/telemetry)
+$(shell mkdir -p $(OBJ_DIR)/drivers/neopixel)
 $(shell mkdir -p $(OBJ_DIR)/modules/collision_avoidance)
 $(shell mkdir -p $(OBJ_DIR)/modules/communication)
 $(shell mkdir -p $(OBJ_DIR)/modules/embedd)
@@ -52,11 +53,11 @@ all : $(DRONE_EXECUTABLE) $(VEHICLE_EXECUTABLE)
 
 #make drone.exe
 $(DRONE_EXECUTABLE): $(OBJ) $(DRONE_MAIN)
-		$(CC) $^ -o $(DRONE_EXECUTABLE) $(LDFLAGS) $(PYFLAGS)
+		$(CC) $^ -o $(DRONE_EXECUTABLE) $(LDFLAGS) $(PYFLAGS) $(GPFLAGS)
 
 #make vehicle.exe
 $(VEHICLE_EXECUTABLE): $(OBJ) $(VEHICLE_MAIN)
-		$(CC) $^ -o $(VEHICLE_EXECUTABLE) $(LDFLAGS) $(PYFLAGS)
+		$(CC) $^ -o $(VEHICLE_EXECUTABLE) $(LDFLAGS) $(PYFLAGS) $(GPFLAGS)
 
 #make dreon_main_process.o
 $(DRONE_MAIN) : $(DRONE_DIR)/drone_main_process.cpp
