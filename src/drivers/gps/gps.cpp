@@ -76,7 +76,7 @@ GPSData extract_gps_data(const std::string& gps_str) {
         gps_data.time = std::stod(token);
     }
     catch (std::invalid_argument& e) {
-        std::cerr << "Invalid argument: " << e.what() << std::endl;
+        //std::cerr << "Invalid argument: " << e.what() << std::endl;
         gps_data.time = 0.0;
     }
 
@@ -87,7 +87,7 @@ GPSData extract_gps_data(const std::string& gps_str) {
         gps_data.latitude = std::stod(latitude);
     }
     catch (std::invalid_argument& e) {
-        std::cerr << "Invalid argument: " << e.what() << std::endl;
+        //std::cerr << "Invalid argument: " << e.what() << std::endl;
         gps_data.latitude = 0.0;
     }
 
@@ -101,7 +101,7 @@ GPSData extract_gps_data(const std::string& gps_str) {
         gps_data.longitude = std::stod(longitude);
     }
     catch (std::invalid_argument& e) {
-        std::cerr << "Invalid argument: " << e.what() << std::endl;
+        //std::cerr << "Invalid argument: " << e.what() << std::endl;
         gps_data.longitude = 0.0;
     }
 
