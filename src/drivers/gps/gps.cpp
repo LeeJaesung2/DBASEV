@@ -1,9 +1,12 @@
 #include <DBASEV/gps.h>
 
 void *getGPS(void* arg){
+    printf("pre open...");
+
     int fd = serialOpen("/dev/serial0", 9600);
 
     while (1) {
+        printf("connecting...");
         if (serialDataAvail(fd)) {
             char temp = (char)serialGetchar(fd);
 
