@@ -1,4 +1,3 @@
-#include <DBASEV/visibility.h>
 #include <DBASEV/Map.h>
 
 #define WAYPOINT_DISTANCE 5 // unit: Meter
