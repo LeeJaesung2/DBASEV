@@ -3,12 +3,9 @@
 #define MAP_H
 
 #include <DBASEV/visibility.h>
+#include <DBASEV/gps.h>
 #include <unordered_map>
 #include <limits>
-
-#include "gps.h"
-
-using namespace std;
 
 struct Vertex {
     int id;
