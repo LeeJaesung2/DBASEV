@@ -31,7 +31,7 @@ void* vehicle_control(void* arg)
             cout << "speed: " << pre_speed << " m/s \n";
         } 
         else{
-            current_speed = getSpeed(getDistance(pre_gps, gps), pre_gps, gps);
+            //current_speed = getSpeed(getDistance(pre_gps, gps), pre_gps, gps);
             cout << "speed: " << current_speed << " m/s \n";
             pre_speed = current_speed;
         }
