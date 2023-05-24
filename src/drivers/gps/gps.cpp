@@ -6,7 +6,7 @@ void *getGPS(void* arg){
     while (1) {
         //printf("connecting...");
         if (serialDataAvail(fd)) {
-
+            cout << "getting gps............." << endl;
             char temp = (char)serialGetchar(fd);
         
             if (temp == '$') {
