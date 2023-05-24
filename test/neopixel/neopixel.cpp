@@ -380,6 +380,7 @@ int main(int argc, char *argv[])
     {
         matrix_red();
         matrix_render();
+        usleep(1000000 / 15);
         matrix_blue();
         matrix_render();
 
