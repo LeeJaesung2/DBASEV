@@ -26,7 +26,7 @@ static char VERSION[] = "XX.YY.ZZ";
 // defaults for cmdline options
 #define TARGET_FREQ             WS2811_TARGET_FREQ
 #define GPIO_PIN_18             18
-#define GPIO_PIN_23             23
+#define GPIO_PIN_23             12
 #define DMA                     10
 #define STRIP_TYPE              WS2811_STRIP_GBR     // WS2812/SK6812RGB integrated chip+leds
 #define LED_COUNT               9
