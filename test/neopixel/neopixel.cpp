@@ -26,7 +26,7 @@ static char VERSION[] = "XX.YY.ZZ";
 // defaults for cmdline options
 #define TARGET_FREQ             WS2811_TARGET_FREQ
 #define GPIO_PIN_18             18
-#define GPIO_PIN_12             12
+#define GPIO_PIN_13             13
 #define DMA                     10
 #define STRIP_TYPE              WS2811_STRIP_GBR     // WS2812/SK6812RGB integrated chip+leds
 #define LED_COUNT               9
@@ -52,7 +52,7 @@ ws2811_t ledstring =
         },
         [1] =
         {
-            .gpionum = GPIO_PIN_12,
+            .gpionum = GPIO_PIN_13,
             .invert = 0,
             .count = LED_COUNT,
             .strip_type = STRIP_TYPE,
