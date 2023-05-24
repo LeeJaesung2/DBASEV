@@ -8,7 +8,7 @@ void *getGPS(void *arg){
             char temp = (char)serialGetchar(fd);
 
             if (temp == '$') {
-                string sentence;
+                void* sentence;
                 sentence += temp;
 
                 while (temp != '\n') {
