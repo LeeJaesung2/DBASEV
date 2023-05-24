@@ -36,7 +36,7 @@ static char VERSION[] = "XX.YY.ZZ";
 //#define STRIP_TYPE            SK6812_STRIP_RGBW		// SK6812RGBW (NOT SK6812RGB)
 
 #define WIDTH                   1
-#define HEIGHT                  5
+#define HEIGHT                  9
 #define LED_COUNT               (WIDTH * HEIGHT)
 
 int width = WIDTH;
@@ -77,13 +77,11 @@ void matrix_render(void)
 {
     int x, y;
 
-    for (x = 0; x < width; x++)
+    for (y = 0; y < height; y++)
     {
-        for (y = 0; y < height; y++)
-        {
-            ledstring.channel[0].leds[(y * width) + x] = matrix[y * width + x];
-        }
+        ledstring.channel[0].leds[(y * width)] = matrix[y * width];
     }
+
 }
 
 
@@ -94,10 +92,9 @@ void matrix_clear(void)
 
     for (y = 0; y < (height ); y++)
     {
-        for (x = 0; x < width; x++)
-        {
-            matrix[y * width + x] = 0;
-        }
+        
+        matrix[y * width] = 0;
+        
     }
 }
 
@@ -282,10 +279,10 @@ void matrix_red(void)
 
     for (y = 0; y < height; y++)
     {
-        for (x = 0; x < width; x++)
-        {
-            matrix[y * width + x] = 0x00000020;  // Red color
-        }
+        
+        
+        matrix[y * width] = 0x00000020;  // Red color
+        
     }
 }
 
@@ -295,10 +292,9 @@ void matrix_blue(void)
 
     for (y = 0; y < height; y++)
     {
-        for (x = 0; x < width; x++)
-        {
-            matrix[y * width + x] = 0x00200000;  // Blue color
-        }
+        
+        matrix[y * width] = 0x00200000;  // Blue color
+        
     }
 }
 
