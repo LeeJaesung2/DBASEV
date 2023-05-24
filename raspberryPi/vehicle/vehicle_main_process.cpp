@@ -59,7 +59,7 @@ int main()
     void* gps;
 
     //두번째 스레드 생성
-    thr_id = pthread_create(&threads[1], NULL, &getGPS, &gps);
+    thr_id = pthread_create(&threads[0], NULL, &getGPS, &gps);
     if(thr_id < 0){
         perror("failure create thread");
     }
