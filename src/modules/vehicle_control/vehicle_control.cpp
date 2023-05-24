@@ -1,4 +1,4 @@
-void* vehicle_control(std::string arg)
+void* vehicle_control(string arg)
 {
     //==================init====================
     unordered_map<int, Vertex> graph = creatingMap();
