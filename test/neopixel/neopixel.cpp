@@ -292,7 +292,7 @@ int main(int argc, char *argv[])
 
     sprintf(VERSION, "%d.%d.%d", VERSION_MAJOR, VERSION_MINOR, VERSION_MICRO);
 
-    parseargs(argc, argv, &ledstring);
+    //parseargs(argc, argv, &ledstring);
 
     matrix = (ws2811_led_t*)malloc(sizeof(ws2811_led_t) * led_count);
 
