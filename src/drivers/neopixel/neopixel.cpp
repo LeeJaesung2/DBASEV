@@ -1,7 +1,7 @@
 #include <DBASEV/neopixel.h>
 
 
-
+ws2811_return_t ret;
 
 ws2811_t initNeopixel(){
     ws2811_t ledstring =
@@ -28,6 +28,14 @@ ws2811_t initNeopixel(){
             },
         },
     };
+    
+
+    sprintf(VERSION, "%d.%d.%d", VERSION_MAJOR, VERSION_MINOR, VERSION_MICRO);
+
+    if ((ret = ws2811_init(&ledstring)) != WS2811_SUCCESS) {
+        fprintf(stderr, "ws2811_init failed: %s\n", ws2811_get_return_t_str(ret));
+        return ret;
+    }
     return ledstring;
 }
 ws2811_t matrix_render_red(ws2811_t ledstring){
@@ -36,6 +44,10 @@ ws2811_t matrix_render_red(ws2811_t ledstring){
         ledstring.channel[0].leds[x] = RED; // Pin 18
         ledstring.channel[1].leds[x] = BLUE; // Pin 15 
     }
+    if ((ret = ws2811_render(&ledstring)) != WS2811_SUCCESS) {
+        fprintf(stderr, "ws2811_render failed: %s\n", ws2811_get_return_t_str(ret));
+        break;
+    }
     return ledstring;
 }
 ws2811_t matrix_render_blue(ws2811_t ledstring){
@@ -43,6 +55,10 @@ ws2811_t matrix_render_blue(ws2811_t ledstring){
         
         ledstring.channel[0].leds[x] = BLUE; // Pin 18
         ledstring.channel[1].leds[x] = RED; // Pin 15 
+    }
+    if ((ret = ws2811_render(&ledstring)) != WS2811_SUCCESS) {
+        fprintf(stderr, "ws2811_render failed: %s\n", ws2811_get_return_t_str(ret));
+        break;
     }
     return ledstring;
 }
