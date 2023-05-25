@@ -12,4 +12,4 @@ apt-get install -y python2.7-dev
 #dronekit here
 
 #for message queue
-
+pip install sysv-ipc==1.0.1
