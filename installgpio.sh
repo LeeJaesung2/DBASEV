@@ -1,5 +1,12 @@
 mkdir lib
 
+#WiringPi
+cd lib
+git clone https://github.com/WiringPi/WiringPi
+cd WiringPi
+./build
+cd ../..
+
 #ws2811(neopixel)
 cd lib
 git clone https://github.com/jgarff/rpi_ws281x

@@ -31,15 +31,20 @@ int main()
     }
 
 
-    // create third thread
-    // thr_id = pthread_create(&threads[2], NULL, &thread_func3, (void *)&begin);
-    // if(thr_id < 0){
-    //     perror("failure create thread");
-    // }
 
     // run on main thread
-    announceOn();    
-
+    /*check OS version
+    only run on raspberry pi*/
+    struct utsname linux_info;
+    if (uname(&linux_info) != -1) {
+        if(strcmp(linux_info.release,"6.1.21-v8+")==0){
+            printf("hern");
+            announceOn();
+        }
+    } else {
+        std::cerr << "Error: Failed to retrieve Linux version." << std::endl;
+        return 1;
+    }
     // wait for all of thread dead
     for (int i = 0; i < NUM_THREADS; i++) {
         pthread_join(threads[i], &status);
