@@ -6,7 +6,7 @@
 
 
 
-#define NUM_THREADS 2
+#define NUM_THREADS 0
 
 
 
@@ -20,25 +20,36 @@ int main()
     pthread_t threads[NUM_THREADS];
 
     //create flight thread
-    thr_id = pthread_create(&threads[0], NULL, &flight_control, NULL);
-    if(thr_id < 0){
-        perror("failure create thread");
-    }
-    // create receiver thread
-    thr_id = pthread_create(&threads[1], NULL, &receiver, NULL);
-    if(thr_id < 0){
-        perror("failure create thread");
-    }
-
-
-    // create third thread
-    // thr_id = pthread_create(&threads[2], NULL, &thread_func3, (void *)&begin);
+    // thr_id = pthread_create(&threads[0], NULL, &flight_control, NULL);
+    // if(thr_id < 0){
+    //     perror("failure create thread");
+    // }
+    // // create receiver thread
+    // thr_id = pthread_create(&threads[1], NULL, &receiver, NULL);
     // if(thr_id < 0){
     //     perror("failure create thread");
     // }
 
+
+
     // run on main thread
-    announceOn();    
+
+    /*check OS version
+    only run on raspberry pi*/
+    struct utsname linux_info;
+    if (uname(&linux_info) != -1) {
+        cout << linux_info.release << endl;
+        if(strcmp(linux_info.release,"5.15.0-71-generic")==0){
+        
+        //announceOn();
+        }   
+    } else {
+        std::cerr << "Error: Failed to retrieve Linux version." << std::endl;
+        return 1;
+    }
+    if(strcmp(linux_info.release,"5.15.0-71-generic")==0){
+        //announceOn(); //only run on raspberry pi
+    }   
 
     // wait for all of thread dead
     for (int i = 0; i < NUM_THREADS; i++) {
