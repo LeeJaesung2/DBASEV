@@ -2,7 +2,8 @@
 #define __ANNOUNCE_H__
 #include "visibility.h"
 #include "neopixel.h"
-#include <ws2811/ws2811.h>
+
+#define RELAY_PIN 17 // using GPIO pin
 
 //control led and piezo buzzer
 int announceOn();

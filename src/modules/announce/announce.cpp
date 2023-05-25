@@ -9,6 +9,10 @@ void initBuzzer(){
     #ifndef DEBUG
         cout << "announce.cpp" << endl;
     #endif
+    if (wiringPiSetup() == -1) {
+        
+    }
+    pinMode(RELAY_PIN, OUTPUT);
 }
 
 
@@ -18,6 +22,7 @@ void buzzerOn(){
     #ifndef DEBUG
         cout << "announce.cpp" << endl;
     #endif
+    digitalWrite(RELAY_PIN, HIGH);
 }
 
 void ledOff(ws2811_t ledstring){
@@ -27,7 +32,7 @@ void ledOff(ws2811_t ledstring){
     #endif
     matrix_clear(ledstring);
     ws2811_render(&ledstring);
-     ws2811_fini(&ledstring);
+    ws2811_fini(&ledstring);
 }
 
 void buzzerOff(){
@@ -35,6 +40,7 @@ void buzzerOff(){
     #ifndef DEBUG
         cout << "announce.cpp" << endl;
     #endif
+    digitalWrite(RELAY_PIN, LOW);
 }
 
 //control led and piezo buzzer
