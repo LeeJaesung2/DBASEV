@@ -33,7 +33,6 @@ int main()
 
 
     // run on main thread
-
     /*check OS version
     only run on raspberry pi*/
     struct utsname linux_info;
