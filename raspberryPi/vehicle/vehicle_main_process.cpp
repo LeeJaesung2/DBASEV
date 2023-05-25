@@ -9,7 +9,7 @@
 void main_thred_func(){
     
     while(true){
-        print("A");
+        printf("A");
     }
 }
 
