@@ -38,9 +38,8 @@ int main()
     only run on raspberry pi*/
     struct utsname linux_info;
     if (uname(&linux_info) != -1) {
-        cout << linux_info.release << endl;
-        if(strcmp(linux_info.release,"5.15.0-71-generic")==0){
-        
+        if(strcmp(linux_info.release,"6.1.21-v8+")==0){
+        	printf("here");
         //announceOn();
         }   
     } else {
