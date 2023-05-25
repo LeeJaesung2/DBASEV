@@ -14,7 +14,7 @@ static char VERSION[] = "XX.YY.ZZ";
 #include <stdarg.h>
 #include <getopt.h>
 #include <iostream>
-
+#include <wiringPi.h>
 #include <ws2811/clk.h>
 #include <ws2811/gpio.h>
 #include <ws2811/dma.h>
