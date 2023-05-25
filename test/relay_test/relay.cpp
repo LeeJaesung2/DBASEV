@@ -8,14 +8,16 @@ int main() {
 
     pinMode(RELAY_PIN, OUTPUT);
 
-    // 릴레이 켜기
-    digitalWrite(RELAY_PIN, HIGH);
+    while(1){
+        // 릴레이 켜기
+        digitalWrite(RELAY_PIN, HIGH);
 
-    // 5초간 대기
-    delay(5000);
+        // 5초간 대기
+        delay(1000);
 
-    // 릴레이 끄기
-    digitalWrite(RELAY_PIN, LOW);
+        // 릴레이 끄기
+        digitalWrite(RELAY_PIN, LOW);
+    }
 
     return 0;
 }
