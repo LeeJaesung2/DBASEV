@@ -1,6 +1,6 @@
 #include <wiringPi.h>
 
-#define RELAY_PIN 17 // using GPIO pin
+#define RELAY_PIN 0 // using GPIO pin
 int main() {
     if (wiringPiSetup() == -1) {
         return 1;

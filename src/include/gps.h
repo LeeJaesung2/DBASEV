@@ -2,6 +2,7 @@
 #define GPS_FUNCTIONS_H
 
 #include <DBASEV/visibility.h>
+#include <DBASEV/messagequeue.h>
 #include <cmath>
 #include <sstream>
 #include <wiringSerial.h> // g++ -o file file.cpp -lwiringPi

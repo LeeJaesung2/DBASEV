@@ -18,11 +18,15 @@ void* vehicle_control(void* arg)
     while (1) {  
         //cout << "arg : " << arg << endl;
 
-        char* gps = static_cast<char*>(arg); 
+        MsgBuf msg;
+        key_t key = 1234;
+        int key_id = mq_init(key);
+        struct msqid_ds buf;
+        
+        msg = pop(key_id, buf);
+        cout << "gps : " << msg.buf << endl;
 
-        cout << "gps : " << gps << endl;
-
-        if (!isValidGPSData(gps)) {
+        if (!isValidGPSData(msg.buf)) {
             pre_gps = "";
             continue;
         }
@@ -31,13 +35,13 @@ void* vehicle_control(void* arg)
             cout << "speed: " << pre_speed << " m/s \n";
         } 
         else{
-            current_speed = getSpeed(getDistance(pre_gps, gps), pre_gps, gps);
+            current_speed = getSpeed(getDistance(pre_gps, msg.buf), pre_gps, msg.buf);
             cout << "speed: " << current_speed << " m/s \n";
             pre_speed = current_speed;
         }
 
-        current_latitude = extract_gps_data(gps).latitude;
-        current_longitude = extract_gps_data(gps).longitude;
+        current_latitude = extract_gps_data(msg.buf).latitude;
+        current_longitude = extract_gps_data(msg.buf).longitude;
 
         now_waypoint = calculateClosestWaypoint(road_id, pre_waypoint, current_latitude, current_longitude, graph);
         pre_waypoint = now_waypoint;
@@ -56,7 +60,7 @@ void* vehicle_control(void* arg)
             //printf("now road: %d\n", road_id);
         }
 
-        pre_gps = gps;
+        pre_gps = msg.buf;
 
         sleep(0.5);
     }

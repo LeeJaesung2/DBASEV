@@ -2,7 +2,6 @@
 #include <DBASEV/gps.h>
 #include <DBASEV/vehicle_control.h>
 #include <DBASEV/communication.h>
-#include <DBASEV/messagequeue.h>
 
 #define NUM_THREADS 2
 
@@ -12,32 +11,6 @@ void main_thred_func(){
         printf("A");
     }
 }
-
-// void * sender(void * arg)
-// {
-//     MsgBuf msg;
-//     key_t key = 1234;
-//     int key_id = mq_init(key);
-//     struct msqid_ds buf;
-//     while(true){
-//         msg = pop(key_id, buf);
-//         cout << msg.buf << endl;
-//     }
-
-// }
-
-// void * receiver(void * arg)
-// {
-//     MsgBuf msg;
-//     msg.msgtype = 1;
-//     key_t key = 1234;
-//     int key_id = mq_init(key);
-//     struct msqid_ds buf;
-//     strcpy(msg.buf, "Recieved!!");
-//     while(true){
-//         push(key_id,buf, msg);
-//     }
-// }
 
 void * thread_func6(void * arg)
 {
@@ -58,21 +31,19 @@ int main()
     pthread_t threads[NUM_THREADS];
 
     //첫번째 스레드 생성
-    thr_id = pthread_create(&threads[0], NULL, &sender, NULL);
-    if(thr_id < 0){
-        perror("failure create thread");
-    }
-
-    void* gps;
+    // thr_id = pthread_create(&threads[0], NULL, &sender, NULL);
+    // if(thr_id < 0){
+    //     perror("failure create thread");
+    // }
 
     //두번째 스레드 생성
-    thr_id = pthread_create(&threads[0], NULL, &getGPS, &gps);
+    thr_id = pthread_create(&threads[0], NULL, &getGPS, NULL);
     if(thr_id < 0){
         perror("failure create thread");
     }
 
     //세번째 스레드 생성
-    thr_id = pthread_create(&threads[1], NULL, &vehicle_control, &gps);
+    thr_id = pthread_create(&threads[1], NULL, &vehicle_control, NULL);
     if(thr_id < 0){
         perror("failure create thread");
     }
