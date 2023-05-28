@@ -24,7 +24,8 @@ void* vehicle_control(void* arg)
         msg = pop(key_id, buf);
         
         cout << "fix gps : " << msg.buf << endl;
-
+        sleep(1);
+        printf("check\n");
         if (!isValidGPSData(msg.buf)) {
             pre_gps = "";
             continue;
