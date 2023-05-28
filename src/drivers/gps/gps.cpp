@@ -30,7 +30,7 @@ void *getGPS(void* arg){
             }
         }
 
-        usleep(1000);
+        usleep(1000000);
     }
 }
 
