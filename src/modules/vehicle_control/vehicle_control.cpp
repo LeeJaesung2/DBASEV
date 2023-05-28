@@ -14,12 +14,14 @@ void* vehicle_control(void* arg)
     float pre_speed = 0.0, current_speed;
     float current_latitude, current_longitude;
     int pre_waypoint = 0, now_waypoint;
+    
+    MsgBuf msg;
+    key_t key = 4567;
+    int key_id = mq_init(key);
+    struct msqid_ds buf;
 
     while (1) {  
-        MsgBuf msg;
-        key_t key = 4567;
-        int key_id = mq_init(key);
-        struct msqid_ds buf;
+        
         
         msg = pop(key_id, buf);
         
