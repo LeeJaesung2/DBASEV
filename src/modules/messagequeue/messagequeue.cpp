@@ -15,7 +15,7 @@ int mq_init(key_t key){
 
 void push(int key_id,msqid_ds buf, MsgBuf msg){
     
-
+    cout << "push" << "key id" << key_id << "stat" << IPC_STAT << endl;
     if (msgctl(key_id, IPC_STAT, &buf) == -1) {
         std::cerr << "Failed to push message queue status!" << std::endl;
         #ifndef DEBUG
@@ -55,7 +55,7 @@ void push(int key_id,msqid_ds buf, MsgBuf msg){
 
 MsgBuf pop(int key_id, msqid_ds buf) {
     MsgBuf msg;
-    
+    cout << "push" << "key id" << key_id << "stat" << IPC_STAT << endl;
     if (msgctl(key_id, IPC_STAT, &buf) == -1) {
         std::cerr << "Failed to get message queue status!" << std::endl;
         #ifndef DEBUG
