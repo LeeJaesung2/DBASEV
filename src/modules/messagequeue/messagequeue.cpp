@@ -17,7 +17,7 @@ void push(int key_id,msqid_ds buf, MsgBuf msg){
     
 
     if (msgctl(key_id, IPC_STAT, &buf) == -1) {
-        std::cerr << "Failed to get message queue status!" << std::endl;
+        std::cerr << "Failed to push message queue status!" << std::endl;
         #ifndef DEBUG
             cout << "messagequeue.cpp" << endl;
         #endif
