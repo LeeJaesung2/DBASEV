@@ -29,6 +29,8 @@ void *getGPS(void* arg){
                 }
             }
         }
+
+        usleep(1000);
     }
 }
 
