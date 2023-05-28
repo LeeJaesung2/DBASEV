@@ -61,8 +61,6 @@ void* vehicle_control(void* arg)
 
         pre_gps = msg.buf;
 
-        usleep(100000);
-
         printf("check\n");
     }
 }
