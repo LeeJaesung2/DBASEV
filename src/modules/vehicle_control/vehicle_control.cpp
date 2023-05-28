@@ -17,7 +17,7 @@ void* vehicle_control(void* arg)
 
     while (1) {  
         MsgBuf msg;
-        key_t key = 0196;
+        key_t key = 4567;
         int key_id = mq_init(key);
         struct msqid_ds buf;
         
