@@ -67,7 +67,7 @@ MsgBuf pop(int key_id, msqid_ds buf) {
 
     // Check the number of messages currently in the queue
     if (buf.msg_qnum <= 0) {
-        std::cerr << "Message queue is empty. Cannot retrieve message." << std::endl;
+        //std::cerr << "Message queue is empty. Cannot retrieve message." << std::endl;
         #ifndef DEBUG
         cout << "messagequeue.cpp" << endl;
         #endif
