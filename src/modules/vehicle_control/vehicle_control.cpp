@@ -16,8 +16,6 @@ void* vehicle_control(void* arg)
     int pre_waypoint = 0, now_waypoint;
 
     while (1) {  
-        //cout << "arg : " << arg << endl;
-
         MsgBuf msg;
         key_t key = 1234;
         int key_id = mq_init(key);

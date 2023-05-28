@@ -10,9 +10,7 @@ void *getGPS(void* arg){
     struct msqid_ds buf;
     
     while (1) {
-        //printf("connecting...");
         if (serialDataAvail(fd)) {
-            //cout << "getting gps............." << endl;
             char temp = (char)serialGetchar(fd);
         
             if (temp == '$') {
@@ -25,7 +23,7 @@ void *getGPS(void* arg){
                 }
 
                 if (sentence.find("GPGGA") != string::npos) {
-                    //string에서 char*로 바꾸기
+                    print("acting push!!!!!!!!!!\n\n");
                     strcpy(msg.buf, sentence.c_str());
                     push(key_id,buf, msg);
                 }
