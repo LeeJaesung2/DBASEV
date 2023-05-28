@@ -168,8 +168,6 @@ int findNextRoadId(int road_id, float current_latitude, float current_longitude,
         vector<int> connected_waypoints = getWaypoints(graph, connected_road);
         if (!connected_waypoints.empty())
         {
-            int first_waypoint_id = connected_waypoints[0];
-
             //cout << " first_waypoint_id: " << first_waypoint_id << " of road: " << connected_road;
 
             float waypoint_latitude = graph.at(connected_road).latitude[0];
