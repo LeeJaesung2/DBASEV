@@ -24,9 +24,8 @@ void* vehicle_control(void* arg)
         struct msqid_ds buf;
         
         msg = pop(key_id, buf);
-        if(msg.buf != ""){
-            cout << "gps : " << msg.buf << endl;
-        }
+        
+        cout << "gps : " << msg.buf << endl;
 
         if (!isValidGPSData(msg.buf)) {
             pre_gps = "";
@@ -64,6 +63,6 @@ void* vehicle_control(void* arg)
 
         pre_gps = msg.buf;
 
-        sleep(0.5);
+        sleep(1);
     }
 }
