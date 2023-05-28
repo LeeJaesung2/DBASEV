@@ -16,7 +16,7 @@ void* vehicle_control(void* arg)
     int pre_waypoint = 0, now_waypoint;
     
     MsgBuf msg;
-    key_t key = 4567;
+    key_t key = 1234;
     int key_id = mq_init(key);
     struct msqid_ds buf;
 
