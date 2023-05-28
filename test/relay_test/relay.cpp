@@ -12,7 +12,7 @@ int main() {
         // 릴레이 켜기
         digitalWrite(RELAY_PIN, HIGH);
 
-        // 5초간 대기
+        // 1초간 대기
         delay(1000);
 
         // 릴레이 끄기

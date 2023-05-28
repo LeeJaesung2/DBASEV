@@ -7,7 +7,7 @@
 
 struct MsgBuf {
     long msgtype; // message type, must be > 0
-    char buf[26];
+    char buf[100];
 };
 
 
