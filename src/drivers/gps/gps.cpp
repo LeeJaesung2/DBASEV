@@ -25,7 +25,8 @@ void *getGPS(void* arg){
                 }
 
                 if (sentence.find("GPGGA") != string::npos) {
-                    strcpy(msg.buf, sentence);
+                    //string에서 char*로 바꾸기
+                    strcpy(msg.buf, sentence.c_str());
                     push(key_id,buf, msg);
                 }
             }
