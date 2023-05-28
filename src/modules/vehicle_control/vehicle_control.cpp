@@ -17,14 +17,14 @@ void* vehicle_control(void* arg)
 
     while (1) {  
         MsgBuf msg;
-        key_t key = 1234;
+        key_t key = 0196;
         int key_id = mq_init(key);
         struct msqid_ds buf;
         
         msg = pop(key_id, buf);
         
         cout << "gps : " << msg.buf << endl;
-        
+
         if (!isValidGPSData(msg.buf)) {
             pre_gps = "";
             sleep(1);
