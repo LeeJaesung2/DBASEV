@@ -23,7 +23,7 @@ void *getGPS(void* arg){
                 }
 
                 if (sentence.find("GPGGA") != string::npos) {
-                    print("acting push!!!!!!!!!!\n\n");
+                    printf("acting push!!!!!!!!!!\n\n");
                     strcpy(msg.buf, sentence.c_str());
                     push(key_id,buf, msg);
                 }
