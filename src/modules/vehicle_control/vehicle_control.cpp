@@ -28,7 +28,7 @@ void* vehicle_control(void* arg)
 
     while (1) {  
         
-        string sending_communication;
+        char* sending_communication;
 
 
         
