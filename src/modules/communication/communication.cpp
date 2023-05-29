@@ -40,7 +40,7 @@ void * sender(void *arg)
         }
         comp = cmd.sq;
         //temp2 = string(cmd.buf);
-        message = "velocity 1 0";
+        message = "velocity10";
         
 		for (int i = 0; i < message.length(); i += max_chunk_size) {
 				int chunk_size = std::min(max_chunk_size, static_cast<int>(message.length() - i));
