@@ -59,7 +59,7 @@ void* vehicle_control(void* arg)
         pre_waypoint = now_waypoint;
         //printf("now_waypoint: %d\n\n", graph[road_id].waypoints[now_waypoint]);
 
-        sending_communication += to_string(road_id);
+        sending_communication += to_string(road_id) + " / ";
         sending_communication += to_string(now_waypoint);
 
         int remain_waypoints = graph[road_id].waypoints.back() - now_waypoint;
