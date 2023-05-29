@@ -22,14 +22,14 @@ void * sender(void *arg)
 
     const int max_chunk_size = 49;
     char temp_buffer[50];
-    std::string temp;
+    string temp;
 
     MsgBuf cmd;
     key_t key = 5555;
     int key_id = mq_init(key);
     struct msqid_ds bufs;
     int comp;
-    std::string message;
+    string message;
     
     while (true) {
 		
@@ -38,7 +38,8 @@ void * sender(void *arg)
             cout << "sender : " << cmd.buf  << "msg count : " << cmd.sq << endl;
         }
         comp = cmd.sq;
-        //message = (cmd.buf).c_str();
+        
+        message = cmd.buf;
 		
 		for (int i = 0; i < message.length(); i += max_chunk_size) {
 				int chunk_size = std::min(max_chunk_size, static_cast<int>(message.length() - i));
@@ -59,8 +60,10 @@ void * sender(void *arg)
 				// Send the message over the serial port
 				ssize_t bytesWritten = write(serial_port, buf, len);
 				
+                printf("1111111111111111\n");
 				if (bytesWritten < 0 || bytesWritten != len) {
 					//std::cerr << "Error sending message." << std::endl;
+                    printf("2222222222222222\n");
 					close(serial_port);
 					//return 1;
 				}
@@ -88,7 +91,7 @@ void * receiver(void *arg)
     //uint8_t buf[MAVLINK_MAX_PACKET_LEN];
     mavlink_status_t status;
     mavlink_channel_t channel = MAVLINK_COMM_0;
-    std::string message;
+    string message;
 
     //ready to send message using message queue
     MsgBuf qmsg;
