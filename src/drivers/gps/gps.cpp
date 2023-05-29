@@ -4,6 +4,7 @@ void *getGPS(void* arg){
     int fd = serialOpen("/dev/serial0", 9600);
     
     MsgBuf msg;
+    msg.msgtype = 1;
     key_t key = 1234;
     int key_id = mq_init(key);
     struct msqid_ds buf;

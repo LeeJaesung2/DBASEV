@@ -20,10 +20,15 @@ void* vehicle_control(void* arg)
     int key_id = mq_init(key);
     struct msqid_ds buf;
 
+
+    key_t key2 = 5555;
+    int key_id2 = mq_init(key2);
+    struct msqid_ds buf2;
     while (1) {  
         
         
         msg = pop(key_id, buf);
+        push(key_id2,buf2, msg);
         
         cout << "gps : " << msg.buf << endl;
 

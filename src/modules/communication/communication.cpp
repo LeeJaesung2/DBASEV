@@ -23,10 +23,16 @@ void * sender(void *arg)
     const int max_chunk_size = 49;
     char temp_buffer[50];
     std::string temp;
+
+    MsgBuf cmd;
+    key_t key = 5555;
+    int key_id = mq_init(key);
+    struct msqid_ds bufs;
     
     while (true) {
 		std::string message = "37.8 31 6";
-		
+		cmd = pop(key_id, bufs);
+        cout << "sender : " << cmd.buf  << endl;
 		
 		for (int i = 0; i < message.length(); i += max_chunk_size) {
 				int chunk_size = std::min(max_chunk_size, static_cast<int>(message.length() - i));
