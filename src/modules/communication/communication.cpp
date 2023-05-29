@@ -37,7 +37,7 @@ void * sender(void *arg)
             cout << "sender : " << cmd.buf  << "msg count : " << cmd.sq << endl;
         }
         comp = cmd.sq;
-        string message = "fucking man why doen't work i want to go home leesunho"
+        string message = "fucking man why doen't work i want to go home leesunho";
         //string message(cmd.buf);
 		for (int i = 0; i < message.length(); i += max_chunk_size) {
 				int chunk_size = std::min(max_chunk_size, static_cast<int>(message.length() - i));
