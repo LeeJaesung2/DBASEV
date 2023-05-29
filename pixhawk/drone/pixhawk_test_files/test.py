@@ -4,7 +4,8 @@ import time
 #드론 pixhawk 연결함수
 def connect_to_pixhawk():
     # 연결할 시리얼 포트의 경로를 지정합니다.
-    connection_string = "/dev/ttyAMA0" #USB : '/dev/ttyACM0' 
+    connection_string =  "/dev/ttyAMA0"
+    #connection_string = "tcp:127.0.0.1:5760" # Serial : "/dev/ttyAMA0" #USB : '/dev/ttyACM0' 
 
     # 연결합니다.
     vehicle = connect(connection_string, baud=57600, wait_ready=True)
@@ -23,9 +24,15 @@ def arm_and_takeoff_to_pixhawk(vehicle, aTargetAltitude):
 
     vehicle.mode = VehicleMode("GUIDED")
     vehicle.armed = True
+    while vehicle.mode == "GUIDED":
+        vehicle.mode = VehicleMode("GUIDED")
+        print(vehicle.mode)
+        print("wait")
+        time.sleep(1)    
 
     # 이륙 고도 도달 대기
     while not vehicle.armed:
+        vehicle.armed = True
         print("드론 arming 중...")
         time.sleep(1)
 
@@ -85,12 +92,15 @@ waypoints = [[1, 1, 35.1535098, 128.1002861, 5.0],
 
 #test1 : 연결 함수
 def test1():
+    print("start test1")
     vehicle = connect_to_pixhawk()
+
+    
 
 #test2 : 연결 후 원하는 고도로 이륙
 def test2():
     vehicle = connect_to_pixhawk()
-    arm_and_takeoff_to_pixhawk(vehicle, 5.0)
+    arm_and_takeoff_to_pixhawk(vehicle, 10.0)
 
 # test3 : 연결 -> 이륙 -> 착륙
 def test3():
@@ -136,4 +146,4 @@ def test5():
         if turnoff * 5 > 60:
             break
 
-
+test2()
