@@ -25,32 +25,34 @@ void* vehicle_control(void* arg)
     int key_id2 = mq_init(key2);
     struct msqid_ds buf2;
     int temp;
+
     while (1) {  
         
-        
+        string sending_communication;
+
         msg = pop(key_id, buf);
         usleep(1);
         push(key_id2,buf2, msg);
         
         if(msg.sq != temp){
             cout << "vehicle_control.cpp : " << msg.buf << "msg num : " <<msg.sq << endl;
-
         }
         temp = msg.sq;
-        //cout << "gps : " << msg.buf << endl;
 
         if (!isValidGPSData(msg.buf)) {
             pre_gps = "";
-            sleep(1);
             continue;
         }
-
+         // 데이터 포맷 : 속도 / 도로id/ waypoint
         if (pre_gps ==""){
-            cout << "speed: " << pre_speed << " m/s \n";
+            //cout << "speed: " << pre_speed << " m/s \n";
+            sending_communication += "velocity / ";
+            // real : sending_communication += pre_speed;
         } 
         else{
             current_speed = getSpeed(getDistance(pre_gps, msg.buf), pre_gps, msg.buf);
-            cout << "speed: " << current_speed << " m/s \n";
+            //cout << "speed: " << current_speed << " m/s \n";
+            sending_communication += current_speed;
             pre_speed = current_speed;
         }
 
@@ -60,6 +62,9 @@ void* vehicle_control(void* arg)
         now_waypoint = calculateClosestWaypoint(road_id, pre_waypoint, current_latitude, current_longitude, graph);
         pre_waypoint = now_waypoint;
         //printf("now_waypoint: %d\n\n", graph[road_id].waypoints[now_waypoint]);
+
+        sending_communication += to_string(road_id);
+        sending_communication += to_string(now_waypoint);
 
         int remain_waypoints = graph[road_id].waypoints.back() - now_waypoint;
         
