@@ -29,14 +29,16 @@ void * sender(void *arg)
     int key_id = mq_init(key);
     struct msqid_ds bufs;
     int comp;
+    std::string message;
     
     while (true) {
-		std::string message = "37.8 31 6";
+		
 		cmd = pop(key_id, bufs);
         if(comp != cmd.sq){
             cout << "sender : " << cmd.buf  << "msg count : " << cmd.sq << endl;
         }
         comp = cmd.sq;
+        message = (cmd.buf).c_str();
 		
 		for (int i = 0; i < message.length(); i += max_chunk_size) {
 				int chunk_size = std::min(max_chunk_size, static_cast<int>(message.length() - i));
