@@ -45,13 +45,13 @@ void* vehicle_control(void* arg)
          // 데이터 포맷 : 속도 / 도로id/ waypoint
         if (pre_gps ==""){
             //cout << "speed: " << pre_speed << " m/s \n";
-            sending_communication += "velocity / ";
+            str(sending_communication) += "velocity / ";
             // real : sending_communication += pre_speed;
         } 
         else{
             current_speed = getSpeed(getDistance(pre_gps, msg.buf), pre_gps, msg.buf);
             //cout << "speed: " << current_speed << " m/s \n";
-            sending_communication += current_speed;
+            str(sending_communication) += current_speed;
             pre_speed = current_speed;
         }
 
@@ -62,8 +62,8 @@ void* vehicle_control(void* arg)
         pre_waypoint = now_waypoint;
         //printf("now_waypoint: %d\n\n", graph[road_id].waypoints[now_waypoint]);
 
-        sending_communication += to_string(road_id);
-        sending_communication += to_string(now_waypoint);
+        str(sending_communication) += to_string(road_id);
+        str(sending_communication) += to_string(now_waypoint);
 
         int remain_waypoints = graph[road_id].waypoints.back() - now_waypoint;
         
