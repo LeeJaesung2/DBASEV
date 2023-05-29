@@ -43,6 +43,7 @@ void push(int key_id,msqid_ds buf, MsgBuf msg){
                 cout << "messagequeue.cpp" << endl;
             #endif
             return;
+            usleep(1);
         }
     }
     if (msgsnd(key_id, &msg, sizeof(msg), IPC_NOWAIT) == -1) {

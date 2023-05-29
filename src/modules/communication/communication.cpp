@@ -28,11 +28,15 @@ void * sender(void *arg)
     key_t key = 5555;
     int key_id = mq_init(key);
     struct msqid_ds bufs;
+    int comp;
     
     while (true) {
 		std::string message = "37.8 31 6";
 		cmd = pop(key_id, bufs);
-        cout << "sender : " << cmd.buf  << endl;
+        if(comp != cmd.sq){
+            cout << "sender : " << cmd.buf  << "msg count : " << cmd.sq << endl;
+        }
+        comp = cmd.sq;
 		
 		for (int i = 0; i < message.length(); i += max_chunk_size) {
 				int chunk_size = std::min(max_chunk_size, static_cast<int>(message.length() - i));
@@ -54,7 +58,7 @@ void * sender(void *arg)
 				ssize_t bytesWritten = write(serial_port, buf, len);
 				
 				if (bytesWritten < 0 || bytesWritten != len) {
-					std::cerr << "Error sending message." << std::endl;
+					//std::cerr << "Error sending message." << std::endl;
 					close(serial_port);
 					//return 1;
 				}

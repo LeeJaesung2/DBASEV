@@ -5,9 +5,10 @@ void *getGPS(void* arg){
     
     MsgBuf msg;
     msg.msgtype = 1;
-    key_t key = 1234;
+    key_t key = 1235;
     int key_id = mq_init(key);
     struct msqid_ds buf;
+    msg.sq = -1;
     
     while (1) {
         if (serialDataAvail(fd)) {
@@ -26,9 +27,14 @@ void *getGPS(void* arg){
                     cout << "sentence.c_str(): " << sentence.c_str() << endl;
                     strcpy(msg.buf, sentence.c_str());
                     push(key_id,buf, msg);
+                    msg.sq++;
                 }
             }
         }
+        // strcpy(msg.buf, "message test!");
+        // push(key_id,buf, msg);
+        // msg.sq++;
+        // usleep(1000);
     }
 }
 

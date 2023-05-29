@@ -16,7 +16,7 @@ void* vehicle_control(void* arg)
     int pre_waypoint = 0, now_waypoint;
     
     MsgBuf msg;
-    key_t key = 1234;
+    key_t key = 1235;
     int key_id = mq_init(key);
     struct msqid_ds buf;
 
@@ -24,13 +24,20 @@ void* vehicle_control(void* arg)
     key_t key2 = 5555;
     int key_id2 = mq_init(key2);
     struct msqid_ds buf2;
+    int temp;
     while (1) {  
         
         
         msg = pop(key_id, buf);
+        usleep(1);
         push(key_id2,buf2, msg);
         
-        cout << "gps : " << msg.buf << endl;
+        if(msg.sq != temp){
+            cout << "vehicle_control.cpp : " << msg.buf << "msg num : " <<msg.sq << endl;
+
+        }
+        temp = msg.sq;
+        //cout << "gps : " << msg.buf << endl;
 
         if (!isValidGPSData(msg.buf)) {
             pre_gps = "";

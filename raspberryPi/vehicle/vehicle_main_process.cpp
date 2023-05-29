@@ -3,7 +3,7 @@
 #include <DBASEV/vehicle_control.h>
 #include <DBASEV/communication.h>
 
-#define NUM_THREADS 2
+#define NUM_THREADS 3
 
 void main_thred_func(){
     
