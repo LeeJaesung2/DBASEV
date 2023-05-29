@@ -48,7 +48,7 @@ void* vehicle_control(void* arg)
         else{
             current_speed = getSpeed(getDistance(pre_gps, msg.buf), pre_gps, msg.buf);
             //cout << "speed: " << current_speed << " m/s \n";
-            sending_communication += (current_speed+"/");
+            sending_communication += to_string(current_speed)+"/";
             pre_speed = current_speed;
         }
 
