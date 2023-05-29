@@ -11,30 +11,30 @@ void *getGPS(void* arg){
     msg.sq = -1;
     
     while (1) {
-        // if (serialDataAvail(fd)) {
-        //     char temp = (char)serialGetchar(fd);
+        if (serialDataAvail(fd)) {
+            char temp = (char)serialGetchar(fd);
         
-        //     if (temp == '$') {
-        //         string sentence;
-        //         sentence += temp;
+            if (temp == '$') {
+                string sentence;
+                sentence += temp;
 
-        //         while (temp != '\n') {
-        //             temp = (char)serialGetchar(fd);
-        //             sentence += temp;
-        //         }
+                while (temp != '\n') {
+                    temp = (char)serialGetchar(fd);
+                    sentence += temp;
+                }
 
-        //         if (sentence.find("GPGGA") != string::npos) {
-        //             cout << "sentence.c_str(): " << sentence.c_str() << endl;
-        //             strcpy(msg.buf, sentence.c_str());
-        //             push(key_id,buf, msg);
-        //             msg.sq++;
-        //         }
-        //     }
-        // }
-        strcpy(msg.buf, "message test!");
-        push(key_id,buf, msg);
-        msg.sq++;
-        usleep(1000);
+                if (sentence.find("GPGGA") != string::npos) {
+                    cout << "sentence.c_str(): " << sentence.c_str() << endl;
+                    strcpy(msg.buf, sentence.c_str());
+                    push(key_id,buf, msg);
+                    msg.sq++;
+                }
+            }
+        }
+        // strcpy(msg.buf, "message test!");
+        // push(key_id,buf, msg);
+        // msg.sq++;
+        // usleep(1000);
     }
 }
 
