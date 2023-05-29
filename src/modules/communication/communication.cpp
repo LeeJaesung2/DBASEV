@@ -9,7 +9,7 @@ void * sender(void *arg)
         //return 1;
     }
 
-    //serialSetting(serial_port);
+    serialSetting(serial_port);
 
     // Create a Mavlink instance
     mavlink_message_t msg;
