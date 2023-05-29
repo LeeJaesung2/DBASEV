@@ -30,6 +30,7 @@ void * sender(void *arg)
     struct msqid_ds bufs;
     int comp;
     string message;
+    string temp2;
     
     while (true) {
 		
@@ -38,7 +39,8 @@ void * sender(void *arg)
             cout << "sender : " << cmd.buf  << "msg count : " << cmd.sq << endl;
         }
         comp = cmd.sq;
-        message = string(&(cmd.buf));
+        temp2 = string(cmd.buf);
+        message = temp2;
         
 		for (int i = 0; i < message.length(); i += max_chunk_size) {
 				int chunk_size = std::min(max_chunk_size, static_cast<int>(message.length() - i));
