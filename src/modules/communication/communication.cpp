@@ -29,7 +29,6 @@ void * sender(void *arg)
     int key_id = mq_init(key);
     struct msqid_ds bufs;
     int comp;
-    string message;
     
     while (true) {
 		
@@ -39,7 +38,8 @@ void * sender(void *arg)
         }
         comp = cmd.sq;
         
-        message(cmd.buf);
+        string message(cmd.buf);
+        cout << message << "1111111111" << endl;
 		
 		for (int i = 0; i < message.length(); i += max_chunk_size) {
 				int chunk_size = std::min(max_chunk_size, static_cast<int>(message.length() - i));
