@@ -30,9 +30,8 @@ void* vehicle_control(void* arg)
         
         string sending_communication;
 
-        msg = pop(key_id, buf);
-        usleep(1);
-        push(key_id2,buf2, msg);
+
+        
         
         if(msg.sq != temp){
             cout << "vehicle_control.cpp : " << msg.buf << "msg num : " <<msg.sq << endl;
@@ -80,7 +79,7 @@ void* vehicle_control(void* arg)
         }
 
         pre_gps = msg.buf;
-
-        sleep(1);
+        strcpy(msg.buf, sending_communication);
+        push(key_id2,buf2, msg);
     }
 }
