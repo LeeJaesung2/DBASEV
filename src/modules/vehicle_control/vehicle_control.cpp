@@ -58,7 +58,7 @@ void* vehicle_control(void* arg)
         now_waypoint = calculateClosestWaypoint(road_id, pre_waypoint, current_latitude, current_longitude, graph);
         pre_waypoint = now_waypoint;
         //printf("now_waypoint: %d\n\n", graph[road_id].waypoints[now_waypoint]);
-
+        road_id++;
         sending_communication += to_string(road_id) + " / ";
         sending_communication += to_string(now_waypoint);
 
