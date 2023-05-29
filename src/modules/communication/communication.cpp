@@ -38,9 +38,8 @@ void * sender(void *arg)
         }
         comp = cmd.sq;
         
-        string message(cmd.buf);
-        cout << message << "1111111111" << endl;
-		
+        //string message(cmd.buf);
+		string message = "fuck";
 		for (int i = 0; i < message.length(); i += max_chunk_size) {
 				int chunk_size = std::min(max_chunk_size, static_cast<int>(message.length() - i));
 				temp = message.substr(i, chunk_size);
