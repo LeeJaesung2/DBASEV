@@ -28,11 +28,8 @@ void* vehicle_control(void* arg)
 
     while (1) {  
         
-        char* sending_communication;
+        string sending_communication;
 
-
-        
-        
         if(msg.sq != temp){
             cout << "vehicle_control.cpp : " << msg.buf << "msg num : " <<msg.sq << endl;
         }
@@ -45,13 +42,13 @@ void* vehicle_control(void* arg)
          // 데이터 포맷 : 속도 / 도로id/ waypoint
         if (pre_gps ==""){
             //cout << "speed: " << pre_speed << " m/s \n";
-            string str(sending_communication) += "velocity / ";
+            sending_communication += "velocity / ";
             // real : sending_communication += pre_speed;
         } 
         else{
             current_speed = getSpeed(getDistance(pre_gps, msg.buf), pre_gps, msg.buf);
             //cout << "speed: " << current_speed << " m/s \n";
-            string str(sending_communication) += current_speed;
+            sending_communication += current_speed;
             pre_speed = current_speed;
         }
 
@@ -62,8 +59,8 @@ void* vehicle_control(void* arg)
         pre_waypoint = now_waypoint;
         //printf("now_waypoint: %d\n\n", graph[road_id].waypoints[now_waypoint]);
 
-        string str(sending_communication) += to_string(road_id);
-        string str(sending_communication) += to_string(now_waypoint);
+        sending_communication += to_string(road_id);
+        sending_communication += to_string(now_waypoint);
 
         int remain_waypoints = graph[road_id].waypoints.back() - now_waypoint;
         
@@ -79,7 +76,8 @@ void* vehicle_control(void* arg)
         }
 
         pre_gps = msg.buf;
-        strcpy(msg.buf, sending_communication);
+
+        strcpy(msg.buf, sending_communication.c_str());
         push(key_id2,buf2, msg);
     }
 }
