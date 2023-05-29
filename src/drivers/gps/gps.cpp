@@ -4,30 +4,33 @@ void *getGPS(void* arg){
     int fd = serialOpen("/dev/serial0", 9600);
     
     MsgBuf msg;
+    msg.msgtype = 1;
     key_t key = 1234;
     int key_id = mq_init(key);
     struct msqid_ds buf;
     
     while (1) {
-        if (serialDataAvail(fd)) {
-            char temp = (char)serialGetchar(fd);
+    //     if (serialDataAvail(fd)) {
+    //         char temp = (char)serialGetchar(fd);
         
-            if (temp == '$') {
-                string sentence;
-                sentence += temp;
+    //         if (temp == '$') {
+    //             string sentence;
+    //             sentence += temp;
 
-                while (temp != '\n') {
-                    temp = (char)serialGetchar(fd);
-                    sentence += temp;
-                }
+    //             while (temp != '\n') {
+    //                 temp = (char)serialGetchar(fd);
+    //                 sentence += temp;
+    //             }
 
-                if (sentence.find("GPGGA") != string::npos) {
-                    cout << "sentence.c_str(): " << sentence.c_str() << endl;
-                    strcpy(msg.buf, sentence.c_str());
-                    push(key_id,buf, msg);
-                }
-            }
-        }
+    //             if (sentence.find("GPGGA") != string::npos) {
+    //                 cout << "sentence.c_str(): " << sentence.c_str() << endl;
+    //                 strcpy(msg.buf, sentence.c_str());
+    //                 push(key_id,buf, msg);
+        strcpy(msg.buf,"here is gps.cpp");
+        push(key_id,buf, msg);
+    //             }
+    //         }
+    //     }
     }
 }
 

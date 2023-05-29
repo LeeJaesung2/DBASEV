@@ -15,7 +15,8 @@ int mq_init(key_t key){
 
 void push(int key_id,msqid_ds buf, MsgBuf msg){
     
-    cout << "push" << "key id" << key_id << "stat" << IPC_STAT << endl;
+
+
     if (msgctl(key_id, IPC_STAT, &buf) == -1) {
         std::cerr << "Failed to push message queue status!" << std::endl;
         #ifndef DEBUG
@@ -37,7 +38,7 @@ void push(int key_id,msqid_ds buf, MsgBuf msg){
     while (buf.msg_qnum >0 ) {
         // Remove existing message before pushing a new one
         if (msgrcv(key_id, &msg, sizeof(msg), 0, IPC_NOWAIT) == -1) {
-            std::cerr << "Failed to remove existing message from the queue!" << std::endl;
+            //std::cerr << "Failed to remove existing message from the queue!" << std::endl;
             #ifndef DEBUG
                 cout << "messagequeue.cpp" << endl;
             #endif
@@ -55,7 +56,6 @@ void push(int key_id,msqid_ds buf, MsgBuf msg){
 
 MsgBuf pop(int key_id, msqid_ds buf) {
     MsgBuf msg;
-    cout << "pop" << "key id" << key_id << "stat" << IPC_STAT << endl;
     if (msgctl(key_id, IPC_STAT, &buf) == -1) {
         std::cerr << "Failed to get message queue status!" << std::endl;
         #ifndef DEBUG
