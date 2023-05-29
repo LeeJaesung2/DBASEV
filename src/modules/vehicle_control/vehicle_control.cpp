@@ -27,7 +27,7 @@ void* vehicle_control(void* arg)
     int temp;
 
     while (1) {  
-        
+        msg = pop(key_id, buf);
         string sending_communication;
 
         if(msg.sq != temp){
