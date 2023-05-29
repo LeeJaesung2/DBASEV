@@ -25,8 +25,11 @@ void* vehicle_control(void* arg)
     int key_id2 = mq_init(key2);
     struct msqid_ds buf2;
     int temp;
+    int i = 0;
 
     while (1) {  
+        road_id = i;
+        i++;
         msg = pop(key_id, buf);
         string sending_communication;
 
@@ -78,11 +81,6 @@ void* vehicle_control(void* arg)
         //cout << "vehicle cmd : " << sending_communication.c_str() << endl;
         strcpy(msg.buf, sending_communication.c_str());
         push(key_id2,buf2, msg);
-        if(road_id <10){
-            road_id++;
-        }
-        else{
-            road_id = 1;
-        }
+
     }
 }
