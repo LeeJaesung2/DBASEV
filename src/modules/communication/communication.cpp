@@ -39,7 +39,7 @@ void * sender(void *arg)
         }
         comp = cmd.sq;
         
-        message = cmd.buf;
+        message = "fucking cmd.buf";
 		
 		for (int i = 0; i < message.length(); i += max_chunk_size) {
 				int chunk_size = std::min(max_chunk_size, static_cast<int>(message.length() - i));
@@ -63,7 +63,6 @@ void * sender(void *arg)
                 printf("1111111111111111\n");
 				if (bytesWritten < 0 || bytesWritten != len) {
 					//std::cerr << "Error sending message." << std::endl;
-                    printf("2222222222222222\n");
 					close(serial_port);
 					//return 1;
 				}
