@@ -1,4 +1,5 @@
-from dronekit import connect, VehicleMode, LocationGlobalRelative
+from dronekit import connect, VehicleMode, LocationGlobalRelative, Command
+from pymavlink import mavutil
 import time
 import argparse 
 import dronekit_sitl
@@ -42,6 +43,8 @@ def arm_and_takeoff_to_pixhawk(aTargetAltitude):
     # Confirm vehicle armed before attempting to take off
     while not vehicle.armed:
         print(" Waiting for arming...")
+        vehicle.mode = VehicleMode("GUIDED")
+        vehicle.armed = True
         time.sleep(1)
 
     print("Taking off!")
@@ -56,11 +59,23 @@ def arm_and_takeoff_to_pixhawk(aTargetAltitude):
 
 
 def add_waypoints_to_pixhawk(waypoint_list):
+    cmd = vehicle.commands
+    cmd.download()
+    cmd.wait_ready()
+
     for waypoint in waypoint_list:
-        waypoint_gps = waypoint[2:]
-        wp = LocationGlobalRelative(*waypoint_gps)
-        vehicle.commands.add(wp)
-    vehicle.flush()
+        print("wapoint : ", waypoint[2], waypoint[3], waypoint[4])
+        wp = LocationGlobalRelative(waypoint[2], waypoint[3], waypoint[4])
+        cmd.add(
+            Command(0,0,0, 
+            mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,
+            mavutil.mavlink.MAV_CMD_NAV_WAYPOINT,
+            0, 1, 0, 0, 0, 0,
+            wp.lat, wp.lon, wp.alt
+            )
+        )    
+        
+    cmd.upload()
 
 def print_current_gps():
     current_gps = vehicle.location.global_frame
@@ -69,7 +84,7 @@ def print_current_gps():
     print("고도: %.1f" % current_gps.alt)
     
 
-def set_airspeed_to_pixhawk(vehicle, airspeed):
+def set_airspeed_to_pixhawk(airspeed):
     vehicle.airspeed = airspeed
 
 
@@ -105,7 +120,7 @@ def test():
     start_time = time.time()
     arm_and_takeoff_to_pixhawk(15.0)
 
-    add_waypoints_to_pixhawk(waypoints)
+    add_waypoints_to_pixhawk(waypoints[1])
     
     set_airspeed_to_pixhawk(40)
 
@@ -116,3 +131,5 @@ def test():
         time.sleep(2)
         if elapsed_time > 90:
             break
+
+test()
