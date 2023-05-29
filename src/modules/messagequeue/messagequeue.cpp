@@ -51,7 +51,7 @@ void push(int key_id,msqid_ds buf, MsgBuf msg){
             #ifndef DEBUG
                 cout << "messagequeue.cpp" << endl;
             #endif
-            exit(EXIT_FAILURE);
+            //exit(EXIT_FAILURE);
         }
 }
 
