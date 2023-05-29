@@ -37,7 +37,7 @@ void* vehicle_control(void* arg)
 
         if (!isValidGPSData(msg.buf)) {
             pre_gps = "";
-            continue;
+            //continue;
         }
          // 데이터 포맷 : 속도 / 도로id/ waypoint
         if (pre_gps ==""){
