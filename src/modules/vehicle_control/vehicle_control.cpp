@@ -78,7 +78,7 @@ void* vehicle_control(void* arg)
         //cout << "vehicle cmd : " << sending_communication.c_str() << endl;
         strcpy(msg.buf, sending_communication.c_str());
         push(key_id2,buf2, msg);
-        if(road_id<3){
+        if(road_id<2){
             road_id++;
         }
         else{
