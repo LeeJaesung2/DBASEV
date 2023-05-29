@@ -55,9 +55,7 @@ void* vehicle_control(void* arg)
         current_latitude = extract_gps_data(msg.buf).latitude;
         current_longitude = extract_gps_data(msg.buf).longitude;
 
-        printf("1111111111111111\n");
         now_waypoint = calculateClosestWaypoint(road_id, pre_waypoint, current_latitude, current_longitude, graph);
-        printf("2222222222222222\n");
         pre_waypoint = now_waypoint;
         //printf("now_waypoint: %d\n\n", graph[road_id].waypoints[now_waypoint]);
         sending_communication += to_string(road_id) + " / ";
@@ -80,6 +78,11 @@ void* vehicle_control(void* arg)
         //cout << "vehicle cmd : " << sending_communication.c_str() << endl;
         strcpy(msg.buf, sending_communication.c_str());
         push(key_id2,buf2, msg);
-        road_id++;
+        if(road_id<3){
+            road_id++;
+        }
+        else{
+            road_id = 0;
+        }
     }
 }
