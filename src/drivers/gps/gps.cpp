@@ -11,9 +11,9 @@ void *getGPS(void* arg){
     msg.sq = -1;
 
     /*communicate time test*/
-    // struct timespec specific_time;
-    // struct tm *now;
-    // int millsec;
+    struct timespec specific_time;
+    struct tm *now;
+    int millsec;
     /*communicate time test*/
     
     
@@ -33,15 +33,15 @@ void *getGPS(void* arg){
 
                 if (sentence.find("GPGGA") != string::npos) {
                     //cout << "sentence.c_str(): " << sentence.c_str() << endl;
-                    strcpy(msg.buf, sentence.c_str());
+                    //strcpy(msg.buf, sentence.c_str());
 
                     /*communicate time test*/
-                    // clock_gettime( CLOCK_REALTIME, &specific_time);
-                    // now = localtime(&specific_time.tv_sec);
-                    // millsec = specific_time.tv_nsec;
-                    // millsec = floor (specific_time.tv_nsec/1.0e6);
-                    // time = to_string(now->tm_hour) + "/" + to_string(now->tm_min) + "/" + to_string(now->tm_sec) + "/" + to_string(millsec);
-                    // strcpy(msg.buf, time.c_str());
+                    clock_gettime( CLOCK_REALTIME, &specific_time);
+                    now = localtime(&specific_time.tv_sec);
+                    millsec = specific_time.tv_nsec;
+                    millsec = floor (specific_time.tv_nsec/1.0e6);
+                    time = to_string(now->tm_hour) + "/" + to_string(now->tm_min) + "/" + to_string(now->tm_sec) + "/" + to_string(millsec);
+                    strcpy(msg.buf, time.c_str());
                     /*communicate time test*/
 
                     push(key_id,buf, msg);
