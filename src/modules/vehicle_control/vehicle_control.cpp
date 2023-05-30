@@ -77,7 +77,6 @@ void* vehicle_control(void* arg)
         pre_gps = msg.buf;
         //cout << "vehicle cmd : " << sending_communication.c_str() << endl;
         //strcpy(msg.buf, sending_communication.c_str());
-        cout << msg.buf << endl;
         push(key_id2,buf2, msg);
         if(road_id <3){
             road_id++;

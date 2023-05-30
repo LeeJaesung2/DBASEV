@@ -16,6 +16,7 @@ void *getGPS(void* arg){
     int millsec;
     /*communicate time test*/
     
+    
     while (1) {
         string time;
         if (serialDataAvail(fd)) {
@@ -40,6 +41,9 @@ void *getGPS(void* arg){
                     millsec = specific_time.tv_nsec;
                     millsec = floor (specific_time.tv_nsec/1.0e6);
                     time = to_string(now->tm_hour) + "/" + to_string(now->tm_min) + "/" + to_string(now->tm_sec) + "/" + to_string(millsec);
+                    printf("[%04d/%02d/%02d] %02d:%02d:%02d msec : %d\n", 1900 + now->tm_year, 
+                        now->tm_mon + 1, now->tm_mday, now->tm_hour, 
+                        now->tm_min, now->tm_sec, millsec);
                     strcpy(msg.buf, time.c_str());
                     /*communicate time test*/
 
