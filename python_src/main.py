@@ -42,12 +42,15 @@ def consumer(a):
     # Get message queue ID using same key as C++ program
     key = 5656
     mq = mq_init(key)
+    temp = "aa"
 
     # Read messages from queue
     while True:
         # Read message from queue
         msg = pop(mq)
         if(msg!="error"):
-            print(msg)
+            if(temp!=msg):
+                print(msg)
+                temp = msg
         #update(msg)
         
