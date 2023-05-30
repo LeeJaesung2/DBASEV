@@ -47,6 +47,7 @@ def consumer(a):
     while True:
         # Read message from queue
         msg = pop(mq)
-        print(msg)
+        if(msg!="error"):
+            print(msg)
         #update(msg)
         
