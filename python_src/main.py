@@ -49,6 +49,7 @@ def consumer(a):
     while True:
         # Read message from queue
         msg = pop(mq)
+        now = datetime.now()
         if(msg!="error"):
             if(temp!=msg):
                 print( "start ",msg, "end : ",now.time())
