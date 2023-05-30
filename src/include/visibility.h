@@ -15,6 +15,7 @@
 #include <cstdlib>
 #include <vector>
 #include <sys/utsname.h>
+#include <string>
 
 
 

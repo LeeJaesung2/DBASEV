@@ -16,7 +16,7 @@ void* vehicle_control(void* arg)
     int pre_waypoint = 0, now_waypoint;
     
     MsgBuf msg;
-    key_t key = 1234;
+    key_t key = 1235;
     int key_id = mq_init(key);
     struct msqid_ds buf;
 
@@ -24,26 +24,31 @@ void* vehicle_control(void* arg)
     key_t key2 = 5555;
     int key_id2 = mq_init(key2);
     struct msqid_ds buf2;
+    int temp;
+
     while (1) {  
-        
-        
         msg = pop(key_id, buf);
-        push(key_id2,buf2, msg);
-        
-        cout << "gps : " << msg.buf << endl;
+        string sending_communication;
+
+        if(msg.sq != temp){
+            cout << "vehicle_control.cpp : " << msg.buf << "msg num : " <<msg.sq << endl;
+        }
+        temp = msg.sq;
 
         if (!isValidGPSData(msg.buf)) {
             pre_gps = "";
-            sleep(1);
-            continue;
+            //continue;
         }
-
+         // 데이터 포맷 : 속도 / 도로id/ waypoint
         if (pre_gps ==""){
-            cout << "speed: " << pre_speed << " m/s \n";
+            //cout << "speed: " << pre_speed << " m/s \n";
+            sending_communication += "velocity/";
+            // real : sending_communication += pre_speed;
         } 
         else{
             current_speed = getSpeed(getDistance(pre_gps, msg.buf), pre_gps, msg.buf);
-            cout << "speed: " << current_speed << " m/s \n";
+            //cout << "speed: " << current_speed << " m/s \n";
+            sending_communication += to_string(current_speed)+"/";
             pre_speed = current_speed;
         }
 
@@ -53,6 +58,8 @@ void* vehicle_control(void* arg)
         now_waypoint = calculateClosestWaypoint(road_id, pre_waypoint, current_latitude, current_longitude, graph);
         pre_waypoint = now_waypoint;
         //printf("now_waypoint: %d\n\n", graph[road_id].waypoints[now_waypoint]);
+        sending_communication += to_string(road_id) + "/";
+        sending_communication += to_string(now_waypoint) +"/";
 
         int remain_waypoints = graph[road_id].waypoints.back() - now_waypoint;
         
@@ -68,7 +75,14 @@ void* vehicle_control(void* arg)
         }
 
         pre_gps = msg.buf;
-
-        sleep(1);
+        //cout << "vehicle cmd : " << sending_communication.c_str() << endl;
+        strcpy(msg.buf, sending_communication.c_str());
+        push(key_id2,buf2, msg);
+        if(road_id <3){
+            road_id++;
+        }
+        else{
+            road_id = 1;
+        }
     }
 }
