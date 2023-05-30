@@ -24,7 +24,7 @@ def update(msg):
 
     car.update_car_data(msg)
 
-    # 자동차의 예전 road와 다른 경우 will go waypoint update
+    # car pre road is not match update will go waypoint update
     if pre_car_road_id != car.road_id:
         waypoints = roadMap[car.road_id]
         drone.update_will_go_waypoint(waypoints)
@@ -48,5 +48,5 @@ def consumer(a):
         # Read message from queue
         value, msg = pop(mq)
         print(msg)
-        #update(msg)
+        update(msg)
         
