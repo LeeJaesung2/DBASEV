@@ -7,6 +7,11 @@
 #include <sstream>
 #include <wiringSerial.h> // g++ -o file file.cpp -lwiringPi
 
+/*communicate time test*/
+#include <time.h>
+#include <math.h>
+/*communicate time test*/
+
 #define LATITUDE 1
 #define LONGITUDE 2
 
