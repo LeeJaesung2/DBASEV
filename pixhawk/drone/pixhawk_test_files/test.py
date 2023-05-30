@@ -4,6 +4,7 @@ import time
 import argparse 
 import dronekit_sitl
 
+'''
 parser = argparse.ArgumentParser(description='Print out vehicle state information. Connects to SITL on local PC by default.')
 parser.add_argument('--connect', 
                 help="vehicle connection target string. If not specified, SITL automatically started and used.")
@@ -21,6 +22,11 @@ print("\nConnecting to vehicle on: %s" % connection_string)
 vehicle = connect(connection_string, wait_ready=True)
 
 vehicle.wait_ready('autopilot_version')
+'''
+
+connection_string = 'udp:127.0.0.1:1450'
+vehicle = connect(connection_string, wait_ready=True)
+print("Connecting to vehicle on : %s" %(connection_string, ))
 
 
 # takeoff function
@@ -62,7 +68,8 @@ def add_waypoints_to_pixhawk(waypoint_list):
     cmd = vehicle.commands
     cmd.download()
     cmd.wait_ready()
-
+    cmd.clear()
+    
     for waypoint in waypoint_list:
         print("wapoint : ", waypoint[2], waypoint[3], waypoint[4])
         wp = LocationGlobalRelative(waypoint[2], waypoint[3], waypoint[4])
@@ -131,5 +138,6 @@ def test():
         time.sleep(2)
         if elapsed_time > 90:
             break
+    vehicle.close()
 
 test()
