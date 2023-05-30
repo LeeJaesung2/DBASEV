@@ -36,11 +36,15 @@ void *getGPS(void* arg){
                     //strcpy(msg.buf, sentence.c_str());
 
                     /*communicate time test*/
+                    cout << "11111" << endl;
                     clock_gettime( CLOCK_REALTIME, &specific_time);
                     now = localtime(&specific_time.tv_sec);
+                    cout << "222222" << endl;
                     millsec = specific_time.tv_nsec;
                     millsec = floor (specific_time.tv_nsec/1.0e6);
+                    cout << "3333333" << endl;
                     time = to_string(now->tm_hour) + "/" + to_string(now->tm_min) + "/" + to_string(now->tm_sec) + "/" + to_string(millsec);
+                    cout << "4444444" << endl;
                     printf("[%04d/%02d/%02d] %02d:%02d:%02d msec : %d\n", 1900 + now->tm_year, 
                         now->tm_mon + 1, now->tm_mday, now->tm_hour, 
                         now->tm_min, now->tm_sec, millsec);
