@@ -47,7 +47,7 @@ void push(int key_id,msqid_ds buf, MsgBuf msg){
         }
     }
     if (msgsnd(key_id, &msg, sizeof(msg), IPC_NOWAIT) == -1) {
-            cerr << "Message Sending Failed!" << endl;
+            //cerr << "Message Sending Failed!" << endl;
             #ifndef DEBUG
                 cout << "messagequeue.cpp" << endl;
             #endif

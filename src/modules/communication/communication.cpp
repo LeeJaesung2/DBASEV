@@ -107,7 +107,7 @@ void * receiver(void *arg)
         bool message_received = receiveMessage(fd, msg, status, channel, message);
         
         if (message_received) {
-            printf("%s\n",message.c_str());
+            //printf("%s\n",message.c_str());
             #ifndef DEBUG
                 cout << "communication.cpp" << endl;
             #endif
