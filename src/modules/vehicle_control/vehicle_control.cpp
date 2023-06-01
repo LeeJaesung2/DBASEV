@@ -42,8 +42,7 @@ void* vehicle_control(void* arg)
          // 데이터 포맷 : 속도 / 도로id/ waypoint
         if (pre_gps ==""){
             //cout << "speed: " << pre_speed << " m/s \n";
-            sending_communication += "velocity/";
-            // real : sending_communication += pre_speed;
+            sending_communication += to_string(pre_speed)+"/";
         } 
         else{
             current_speed = getSpeed(getDistance(pre_gps, msg.buf), pre_gps, msg.buf);
