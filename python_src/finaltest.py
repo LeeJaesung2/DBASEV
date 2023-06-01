@@ -1,4 +1,6 @@
 from main import *
+from drone import Drone
+from car import Car
 import time
 
 # straight
