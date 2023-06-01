@@ -10,7 +10,7 @@ class Car:
         if msg == "error":
             return None
         
-        msg_list = msg.strip().split()
+        msg_list = msg.strip().split('/')
 
         self.velocity = float(msg_list[0])
         self.road_id = int(msg_list[1])

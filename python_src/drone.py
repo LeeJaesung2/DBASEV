@@ -1,5 +1,6 @@
 from collections import deque
-from dronekit import connect, VehicleMode, LocationGlobalRelative
+from dronekit import connect, VehicleMode, LocationGlobalRelative, Command
+from pymavlink import mavutil
 import time
 
 class Drone:
@@ -27,9 +28,9 @@ class Drone:
         self.target_waypoint_gps = LocationGlobalRelative(*(0.0, 0.0, 3.3))
         
         self.will_go_waypoint = deque()
-        
+
     def update_drone_data(self):
-        self.velocity= self.vehicle.airspeed
+        self.velocity= self.vehicle.groundspeed
         self.gps = self.vehicle.location.global_relative_frame
 
 
@@ -137,16 +138,29 @@ class Drone:
 
     # Add waypoints to the drone
     def add_waypoints_to_pixhawk(self, waypoint_list):
-        # Add waypoints using LocationGlobalRelative objects
+        
+        cmd = self.vehicle.commands
+        
         for waypoint in waypoint_list:
-            waypoint_gps = waypoint[2:]
-            wp = LocationGlobalRelative(*waypoint_gps)
-            self.vehicle.commands.add(wp)
-        self.vehicle.flush()
+            print("wapoint : ", waypoint[2], waypoint[3], waypoint[4])
+            wp = LocationGlobalRelative(waypoint[2], waypoint[3], waypoint[4])
+            cmd.add(
+                Command(0,0,0, 
+                    mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,
+                    mavutil.mavlink.MAV_CMD_NAV_WAYPOINT,
+                    0, 1, 0, 0, 0, 0,
+                    wp.lat, wp.lon, wp.alt
+                )
+            )    
+        cmd.upload()
+        
+        self.change_vehicleMode("AUTO")
+
+        cmd.next = 0
 
     # Set drone airspeed
     def set_airspeed_to_pixhawk(self, airspeed):
-        self.vehicle.airspeed = airspeed
+        self.vehicle.groundspeed = airspeed
 
     # Landing function
     def land_to_pixhawk(self):
@@ -157,3 +171,11 @@ class Drone:
 
         self.vehicle.armed = False # Disarm the drone
         self.vehicle.close() # Close the connection to the drone
+
+    def change_vehicleMode(self, new_mode):
+        while self.vehicle.mode.name != new_mode:
+            print("Vehicl mode : ", self.vehicle.mode.name)
+            print("Changing Vehcile mode to ", new_mode, "....")
+            
+            self.vehicle.mode = VehicleMode(new_mode)
+            time.sleep(1)
