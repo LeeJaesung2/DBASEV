@@ -4,20 +4,19 @@ from pymavlink import mavutil
 import time
 
 class Drone:
-    def __init__(self, drone):
-        self.vehicle = drone
+    def __init__(self):
+        self.vehicle = None
 
         self.waypoint_dist = 5.0
         self.waypoint_num = int(round(100 / self.waypoint_dist))
         
-        self.mode = self.vehicle.mode.name
         self.ishovering = False
         
-        self.velocity = self.vehicle.airspeed
-        self.max_speed = 11.11
+        self.velocity = 0
+        self.max_speed = 15.0
 
-        # Current GPS
-        self.gps = self.vehicle.location.global_relative_frame
+        # current mission num
+        self.cur_mission_num = 0
 
         # Current waypoint
         self.waypoint = 0
@@ -36,15 +35,21 @@ class Drone:
 
     def update_drone_target(self):
         # Distance between target waypoint gps and drone gps
+        '''
         dist = self.gps.distance_to(self.target_waypoint_gps)
         
         if dist < 1.5:
             nxt_target = True
         else:
             nxt_target = False
-            
+        '''
+        cmds = self.vehicle.commands
+        
+
         # Update next waypoint
-        if nxt_target:
+        if self.cur_mission_num < cmds.next:
+            self.cur_mission_num = cmds.next
+
             if self.will_go_waypoint:
                 self.ishovering = False
                 cur_target_waypoint = self.will_go_waypoint.popleft()
@@ -95,6 +100,12 @@ class Drone:
     
 
     # Connect to Pixhawk
+    def sim_connect_to_pixhawk(self):
+        connection_string = 'udp:127.0.0.1:1450'
+        vehicle = connect(connection_string, wait_ready=True)
+
+        self.vehicle = vehicle
+        
     def connect_to_pixhawk(self):
         # Specify the path of the serial port to connect
         connection_string = "/dev/ttyAMA0" # USB: '/dev/ttyACM0' 
@@ -156,7 +167,6 @@ class Drone:
         
         self.change_vehicleMode("AUTO")
 
-        cmd.next = 0
 
     # Set drone airspeed
     def set_airspeed_to_pixhawk(self, airspeed):
