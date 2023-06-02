@@ -104,6 +104,13 @@ class Drone:
         connection_string = 'udp:127.0.0.1:1450'
         vehicle = connect(connection_string, wait_ready=True)
 
+
+        cmds = vehicle.commands
+        cmds.download()
+        cmds.wait_ready()
+        cmds.clear()
+        cmds.upload()
+
         self.vehicle = vehicle
         
     def connect_to_pixhawk(self):
@@ -116,6 +123,13 @@ class Drone:
         # Print information about the connected vehicle
         print('Connected to vehicle on: {}'.format(connection_string))
         print('Vehicle mode: {}'.format(vehicle.mode.name))
+
+
+        cmds = vehicle.commands
+        cmds.download()
+        cmds.wait_ready()
+        cmds.clear()
+        cmds.upload()
 
         self.vehicle = vehicle
 
