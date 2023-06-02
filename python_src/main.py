@@ -18,10 +18,10 @@ car = Car()
 pre_car_road_id = car.road_id
 
 '''
-def init():
-    #drone.connect_to_pixhawk()
-    drone.sim_connect_to_pixhawk()
-    drone.arm_and_takeoff_to_pixhawk(5.0)
+def init(drone):
+    drone.connect_to_pixhawk()
+    #drone.sim_connect_to_pixhawk()
+    drone.arm_and_takeoff_to_pixhawk(3.0)
 
 def update(msg, roadMap, car, drone, pre_car_road_id):
 
@@ -50,7 +50,7 @@ def flight_control(a):
     # Get message queue ID using same key as C++ program
     key = 5656
     mq = mq_init(key)
-    init()
+    
 
 
     roadMap = {1: [[1, 1, 35.1554345, 128.1040969, 3.0], [1, 2, 35.1553926, 128.1041161, 3.0], [1, 3, 35.1553504, 128.1041358, 3.0], [1, 4, 35.1553084, 128.104155, 3.0], [1, 5, 35.1552665, 128.1041744, 3.0], [1, 6, 35.155224, 128.1041938, 3.0], [1, 7, 35.1551821, 
@@ -67,6 +67,8 @@ def flight_control(a):
     car = Car()
     pre_car_road_id = car.road_id
 
+
+    init(drone)
     # Read messages from queue
     while True:
         # Read message from queue
