@@ -13,11 +13,10 @@ class roadMap:
 
     def getData(self):
         currentPath = os.getcwd()
-        os.chdir(currentPath)
-        files = os.listdir(currentPath)
-        print(files)
+        print(currentPath)
+        
 
-        excel_file = "drone/roadData/straight_100m_data_format.xlsx"
+        excel_file = "pixhawk/drone/roadData/real_test_data/total_road_data.xlsx"
         self.roadDf = pd.read_excel(excel_file)
         
     def createRoadmap(self):
