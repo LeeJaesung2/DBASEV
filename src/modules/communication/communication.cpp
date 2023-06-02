@@ -112,15 +112,16 @@ void * receiver(void *arg)
                 cout << "communication.cpp" << endl;
             #endif
 
-            strcpy(qmsg.buf, message.c_str());
+            //strcpy(qmsg.buf, message.c_str());
+            strcpy(qmsg.buf, "10/1/1");
             push(key_id,buf, qmsg);
         } else {
             message = "ERR";
-            printf("%s\n",message.c_str());
+            //printf("%s\n",message.c_str());
             #ifndef DEBUG
                 cout << "communication.cpp" << endl;
             #endif
-            printf("timeout occurred\n");
+            //printf("timeout occurred\n");
             #ifndef DEBUG
                 cout << "communication.cpp" << endl;
             #endif
