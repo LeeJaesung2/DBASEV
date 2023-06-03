@@ -57,8 +57,8 @@ void* vehicle_control(void* arg)
         
         cout << "now_waypoint: " << now_waypoint << endl;
 
-        //sending_communication += to_string(road_id) + "/";
-        //sending_communication += to_string(graph[road_id].waypoints[now_waypoint]);
+        sending_communication += to_string(road_id) + "/";
+        sending_communication += to_string(graph[road_id].waypoints[now_waypoint]);
 
         //int remain_waypoints = graph[road_id].waypoints.back() - now_waypoint;
         
