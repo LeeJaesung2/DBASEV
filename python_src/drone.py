@@ -104,7 +104,7 @@ class Drone:
     def sim_connect_to_pixhawk(self):
         connection_string = 'udp:127.0.0.1:1450'
         vehicle = connect(connection_string, wait_ready=True)
-
+        
 
         cmds = vehicle.commands
         cmds.download()
@@ -113,6 +113,8 @@ class Drone:
         cmds.upload()
 
         self.vehicle = vehicle
+        
+
         
     def connect_to_pixhawk(self):
         # Specify the path of the serial port to connect
@@ -138,17 +140,22 @@ class Drone:
     def arm_and_takeoff_to_pixhawk(self, aTargetAltitude):
         print("Drone takeoff preparation...")
         # Arm the drone
+        '''
         while not self.vehicle.is_armable:
             print("Waiting for drone to become armable...")
             time.sleep(1)
-
+        
         print("Arming the drone")
+        '''
+
         self.vehicle.mode = VehicleMode("GUIDED")
         self.vehicle.armed = True
 
         # Wait for the drone to be armed
         while not self.vehicle.armed:
             print("Waiting for the drone to become armed...")
+            self.vehicle.mode = VehicleMode("GUIDED")
+            self.vehicle.armed = True
             time.sleep(1)
 
         print("Taking off")
