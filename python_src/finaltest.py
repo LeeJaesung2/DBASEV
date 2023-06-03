@@ -23,13 +23,14 @@ def init_make_logfile():
 
 def add_logfile(data):
     with open("logfile.txt", "a") as file:
-        file.write(f"{data}")
+        file.write(data)
 
 drone = Drone()
 car = Car()
 pre_car_road_id = car.road_id
 starttime = time.time()
 init(drone)
+
 print("DRONE INIT SETTING DONE")
 
 car_idx = 0
@@ -53,7 +54,7 @@ while True:
     car_idx += 1
 
     update_time = time.time()
-    log_data = f"{update_time-starttime},{car.velocity},{car.road_id},{car.waypoint},{drone.velocity},{drone.current_speed},{drone.road_id},{drone.waypoint}\n"
+    log_data = "{},{},{},{},{},{},{},{}\n".format(update_time-starttime,car.velocity,car.road_id,car.waypoint,drone.velocity,drone.current_speed,drone.road_id,drone.waypoint)
     add_logfile(log_data)
     time.sleep(0.1)    
 
