@@ -2,6 +2,12 @@
 
 #include <vector>
 
+void pop_front(std::vector<T> &v)
+{
+    if (v.size() > 0) {
+        v.erase(v.begin());
+    }
+}
 
 void * sender(void *arg)
 {
@@ -118,7 +124,7 @@ void * sender(void *arg)
         }
 
         message = data.front();
-        data.pop();
+        pop_front(data);
         cout << "message: " << message << endl;
         
 		for (int i = 0; i < message.length(); i += max_chunk_size) {
