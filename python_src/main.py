@@ -37,7 +37,7 @@ def init_make_logfile():
 
 def add_logfile(data):
     with open("logfile.txt", "a") as file:
-        file.write(f"{data}")
+        file.write(data)
 
 def flight_control(a):
     # Get message queue ID using same key as C++ program
