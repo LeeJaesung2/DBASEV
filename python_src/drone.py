@@ -147,15 +147,16 @@ class Drone:
         
         print("Arming the drone")
         '''
-
-        self.vehicle.mode = VehicleMode("GUIDED")
+        
         self.vehicle.armed = True
+        self.vehicle.mode = VehicleMode("GUIDED")
+        time.sleep(1)
 
         # Wait for the drone to be armed
         while not self.vehicle.armed:
             print("Waiting for the drone to become armed...")
-            self.vehicle.mode = VehicleMode("GUIDED")
             self.vehicle.armed = True
+            self.vehicle.mode = VehicleMode("GUIDED")
             time.sleep(1)
 
         print("Taking off")
