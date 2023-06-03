@@ -7,7 +7,7 @@ class Drone:
     def __init__(self):
         self.vehicle = None
 
-        self.waypoint_dist = 5.0
+        self.waypoint_dist = 10.0
         self.waypoint_num = int(round(100 / self.waypoint_dist))
         
         self.ishovering = False
@@ -31,7 +31,7 @@ class Drone:
 
     def update_drone_data(self):
         self.velocity= self.vehicle.groundspeed
-        self.gps = self.vehicle.location.global_relative_frame
+        
 
 
     def update_drone_target(self):
