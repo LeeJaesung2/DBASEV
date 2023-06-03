@@ -52,7 +52,7 @@ void* vehicle_control(void* arg)
         current_latitude = extract_gps_data(gps).latitude;
         current_longitude = extract_gps_data(gps).longitude;
 
-        pre_waypoint = graph[road_id].waypoints[now_waypoint];
+        pre_waypoint = now_waypoint;
         now_waypoint = calculateClosestWaypoint(road_id, pre_waypoint, current_latitude, current_longitude, graph);
         
         sending_communication += to_string(road_id) + "/";
