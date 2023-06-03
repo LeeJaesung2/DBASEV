@@ -2,6 +2,7 @@
 
 #include <vector>
 
+template<typename T>
 void pop_front(std::vector<T> &v)
 {
     if (v.size() > 0) {
