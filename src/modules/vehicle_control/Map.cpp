@@ -118,8 +118,8 @@ int findNextRoadId(int road_id, float current_latitude, float current_longitude,
             float waypoint_latitude = graph.at(connected_road).latitude[0];
             float waypoint_longitude = graph.at(connected_road).longitude[0];
 
-    //         // Measure the distance between the two GPS values.
-    //         float distance = calc_distance(current_latitude, current_longitude, waypoint_latitude, waypoint_longitude);
+            // Measure the distance between the two GPS values.
+            float distance = calc_distance(current_latitude, current_longitude, waypoint_latitude, waypoint_longitude);
     //         if (distance < min_distance)
     //         {
     //             min_distance = distance;
