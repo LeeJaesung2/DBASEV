@@ -34,7 +34,7 @@ void* vehicle_control(void* arg)
         //     cout << "vehicle_control.cpp : " << gps << "msg num : " <<msg.sq << endl;
         // }
         // temp = msg.sq;
-
+        cout << "vehicle_control.cpp : " << gps << endl;
         if (!isValidGPSData(gps)) {
             pre_gps = "";
             //continue;
