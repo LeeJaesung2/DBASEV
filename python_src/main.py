@@ -1,6 +1,7 @@
 from drone import Drone
 from car import Car
 from messagequeue import mq_init, pop
+import time
 
 '''
 roadMap = {1: [[1, 1, 35.1554345, 128.1040969, 3.0], [1, 2, 35.1553926, 128.1041161, 3.0], [1, 3, 35.1553504, 128.1041358, 3.0], [1, 4, 35.1553084, 128.104155, 3.0], [1, 5, 35.1552665, 128.1041744, 3.0], [1, 6, 35.155224, 128.1041938, 3.0], [1, 7, 35.1551821, 
@@ -46,11 +47,19 @@ def update(msg, roadMap, car, drone, pre_car_road_id):
 
     return pre_car_road_id
 
+def init_make_logfile():
+    with open("logfile", "w") as file:
+        file.write("time,car_speed,car_road_id,car_waypoint_id,drone_target_speed,drone_speed,drone_road_id,drone_waypoint_id\n")
+
+def add_logfile(str):
+    with open("logfile.txt", "a") as file:
+        file.write(str)
+
 def flight_control(a):
     # Get message queue ID using same key as C++ program
     key = 5656
     mq = mq_init(key)
-    
+    starttime = time.time()
 
 
     roadMap = {1: [[1, 1, 35.1554345, 128.1040969, 3.0], [1, 2, 35.1553926, 128.1041161, 3.0], [1, 3, 35.1553504, 128.1041358, 3.0], [1, 4, 35.1553084, 128.104155, 3.0], [1, 5, 35.1552665, 128.1041744, 3.0], [1, 6, 35.155224, 128.1041938, 3.0], [1, 7, 35.1551821, 
@@ -67,16 +76,16 @@ def flight_control(a):
     car = Car()
     pre_car_road_id = car.road_id
 
-
+    init_make_logfile()
     init(drone)
-    # Read messages from queue
+    
     while True:
-        # Read message from queue
         msg = pop(mq)
-        # now = datetime.now()
-        # if(msg!="error"):
-        #     if(temp!=msg):
-        #         print( "start ",msg, "end : ",now.time())
-        #         temp = msg
-                
+    
         pre_car_road_id = update(msg, roadMap, car, drone, pre_car_road_id)
+        
+        update_time = time.time()
+        
+        log_data = f"{update_time-starttime},{car.velocity},{car.road_id},{car.waypoint},{drone.velocity},{drone.current_speed},{drone.road_id},{drone.waypoint}\n"
+        with open("data.txt", "a") as file:
+            file.write(f"{log_data}\n")
