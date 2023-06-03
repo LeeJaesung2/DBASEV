@@ -107,9 +107,9 @@ int findNextRoadId(int road_id, float current_latitude, float current_longitude,
     vector<int> waypoints = getWaypoints(graph, road_id);
     vector<int> connected_roads = graph.at(road_id).connectedRoads;
 
-    float min_distance = numeric_limits<float>::max();
-    int nearest_road_id = -1;
-    vector<float> first_waypoint_coordinates;
+    // float min_distance = numeric_limits<float>::max();
+    // int nearest_road_id = -1;
+    // vector<float> first_waypoint_coordinates;
     // for (int connected_road : connected_roads)
     // {
     //     vector<int> connected_waypoints = getWaypoints(graph, connected_road);
