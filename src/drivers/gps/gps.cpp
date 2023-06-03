@@ -31,7 +31,7 @@ void *getGPS(void* arg){
                     sentence += temp;
                 }
 
-                if (sentence.find("GPGGA") != string::npos) {
+                if (sentence.find("GNGGA") != string::npos) {
                     //cout << "sentence.c_str(): " << sentence.c_str() << endl;
                     strcpy(msg.buf, sentence.c_str());
 
