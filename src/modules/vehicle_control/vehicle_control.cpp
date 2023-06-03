@@ -55,20 +55,22 @@ void* vehicle_control(void* arg)
         pre_waypoint = now_waypoint;
         now_waypoint = calculateClosestWaypoint(road_id, pre_waypoint, current_latitude, current_longitude, graph);
         
-        sending_communication += to_string(road_id) + "/";
-        sending_communication += to_string(graph[road_id].waypoints[now_waypoint]);
+        cout << "now_waypoint: " << now_waypoint << endl;
 
-        int remain_waypoints = graph[road_id].waypoints.back() - now_waypoint;
+        //sending_communication += to_string(road_id) + "/";
+        //sending_communication += to_string(graph[road_id].waypoints[now_waypoint]);
+
+        //int remain_waypoints = graph[road_id].waypoints.back() - now_waypoint;
         
-        if (remain_waypoints < 2) {
-            int pre_road_id = road_id;
-            road_id = findNextRoadId(road_id, current_latitude, current_longitude, graph);
+        // if (remain_waypoints < 2) {
+        //     int pre_road_id = road_id;
+        //     road_id = findNextRoadId(road_id, current_latitude, current_longitude, graph);
 
-            if(pre_road_id != road_id){
-                pre_waypoint = 0;
-                now_waypoint = 1;
-            }
-        }
+        //     if(pre_road_id != road_id){
+        //         pre_waypoint = 0;
+        //         now_waypoint = 0;
+        //     }
+        // }
 
         pre_gps = gps;
 
