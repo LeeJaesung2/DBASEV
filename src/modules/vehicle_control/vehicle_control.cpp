@@ -66,6 +66,7 @@ void* vehicle_control(void* arg)
 
             if(pre_road_id != road_id){
                 pre_waypoint = 0;
+                now_waypoint = 1;
             }
         }
 
