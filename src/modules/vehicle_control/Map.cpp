@@ -113,10 +113,10 @@ int findNextRoadId(int road_id, float current_latitude, float current_longitude,
     for (int connected_road : connected_roads)
     {
         vector<int> connected_waypoints = getWaypoints(graph, connected_road);
-    //     if (!connected_waypoints.empty())
-    //     {
-    //         float waypoint_latitude = graph.at(connected_road).latitude[0];
-    //         float waypoint_longitude = graph.at(connected_road).longitude[0];
+        if (!connected_waypoints.empty())
+        {
+            float waypoint_latitude = graph.at(connected_road).latitude[0];
+            float waypoint_longitude = graph.at(connected_road).longitude[0];
 
     //         // Measure the distance between the two GPS values.
     //         float distance = calc_distance(current_latitude, current_longitude, waypoint_latitude, waypoint_longitude);
@@ -125,7 +125,7 @@ int findNextRoadId(int road_id, float current_latitude, float current_longitude,
     //             min_distance = distance;
     //             nearest_road_id = connected_road;
     //         }
-    //     }
+        }
     }
 
     // Check if the distance is valid and if it is within 3 meters, update the next_road_id to the nearest road_id.
