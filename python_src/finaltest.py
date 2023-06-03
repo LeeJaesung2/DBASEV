@@ -54,7 +54,7 @@ while True:
     car_idx += 1
 
     update_time = time.time()
-    log_data = "{},{},{},{},{},{},{},{}\n".format(update_time-starttime,car.velocity,car.road_id,car.waypoint,drone.velocity,drone.current_speed,drone.road_id,drone.waypoint)
+    log_data = "{},{},{},{},{},{},{},{}\n".format(update_time-starttime,car.velocity,car.road_id,car.waypoint,drone.velocity,drone.current_speed,drone.road_id,drone.target_waypoint)
     add_logfile(log_data)
     time.sleep(0.1)    
 
