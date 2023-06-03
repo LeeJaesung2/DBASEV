@@ -35,10 +35,11 @@ void * sender(void *arg)
     while (true) {
 		
 		cmd = pop(key_id, bufs);
-        if(comp != cmd.sq){
-            cout << "sender : " << cmd.buf  << "msg count : " << cmd.sq << endl;
-        }
-        comp = cmd.sq;
+        // if(comp != cmd.sq){
+        //     cout << "sender : " << cmd.buf  << "msg count : " << cmd.sq << endl;
+        // }
+        // comp = cmd.sq;
+        cout << "sender : " << cmd.buf  << endl;
         message = string(cmd.buf);
         
 		for (int i = 0; i < message.length(); i += max_chunk_size) {
@@ -112,8 +113,8 @@ void * receiver(void *arg)
                 cout << "communication.cpp" << endl;
             #endif
 
-            //strcpy(qmsg.buf, message.c_str());
-            strcpy(qmsg.buf, "10/1/1");
+            strcpy(qmsg.buf, message.c_str());
+            //strcpy(qmsg.buf, "10/1/1");
             push(key_id,buf, qmsg);
         } else {
             message = "ERR";

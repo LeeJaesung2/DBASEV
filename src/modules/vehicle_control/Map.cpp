@@ -35,7 +35,7 @@ unordered_map<int, Vertex> creatingMap() {
 
     // Connect roads
     connectRoads(graph, 1, 2);
-    connectRoads(graph, 2, 3);
+    //connectRoads(graph, 2, 3);
 
     // Print graph information
     for (const auto& pair : graph) {
@@ -79,17 +79,15 @@ vector<int> getWaypoints(const unordered_map<int, Vertex>& graph, int roadId) {
 // Function to calculate the closest waypoint
 int calculateClosestWaypoint(int road_id, int pre_waypoint, float current_latitude, float current_longitude, const unordered_map<int, Vertex>& graph) {
     vector<int> waypoints = getWaypoints(graph, road_id);
-    int now_waypoint = waypoints[0];
+    int now_waypoint = pre_waypoint;
 
     const vector<float>& waypoint_latitude = graph.at(road_id).latitude;
     const vector<float>& waypoint_longitude = graph.at(road_id).longitude;
 
     float min_distance = numeric_limits<float>::max();
 
-    for (int i = pre_waypoint; i < static_cast<int>(waypoints.size()); i++) {
+    for (int i = now_waypoint; i < static_cast<int>(waypoints.size()); i++) {
         float distance = calc_distance(current_latitude, current_longitude, waypoint_latitude[i], waypoint_longitude[i]);
-
-        //cout << "waypoint " << waypoints[i] << " distance: " << distance << endl;
 
         if (distance > min_distance) {
             break;
@@ -104,22 +102,19 @@ int calculateClosestWaypoint(int road_id, int pre_waypoint, float current_latitu
 
 int findNextRoadId(int road_id, float current_latitude, float current_longitude, const unordered_map<int, Vertex> &graph)
 {
-    int next_road_id;
-
+    int next_road_id = 1;
     // Get the latitude and longitude of the first waypoint of all adjacent road_ids connected to the current road_id.
     vector<int> waypoints = getWaypoints(graph, road_id);
     vector<int> connected_roads = graph.at(road_id).connectedRoads;
+
     float min_distance = numeric_limits<float>::max();
     int nearest_road_id = -1;
     vector<float> first_waypoint_coordinates;
-
     for (int connected_road : connected_roads)
     {
         vector<int> connected_waypoints = getWaypoints(graph, connected_road);
         if (!connected_waypoints.empty())
         {
-            //cout << " first_waypoint_id: " << first_waypoint_id << " of road: " << connected_road;
-
             float waypoint_latitude = graph.at(connected_road).latitude[0];
             float waypoint_longitude = graph.at(connected_road).longitude[0];
 
@@ -130,8 +125,6 @@ int findNextRoadId(int road_id, float current_latitude, float current_longitude,
                 min_distance = distance;
                 nearest_road_id = connected_road;
             }
-
-            //cout << "     distance: " << distance << "\n";
         }
     }
 
@@ -139,7 +132,6 @@ int findNextRoadId(int road_id, float current_latitude, float current_longitude,
     if (nearest_road_id != -1 && min_distance <= 5)
     {
         next_road_id = nearest_road_id;
-        waypoints = getWaypoints(graph, road_id);
     }
 
     return next_road_id;

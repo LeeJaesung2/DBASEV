@@ -8,7 +8,7 @@ void *getGPS(void* arg){
     key_t key = 1235;
     int key_id = mq_init(key);
     struct msqid_ds buf;
-    msg.sq = -1;
+    //msg.sq = -1;
 
     /*communicate time test*/
     // struct timespec specific_time;
@@ -31,7 +31,7 @@ void *getGPS(void* arg){
                     sentence += temp;
                 }
 
-                if (sentence.find("GPGGA") != string::npos) {
+                if (sentence.find("GNGGA") != string::npos) {
                     //cout << "sentence.c_str(): " << sentence.c_str() << endl;
                     strcpy(msg.buf, sentence.c_str());
 
@@ -45,7 +45,7 @@ void *getGPS(void* arg){
                     /*communicate time test*/
 
                     push(key_id,buf, msg);
-                    msg.sq++;
+                    //msg.sq++;
                 }
             }
         }
@@ -67,7 +67,7 @@ bool isValidGPSData(const string& gpsData) {
     return true;
 }
 
-std::string rawGps2degGps(int type, std::string token) {
+string rawGps2degGps(int type, string token) {
     int degrees;
     double minutes;
 
@@ -81,20 +81,20 @@ std::string rawGps2degGps(int type, std::string token) {
     }
 
     double deg_minutes = minutes / 60;
-    std::string str_minutes = std::to_string(deg_minutes);
+    string str_minutes = to_string(deg_minutes);
     str_minutes.replace(str_minutes.find("."), 1, "");
 
-    std::string what3words = std::to_string(degrees).append(".").append(str_minutes);
+    string what3words = to_string(degrees).append(".").append(str_minutes);
 
     return what3words;
 }
 
-GPSData extract_gps_data(const std::string& gps_str) {
+GPSData extract_gps_data(const string& gps_str) {
     GPSData gps_data;
     
     // Split the string by ',' and insert into string stream
-    std::stringstream ss(gps_str);
-    std::string token;
+    stringstream ss(gps_str);
+    string token;
 
     // Remove the GPGGA tag
     getline(ss, token, ',');
@@ -102,9 +102,9 @@ GPSData extract_gps_data(const std::string& gps_str) {
     // Extract time information
     getline(ss, token, ',');
     try {
-        gps_data.time = std::stod(token);
+        gps_data.time = stod(token);
     }
-    catch (std::invalid_argument& e) {
+    catch (invalid_argument& e) {
         //std::cerr << "Invalid argument: " << e.what() << std::endl;
         gps_data.time = 0.0;
     }
@@ -112,10 +112,10 @@ GPSData extract_gps_data(const std::string& gps_str) {
     // Extract latitude information
     getline(ss, token, ',');
     try {
-        std::string latitude = rawGps2degGps(LATITUDE, token);
-        gps_data.latitude = std::stod(latitude);
+        string latitude = rawGps2degGps(LATITUDE, token);
+        gps_data.latitude = stod(latitude);
     }
-    catch (std::invalid_argument& e) {
+    catch (invalid_argument& e) {
         //std::cerr << "Invalid argument: " << e.what() << std::endl;
         gps_data.latitude = 0.0;
     }
@@ -126,10 +126,10 @@ GPSData extract_gps_data(const std::string& gps_str) {
     // Extract longitude information
     getline(ss, token, ',');
     try {
-        std::string longitude = rawGps2degGps(LONGITUDE, token);
-        gps_data.longitude = std::stod(longitude);
+        string longitude = rawGps2degGps(LONGITUDE, token);
+        gps_data.longitude = stod(longitude);
     }
-    catch (std::invalid_argument& e) {
+    catch (invalid_argument& e) {
         //std::cerr << "Invalid argument: " << e.what() << std::endl;
         gps_data.longitude = 0.0;
     }
