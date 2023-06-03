@@ -8,7 +8,7 @@ void *getGPS(void* arg){
     key_t key = 1235;
     int key_id = mq_init(key);
     struct msqid_ds buf;
-    msg.sq = -1;
+    //msg.sq = -1;
 
     /*communicate time test*/
     // struct timespec specific_time;
@@ -45,7 +45,7 @@ void *getGPS(void* arg){
                     /*communicate time test*/
 
                     push(key_id,buf, msg);
-                    msg.sq++;
+                    //msg.sq++;
                 }
             }
         }

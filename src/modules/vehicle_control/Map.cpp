@@ -137,7 +137,6 @@ int findNextRoadId(int road_id, float current_latitude, float current_longitude,
     if (nearest_road_id != -1 && min_distance <= 5)
     {
         next_road_id = nearest_road_id;
-        waypoints = getWaypoints(graph, road_id);
     }
 
     return next_road_id;

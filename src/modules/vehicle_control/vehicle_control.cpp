@@ -13,7 +13,7 @@ void* vehicle_control(void* arg)
     string pre_gps="";
     float pre_speed = 0.0, current_speed;
     float current_latitude, current_longitude;
-    int pre_waypoint = 0, now_waypoint=1;
+    int pre_waypoint = 0, now_waypoint=0;
     
     MsgBuf msg;
     key_t key = 1235;
@@ -30,10 +30,10 @@ void* vehicle_control(void* arg)
         string sending_communication;
         string gps = msg.buf;
 
-        if(msg.sq != temp){
-            cout << "vehicle_control.cpp : " << gps << "msg num : " <<msg.sq << endl;
-        }
-        temp = msg.sq;
+        // if(msg.sq != temp){
+        //     cout << "vehicle_control.cpp : " << gps << "msg num : " <<msg.sq << endl;
+        // }
+        // temp = msg.sq;
 
         if (!isValidGPSData(gps)) {
             pre_gps = "";
