@@ -103,14 +103,14 @@ int calculateClosestWaypoint(int road_id, int pre_waypoint, float current_latitu
 int findNextRoadId(int road_id, float current_latitude, float current_longitude, const unordered_map<int, Vertex> &graph)
 {
     int next_road_id;
-
+    printf("1111111111111111111111\n");
     // Get the latitude and longitude of the first waypoint of all adjacent road_ids connected to the current road_id.
     vector<int> waypoints = getWaypoints(graph, road_id);
     vector<int> connected_roads = graph.at(road_id).connectedRoads;
     float min_distance = numeric_limits<float>::max();
     int nearest_road_id = -1;
     vector<float> first_waypoint_coordinates;
-
+    printf("222222222222222222222222\n");
     for (int connected_road : connected_roads)
     {
         vector<int> connected_waypoints = getWaypoints(graph, connected_road);
@@ -132,7 +132,7 @@ int findNextRoadId(int road_id, float current_latitude, float current_longitude,
             //cout << "     distance: " << distance << "\n";
         }
     }
-
+    printf("3333333333333333333333333333\n");
     // Check if the distance is valid and if it is within 3 meters, update the next_road_id to the nearest road_id.
     if (nearest_road_id != -1 && min_distance <= 5)
     {
