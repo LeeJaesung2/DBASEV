@@ -35,7 +35,7 @@ unordered_map<int, Vertex> creatingMap() {
 
     // Connect roads
     connectRoads(graph, 1, 2);
-    connectRoads(graph, 2, 3);
+    //connectRoads(graph, 2, 3);
 
     // Print graph information
     for (const auto& pair : graph) {
@@ -79,17 +79,15 @@ vector<int> getWaypoints(const unordered_map<int, Vertex>& graph, int roadId) {
 // Function to calculate the closest waypoint
 int calculateClosestWaypoint(int road_id, int pre_waypoint, float current_latitude, float current_longitude, const unordered_map<int, Vertex>& graph) {
     vector<int> waypoints = getWaypoints(graph, road_id);
-    int now_waypoint = waypoints[0];
+    int now_waypoint = pre_waypoint;
 
     const vector<float>& waypoint_latitude = graph.at(road_id).latitude;
     const vector<float>& waypoint_longitude = graph.at(road_id).longitude;
 
     float min_distance = numeric_limits<float>::max();
 
-    for (int i = pre_waypoint; i < static_cast<int>(waypoints.size()); i++) {
+    for (int i = now_waypoint; i < static_cast<int>(waypoints.size()); i++) {
         float distance = calc_distance(current_latitude, current_longitude, waypoint_latitude[i], waypoint_longitude[i]);
-
-        //cout << "waypoint " << waypoints[i] << " distance: " << distance << endl;
 
         if (distance > min_distance) {
             break;
