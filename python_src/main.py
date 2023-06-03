@@ -1,5 +1,8 @@
 from drone import Drone
 from car import Car
+import pandas as pd
+import time
+
 #from messagequeue import *
 
 #curve
@@ -17,6 +20,7 @@ roadMap = {1: [[1, 1, 35.1554345, 128.1040969, 3.0], [1, 2, 35.1553926, 128.1041
 drone = Drone()
 car = Car()
 pre_car_road_id = car.road_id
+start_time = time.time()
 
 def init():
     # drone.connect_to_pixhawk()
@@ -45,6 +49,14 @@ def update(msg):
     
     drone.set_airspeed_to_pixhawk(drone.velocity)
 
+def to_make_file():
+    # time | car_speed | car_road_id | car_waypoint_id |drone_target_speed | drone_target_waypoint | drone_speed | drone_road_id | drone_waypoint_id
+    with open("data.txt", "w") as file:
+        file.write(f"time,car_speed,car_road_id,car_waypoint_id,drone_target_speed,drone_target_waypoint,drone_speed,drone_road_id,drone_waypoint_id\n")
+
+def add_file(str):
+    with open("data.txt", "a") as file:
+        file.write(f"str\n")
 '''
 def consumer(a):
     # Get message queue ID using same key as C++ program
