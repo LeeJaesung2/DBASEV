@@ -1,5 +1,14 @@
 #include <DBASEV/communication.h>
 
+#include <vector>
+
+template<typename T>
+void pop_front(std::vector<T> &v)
+{
+    if (v.size() > 0) {
+        v.erase(v.begin());
+    }
+}
 
 void * sender(void *arg)
 {
@@ -29,19 +38,97 @@ void * sender(void *arg)
     int key_id = mq_init(key);
     struct msqid_ds bufs;
     int comp;
+
     string message;
     string temp2;
-    
+         
+    vector<string> data = {
+        "0/1/1",
+        "0/1/1",
+        "0/1/1",
+        "0/1/1",
+        "0/1/1",
+        "0/1/1",
+        "0/1/1",
+        "0/1/1",
+        "0/1/1",
+        "0/1/1",
+        "0/1/1",
+        "0/1/1",
+        "0/1/1",
+        "0/1/1",
+        "0/1/1",
+        "0/1/1",
+        "0/1/1",
+        "0/1/1",
+        "0/1/1",
+        "0/1/1",
+        "5/1/1",
+        "5/1/2",
+        "5/1/2",
+        "5/1/3",
+        "6/1/3",
+        "6/1/4",
+        "6/1/5",
+        "5/1/5",
+        "5/1/6",
+        "4/1/6",
+        "4/1/6",
+        "4/1/7",
+        "3/1/7",
+        "3/1/7",
+        "5/1/8",
+        "6/1/9",
+        "6/1/9",
+        "6/1/10",
+        "7/1/10",
+        "7/1/11",
+        "7/1/12",
+        "10/1/13",
+        "7/4/1",
+        "6/4/2",
+        "6/4/2",
+        "4/4/3",
+        "4/4/3",
+        "4/4/4",
+        "0/6/1",
+        "0/6/1",
+        "0/6/1",
+        "0/6/1",
+        "0/6/1",
+        "7/6/1",
+        "7/6/2",
+        "7/6/3",
+        "7/6/3",
+        "7/6/4",
+        "9/6/4",
+        "9/6/5",
+        "9/6/6",
+        "10/8/1",
+        "10/8/2",
+        "10/8/3",
+        "10/8/4",
+        "10/8/5"
+    };    
+
     while (true) {
 		
-		cmd = pop(key_id, bufs);
+		//cmd = pop(key_id, bufs);
         // if(comp != cmd.sq){
         //     cout << "sender : " << cmd.buf  << "msg count : " << cmd.sq << endl;
         // }
         // comp = cmd.sq;
-        cout << "sender : " << cmd.buf  << endl;
-        message = string(cmd.buf);
-        
+        //cout << "sender : " << cmd.buf  << endl;
+
+        if (data.empty()) {
+            continue;
+        }
+
+        message = data.front();
+        pop_front(data);
+        //cout << "message: " << message << endl;
+        sleep(1);
+
 		for (int i = 0; i < message.length(); i += max_chunk_size) {
 				int chunk_size = std::min(max_chunk_size, static_cast<int>(message.length() - i));
 				temp = message.substr(i, chunk_size);
@@ -64,7 +151,6 @@ void * sender(void *arg)
 				if (bytesWritten < 0 || bytesWritten != len) {
 					//std::cerr << "Error sending message." << std::endl;
 					close(serial_port);
-					//return 1;
 				}
 		}
     }
