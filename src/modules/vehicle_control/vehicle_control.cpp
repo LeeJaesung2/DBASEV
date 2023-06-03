@@ -39,7 +39,7 @@ void* vehicle_control(void* arg)
             pre_gps = "";
             //continue;
         }
-         // 데이터 포맷 : 속도 / 도로id/ waypoint
+         // data format : velocity / road_id/ now_waypoint
         if (pre_gps ==""){
             //cout << "speed: " << pre_speed << " m/s \n";
             sending_communication += to_string(pre_speed)+"/";
