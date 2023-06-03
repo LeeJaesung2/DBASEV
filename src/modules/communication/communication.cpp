@@ -39,6 +39,7 @@ void * sender(void *arg)
         //     cout << "sender : " << cmd.buf  << "msg count : " << cmd.sq << endl;
         // }
         // comp = cmd.sq;
+        cout << "sender : " << cmd.buf  << endl;
         message = string(cmd.buf);
         
 		for (int i = 0; i < message.length(); i += max_chunk_size) {
