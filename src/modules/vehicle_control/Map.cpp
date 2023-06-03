@@ -120,11 +120,11 @@ int findNextRoadId(int road_id, float current_latitude, float current_longitude,
 
             // Measure the distance between the two GPS values.
             float distance = calc_distance(current_latitude, current_longitude, waypoint_latitude, waypoint_longitude);
-    //         if (distance < min_distance)
-    //         {
-    //             min_distance = distance;
-    //             nearest_road_id = connected_road;
-    //         }
+            if (distance < min_distance)
+            {
+                min_distance = distance;
+                nearest_road_id = connected_road;
+            }
         }
     }
 
