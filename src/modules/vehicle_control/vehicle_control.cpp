@@ -55,8 +55,6 @@ void* vehicle_control(void* arg)
         pre_waypoint = now_waypoint;
         now_waypoint = calculateClosestWaypoint(road_id, pre_waypoint, current_latitude, current_longitude, graph);
         
-        cout << "now_waypoint: " << now_waypoint << endl;
-
         sending_communication += to_string(road_id) + "/";
         sending_communication += to_string(graph[road_id].waypoints[now_waypoint]);
 
