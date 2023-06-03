@@ -27,7 +27,7 @@ static char VERSION[] = "XX.YY.ZZ";
 #define GPIO_PIN_13             13
 #define DMA                     10
 #define STRIP_TYPE              WS2811_STRIP_GBR 
-#define LED_COUNT               9
+#define LED_COUNT               100
 
 #define RED 0x00000020
 #define BLUE 0x00200000

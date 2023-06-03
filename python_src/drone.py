@@ -13,6 +13,7 @@ class Drone:
         self.ishovering = False
         
         self.velocity = 0
+        self.current_speed = 0
         self.max_speed = 15.0
 
         # current mission num
@@ -24,7 +25,7 @@ class Drone:
 
         # Target waypoint
         self.target_waypoint = 1
-        self.target_waypoint_gps = LocationGlobalRelative(*(0.0, 0.0, 3.3))
+        self.target_waypoint_gps = LocationGlobalRelative(0.0, 0.0, 3.3)
         
         self.will_go_waypoint = deque()
 
@@ -57,8 +58,7 @@ class Drone:
                 self.road_id = cur_target_waypoint[0]
                 self.target_waypoint = cur_target_waypoint[1]
 
-                target_waypoint_gps = (cur_target_waypoint[2], cur_target_waypoint[3], cur_target_waypoint[4])
-                self.target_waypoint_gps = LocationGlobalRelative(*target_waypoint_gps)
+                self.target_waypoint_gps = LocationGlobalRelative(cur_target_waypoint[2], cur_target_waypoint[3], cur_target_waypoint[4])
 
             else:
                 self.ishovering = True
@@ -105,6 +105,13 @@ class Drone:
         connection_string = 'udp:127.0.0.1:1450'
         vehicle = connect(connection_string, wait_ready=True)
 
+
+        cmds = vehicle.commands
+        cmds.download()
+        cmds.wait_ready()
+        cmds.clear()
+        cmds.upload()
+
         self.vehicle = vehicle
         
     def connect_to_pixhawk(self):
@@ -117,6 +124,13 @@ class Drone:
         # Print information about the connected vehicle
         print('Connected to vehicle on: {}'.format(connection_string))
         print('Vehicle mode: {}'.format(vehicle.mode.name))
+
+
+        cmds = vehicle.commands
+        cmds.download()
+        cmds.wait_ready()
+        cmds.clear()
+        cmds.upload()
 
         self.vehicle = vehicle
 
@@ -171,6 +185,7 @@ class Drone:
 
     # Set drone airspeed
     def set_airspeed_to_pixhawk(self, airspeed):
+        self.current_speed = self.vehicle.groundspeed
         self.vehicle.groundspeed = airspeed
 
     # Landing function
