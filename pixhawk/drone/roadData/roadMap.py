@@ -16,7 +16,7 @@ class roadMap:
         print(currentPath)
         
 
-        excel_file = "pixhawk/drone/roadData/roadmap_park_10m.xlsx"
+        excel_file = "roadmap_park_10m.xlsx"
         self.roadDf = pd.read_excel(excel_file)
         
     def createRoadmap(self):
