@@ -76,6 +76,6 @@ def flight_control(a):
         
         update_time = time.time()
         
-        log_data = "{},{},{},{},{},{},{},{}\n".format(update_time-starttime, car.road_id, car.speed, car.dist, drone.road_id, drone.speed, drone.target_speed, drone.dist, drone.dist_drone_car)
+        log_data = "{},{},{},{},{},{},{},{},{}\n".format(update_time-starttime, car.road_id, car.speed, car.dist, drone.road_id, drone.speed, drone.target_speed, drone.dist, drone.dist_drone_car)
 
         add_logfile(log_data, formatted_time)
