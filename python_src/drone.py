@@ -2,109 +2,90 @@ from collections import deque
 from dronekit import connect, VehicleMode, LocationGlobalRelative, Command
 from pymavlink import mavutil
 import time
+import math
 
 class Drone:
     def __init__(self):
         self.vehicle = None
 
-        self.waypoint_dist = 10.0
-        self.waypoint_num = int(round(100 / self.waypoint_dist))
-        
-        self.ishovering = False
-        
-        self.velocity = 0
-        self.current_speed = 0
+        # speed / target_speed
+        self.speed = 0
+        self.target_speed = 0
         self.max_speed = 15.0
-
-        # current mission num
-        self.cur_mission_num = 0
 
         # Current waypoint
         self.waypoint = 0
         self.road_id = 0
 
-        # Target waypoint
-        self.target_waypoint = 1
-        self.target_waypoint_gps = LocationGlobalRelative(0.0, 0.0, 3.3)
+        # GPS
+        self.cur_gps = LocationGlobalRelative(0.0, 0.0, 0.0)
         
-        self.will_go_waypoint = deque()
+        # distanc between car and drone
+        self.dist = 0
+
 
     def update_drone_data(self):
-        self.velocity= self.vehicle.groundspeed
+        self.speed= self.vehicle.groundspeed
+        self.cur_gps = self.vehicle.location.global_frame
+
+    def update_dist(self, start_point, car_data):
         
+        # Start point coordinates
+        lat1, lon1, alt1 = start_point
 
+        # Convert degrees to radians
+        alt1_rad = math.radians(alt1)
+        lat1_rad = math.radians(lat1)
+        lon1_rad = math.radians(lon1)
 
-    def update_drone_target(self):
-        # Distance between target waypoint gps and drone gps
-        '''
-        dist = self.gps.distance_to(self.target_waypoint_gps)
-        
-        if dist < 1.5:
-            nxt_target = True
-        else:
-            nxt_target = False
-        '''
-        cmds = self.vehicle.commands
-        
+        # Current location coordinates
+        current_location = self.cur_gps
+        alt2_rad = math.radians(current_location.alt)
+        lat2_rad = math.radians(current_location.lat)
+        lon2_rad = math.radians(current_location.lon)
 
-        # Update next waypoint
-        if self.cur_mission_num < cmds.next:
-            self.cur_mission_num = cmds.next
+        # Calculate differences
+        delta_lat = lat2_rad - lat1_rad
+        delta_lon = lon2_rad - lon1_rad
+        delta_alt = alt2_rad - alt1_rad
 
-            if self.will_go_waypoint:
-                self.ishovering = False
-                cur_target_waypoint = self.will_go_waypoint.popleft()
+        # Haversine formula
+        a = math.sin(delta_lat / 2) ** 2 + math.cos(lat1_rad) * math.cos(lat2_rad) * math.sin(delta_lon / 2) ** 2
+        c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+        distance_2d = c * 6371 * 1000  # Earth radius = 6371km, 2D distance (ignoring altitude difference)
 
-                self.road_id = cur_target_waypoint[0]
-                self.target_waypoint = cur_target_waypoint[1]
+        # Calculate 3D distance
+        distance_3d = math.sqrt(distance_2d ** 2 + delta_alt ** 2)
 
-                self.target_waypoint_gps = LocationGlobalRelative(cur_target_waypoint[2], cur_target_waypoint[3], cur_target_waypoint[4])
+        return distance_3d - car_data.dist
 
-            else:
-                self.ishovering = True
-
-    def update_drone_velocity(self, car_data):
-        if self.ishovering:
-            self.velocity = 0
-            return
-        
+    def update_drone_speed(self, car_data):
         # Same road
         if car_data["road_id"] == self.road_id:
 
-            # Need to adjust velocity as the distance gets larger
-            if car_data["waypoint"] <= self.waypoint - self.waypoint_num:
-                ideal_velocity = car_data["velocity"] - (self.waypoint_dist * (self.waypoint - car_data.waypoint - self.waypoint_num))
+            # if dist under 100m
+            # drone have to fly to max speed
+            if self.dist < 100:
+                self.target_speed = self.max_speed
 
-                if ideal_velocity < 0:
-                    ideal_velocity = 0
-                elif ideal_velocity > self.max_speed:
-                    ideal_velocity = self.max_speed
-                
-                self.velocity = ideal_velocity
-
-            # Need to reach maximum speed as the distance gets closer
+            # if dist over 100m
             else:
-                self.velocity = self.max_speed
-        
-        # Need to reach maximum speed as it is on a different road
+                self.target_speed = car_data.speed - (self.dist - 100)  
+                if self.target_speed < 0 :
+                    self.target_speed = 0
+                elif self.target_speed > self.max_speed:
+                    self.target_speed = self.max_speed
+        # different road
         else:
             self.velocity = self.max_speed
-            
-    def update_will_go_waypoint(self, waypoints):
-        for waypoint in waypoints:
-            self.will_go_waypoint.append(waypoint)
-        
 
 
     """--------------------------------------------------------------------------------------------------------"""
 
-    
-
     # Connect to Pixhawk
     def sim_connect_to_pixhawk(self):
         connection_string = 'udp:127.0.0.1:1450'
-        vehicle = connect(connection_string, wait_ready=True)
-        
+        vehicle = connect(connection_string, wait_ready=True)  
 
         cmds = vehicle.commands
         cmds.download()
@@ -113,8 +94,7 @@ class Drone:
         cmds.upload()
 
         self.vehicle = vehicle
-        
-
+        self.update_drone_data()
         
     def connect_to_pixhawk(self):
         # Specify the path of the serial port to connect
@@ -139,25 +119,13 @@ class Drone:
     # Takeoff function
     def arm_and_takeoff_to_pixhawk(self, aTargetAltitude):
         print("Drone takeoff preparation...")
-        # Arm the drone
-        '''
-        while not self.vehicle.is_armable:
-            print("Waiting for drone to become armable...")
-            time.sleep(1)
         
-        print("Arming the drone")
-        '''
-        
-        self.vehicle.armed = True
-        self.vehicle.mode = VehicleMode("GUIDED")
-        time.sleep(1)
+        self.change_vehicleMode("GUIDED")
 
         # Wait for the drone to be armed
         while not self.vehicle.armed:
             print("Waiting for the drone to become armed...")
-            self.vehicle.armed = True
-            self.vehicle.mode = VehicleMode("GUIDED")
-            time.sleep(1)
+            self.change_vehicleMode("GUIDED")
 
         print("Taking off")
         self.vehicle.simple_takeoff(aTargetAltitude)
@@ -193,7 +161,6 @@ class Drone:
 
     # Set drone airspeed
     def set_airspeed_to_pixhawk(self, airspeed):
-        self.current_speed = self.vehicle.groundspeed
         self.vehicle.groundspeed = airspeed
 
     # Landing function
@@ -211,5 +178,8 @@ class Drone:
             print("Vehicl mode : ", self.vehicle.mode.name)
             print("Changing Vehcile mode to ", new_mode, "....")
             
+            if new_mode == "GUIDED":
+                self.vehicle.arm = True
+
             self.vehicle.mode = VehicleMode(new_mode)
             time.sleep(1)
