@@ -8,7 +8,7 @@ class Car:
         self.dist = 0.0
         
     def update_car_data(self, msg):
-        if msg == "error":
+        if msg == "ERR":
             return None
         
         msg_list = msg.strip().split('/')
