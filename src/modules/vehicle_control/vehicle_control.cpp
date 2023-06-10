@@ -1,4 +1,13 @@
 #include <DBASEV/vehicle_control.h>
+#include <string>
+
+template<typename T>
+void pop_front(std::vector<T> &v)
+{
+    if (v.size() > 0) {
+        v.erase(v.begin());
+    }
+}
 
 void* vehicle_control(void* arg)
 {

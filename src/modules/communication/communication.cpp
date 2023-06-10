@@ -1,13 +1,5 @@
 #include <DBASEV/communication.h>
 
-template<typename T>
-void pop_front(std::vector<T> &v)
-{
-    if (v.size() > 0) {
-        v.erase(v.begin());
-    }
-}
-
 void * sender(void *arg)
 {
     int serial_port = open("/dev/ttyUSB0", O_RDWR);
