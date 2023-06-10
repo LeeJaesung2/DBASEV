@@ -193,7 +193,7 @@ void * sender(void *arg)
 
 				// Send the message over the serial port
 				ssize_t bytesWritten = write(serial_port, buf, len);
-				usleep(10000);
+				usleep(1000000);
 
 				if (bytesWritten < 0 || bytesWritten != len) {
 					std::cerr << "Error sending message." << std::endl;
