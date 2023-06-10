@@ -33,6 +33,7 @@ void * sender(void *arg)
 
     while (true) {
 		cmd = pop(key_id, bufs);
+        usleep(1);
         // if(comp != cmd.sq){
         //     cout << "sender : " << cmd.buf  << "msg count : " << cmd.sq << endl;
         // }
