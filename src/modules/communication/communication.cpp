@@ -173,7 +173,7 @@ void * sender(void *arg)
 
         message = data.front();
         pop_front(data);
-        cout << "message: " << message << endl;
+        //cout << "message: " << message << endl;
         sleep(1);
 
 		for (int i = 0; i < message.length(); i += max_chunk_size) {
