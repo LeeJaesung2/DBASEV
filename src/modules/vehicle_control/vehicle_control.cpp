@@ -1,5 +1,4 @@
 #include <DBASEV/vehicle_control.h>
-#include <string.h>
 
 template<typename T>
 void pop_front(std::vector<T> &v)
@@ -210,7 +209,7 @@ void* vehicle_control(void* arg)
         message = data.front();
         pop_front(data);
 
-        strcpy(msg.buf, data.c_str());
+        strcpy(msg.buf, message.c_str());
         push(key_id2,buf2, msg);
         sleep(1);
     }
