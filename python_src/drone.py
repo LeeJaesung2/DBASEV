@@ -21,15 +21,14 @@ class Drone:
         self.cur_gps = LocationGlobalRelative(0.0, 0.0, 0.0)
         
         # distanc between car and drone
+        self.dist_drone_car = 0
         self.dist = 0
-
 
     def update_drone_data(self):
         self.speed= self.vehicle.groundspeed
         self.cur_gps = self.vehicle.location.global_frame
 
     def update_dist(self, start_point, car_data):
-        
         # Start point coordinates
         lat1, lon1, alt1 = start_point
 
@@ -55,9 +54,10 @@ class Drone:
         distance_2d = c * 6371 * 1000  # Earth radius = 6371km, 2D distance (ignoring altitude difference)
 
         # Calculate 3D distance
-        distance_3d = math.sqrt(distance_2d ** 2 + delta_alt ** 2)
+        self.dist = math.sqrt(distance_2d ** 2 + delta_alt ** 2)
+        
+        self.dist_drone_car = self.dist - car_data.dist 
 
-        return distance_3d - car_data.dist
 
     def update_drone_speed(self, car_data):
         # Same road
@@ -65,12 +65,12 @@ class Drone:
 
             # if dist under 100m
             # drone have to fly to max speed
-            if self.dist < 100:
+            if self.dist_drone_car < 100:
                 self.target_speed = self.max_speed
 
             # if dist over 100m
             else:
-                self.target_speed = car_data.speed - (self.dist - 100)  
+                self.target_speed = car_data.speed - (self.dist_drone_car - 100)  
                 if self.target_speed < 0 :
                     self.target_speed = 0
                 elif self.target_speed > self.max_speed:

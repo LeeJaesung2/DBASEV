@@ -1,19 +1,18 @@
 from drone import Drone
 from car import Car
 from messagequeue import mq_init, pop
-import time
+import time, datetime
 
 def init(drone):
     drone.connect_to_pixhawk()
     #drone.sim_connect_to_pixhawk()
     drone.arm_and_takeoff_to_pixhawk(7.0)
-    
+
 
 def update(msg, roadMap, car, drone, pre_car_road_id):
 
     drone.update_drone_data()
     pre_car_road_id = car.road_id
-
     car.update_car_data(msg)
 
     if pre_car_road_id != car.road_id:
@@ -34,12 +33,13 @@ def update(msg, roadMap, car, drone, pre_car_road_id):
     return pre_car_road_id
 
 def init_make_logfile(num):
-    title = "logfile{}.txt".format(num)
+    title = "{} logfile.txt".format(num)
     with open( title, "w") as file:
-        file.write("time,car_speed,car_road_id,car_waypoint_id,drone_target_speed,drone_speed,drone_road_id,drone_waypoint_id\n")
+        file.write("time,car_road_id,car_speed,car_dist,drone_road_id,drone_speed,drone_target_speed,drone_dist,distance\n")
 
-def add_logfile(data):
-    with open("logfile.txt", "a") as file:
+def add_logfile(data, num):
+    title = "{} logfile.txt".format(num)
+    with open(title, "a") as file:
         file.write(data)
 
 def flight_control(a):
@@ -61,7 +61,10 @@ def flight_control(a):
     car = Car()
     pre_car_road_id = car.road_id
 
-    init_make_logfile()
+    current_time = datetime.datetime.now()
+    formatted_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
+
+    init_make_logfile(formatted_time)
     init(drone)
     
     while True:
@@ -71,6 +74,6 @@ def flight_control(a):
         
         update_time = time.time()
         
-        log_data = "{},{},{},{},{},{},{},{}\n".format(update_time-starttime,car.speed,car.road_id,car.waypoint,drone.target_speed,drone.speed,drone.road_id,drone.target_speed)
+        log_data = "{},{},{},{},{},{},{},{}\n".format(update_time-starttime, car.road_id, car.speed, car.dist, drone.road_id, drone.speed, drone.target_speed, drone.dist, drone.dist_drone_car)
 
-        add_logfile(log_data)
+        add_logfile(log_data, formatted_time)

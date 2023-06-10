@@ -5,7 +5,8 @@ class Car:
         self.waypoint = 0
         self.road_id = 0
         self.speed = 0.0
-    
+        self.dist = 0.0
+        
     def update_car_data(self, msg):
         if msg == "error":
             return None
