@@ -70,7 +70,7 @@ class Drone:
 
             # if dist over 100m
             else:
-                self.target_speed = car_data.speed - (self.dist_drone_car - 100)  
+                self.target_speed = car_data["speed"] - (self.dist_drone_car - 100)  
                 
                 if self.target_speed < 0 :
                     self.target_speed = 0
