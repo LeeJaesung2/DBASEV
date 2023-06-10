@@ -1,5 +1,6 @@
 #include <DBASEV/communication.h>
 
+
 void * sender(void *arg)
 {
     int serial_port = open("/dev/ttyUSB0", O_RDWR);
@@ -28,20 +29,18 @@ void * sender(void *arg)
     int key_id = mq_init(key);
     struct msqid_ds bufs;
     int comp;
-
     string message;
-
+    string temp2;
+    
     while (true) {
+		
 		cmd = pop(key_id, bufs);
-        if(comp != cmd.sq){
-             cout << "sender : " << cmd.buf  << "msg count : " << cmd.sq << endl;
-        }
-        comp = cmd.sq;
-        //cout << "sender : " << cmd.buf  << endl;
-
-        message = cmd.buf;
-        //cout << "message: " << message << endl;
-
+        //if(comp != cmd.sq){
+        //    cout << "sender : " << cmd.buf  << "msg count : " << cmd.sq << endl;
+        //}
+        //comp = cmd.sq;
+        message = string(cmd.buf);
+        
 		for (int i = 0; i < message.length(); i += max_chunk_size) {
 				int chunk_size = std::min(max_chunk_size, static_cast<int>(message.length() - i));
 				temp = message.substr(i, chunk_size);
@@ -60,10 +59,11 @@ void * sender(void *arg)
 
 				// Send the message over the serial port
 				ssize_t bytesWritten = write(serial_port, buf, len);
-
+				
 				if (bytesWritten < 0 || bytesWritten != len) {
 					//std::cerr << "Error sending message." << std::endl;
 					close(serial_port);
+					//return 1;
 				}
 		}
     }
@@ -107,17 +107,16 @@ void * receiver(void *arg)
         bool message_received = receiveMessage(fd, msg, status, channel, message);
         
         if (message_received) {
-            //printf("%s\n",message.c_str());
+            printf("%s\n",message.c_str());
             #ifndef DEBUG
                 cout << "communication.cpp" << endl;
             #endif
 
             strcpy(qmsg.buf, message.c_str());
-            //strcpy(qmsg.buf, "10/1/1");
             push(key_id,buf, qmsg);
         } else {
             message = "ERR";
-            //printf("%s\n",message.c_str());
+            printf("%s\n",message.c_str());
             #ifndef DEBUG
                 cout << "communication.cpp" << endl;
             #endif
