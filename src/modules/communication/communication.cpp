@@ -30,7 +30,6 @@ void * sender(void *arg)
     struct msqid_ds bufs;
     int comp;
     string message;
-    string temp2;
     
     while (true) {
 		
@@ -63,7 +62,6 @@ void * sender(void *arg)
 				if (bytesWritten < 0 || bytesWritten != len) {
 					//std::cerr << "Error sending message." << std::endl;
 					close(serial_port);
-					//return 1;
 				}
 		}
     }

@@ -211,6 +211,6 @@ void* vehicle_control(void* arg)
 
         strcpy(msg.buf, message.c_str());
         push(key_id2,buf2, msg);
-        sleep(1);
+        //sleep(1);
     }
 }
