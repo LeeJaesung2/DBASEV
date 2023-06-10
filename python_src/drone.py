@@ -14,8 +14,8 @@ class Drone:
         self.max_speed = 15.0
 
         # Current waypoint
-        self.waypoint = 0
-        self.road_id = 0
+        self.waypoint = 1
+        self.road_id = 1
 
         # GPS
         self.cur_gps = LocationGlobalRelative(0.0, 0.0, 0.0)
@@ -56,7 +56,7 @@ class Drone:
         # Calculate 3D distance
         self.dist = math.sqrt(distance_2d ** 2 + delta_alt ** 2)
         
-        self.dist_drone_car = self.dist - car_data.dist 
+        self.dist_drone_car = self.dist - car_data["dist"] 
 
 
     def update_drone_speed(self, car_data):
@@ -71,13 +71,15 @@ class Drone:
             # if dist over 100m
             else:
                 self.target_speed = car_data.speed - (self.dist_drone_car - 100)  
+                
                 if self.target_speed < 0 :
                     self.target_speed = 0
+                
                 elif self.target_speed > self.max_speed:
                     self.target_speed = self.max_speed
         # different road
         else:
-            self.velocity = self.max_speed
+            self.target_speed = self.max_speed
 
 
     """--------------------------------------------------------------------------------------------------------"""
@@ -120,12 +122,18 @@ class Drone:
     def arm_and_takeoff_to_pixhawk(self, aTargetAltitude):
         print("Drone takeoff preparation...")
         
-        self.change_vehicleMode("GUIDED")
+        self.vehicle.mode = VehicleMode("GUIDED")
+        time.sleep(1)
+        self.vehicle.arm = True
 
         # Wait for the drone to be armed
+        
         while not self.vehicle.armed:
-            print("Waiting for the drone to become armed...")
-            self.change_vehicleMode("GUIDED")
+            print("Vehicl mode : ", self.vehicle.mode.name)
+            
+            self.vehicle.mode = VehicleMode("GUIDED")
+            time.sleep(1)
+            self.vehicle.arm = True
 
         print("Taking off")
         self.vehicle.simple_takeoff(aTargetAltitude)
@@ -144,7 +152,7 @@ class Drone:
         cmd = self.vehicle.commands
         
         for waypoint in waypoint_list:
-            print("wapoint : ", waypoint[2], waypoint[3], waypoint[4])
+            print("add wapoint : ", waypoint[2], waypoint[3], waypoint[4])
             wp = LocationGlobalRelative(waypoint[2], waypoint[3], waypoint[4])
             cmd.add(
                 Command(0,0,0, 
