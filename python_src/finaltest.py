@@ -1,4 +1,4 @@
-from main import init, update
+from main_test import init, update
 from drone import Drone
 from car import Car
 import time, datetime

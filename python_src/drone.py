@@ -96,7 +96,7 @@ class Drone:
         cmds.upload()
 
         self.vehicle = vehicle
-        self.update_drone_data()
+        print("Complete connect!!!")
         
     def connect_to_pixhawk(self):
         # Specify the path of the serial port to connect
@@ -116,25 +116,26 @@ class Drone:
         cmds.clear()
         cmds.upload()
 
+        print("Complete connect!!!")
         self.vehicle = vehicle
 
     # Takeoff function
     def arm_and_takeoff_to_pixhawk(self, aTargetAltitude):
         print("Drone takeoff preparation...")
+
         
         self.vehicle.mode = VehicleMode("GUIDED")
+        time.sleep(2)
+        self.vehicle.armed = True
         time.sleep(1)
-        self.vehicle.arm = True
 
         # Wait for the drone to be armed
-        
         while not self.vehicle.armed:
-            print("Vehicl mode : ", self.vehicle.mode.name)
-            
+            print("Waiting for the drone to become armed...")
+            self.vehicle.armed = True
             self.vehicle.mode = VehicleMode("GUIDED")
             time.sleep(1)
-            self.vehicle.arm = True
-
+            
         print("Taking off")
         self.vehicle.simple_takeoff(aTargetAltitude)
 
