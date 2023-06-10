@@ -1,5 +1,5 @@
 #include <DBASEV/vehicle_control.h>
-#include <string>
+#include <string.h>
 
 template<typename T>
 void pop_front(std::vector<T> &v)
