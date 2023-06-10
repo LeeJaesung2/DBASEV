@@ -40,14 +40,14 @@ void * sender(void *arg)
     string message;
 
     while (true) {
-		//cmd = pop(key_id, bufs);
+		cmd = pop(key_id, bufs);
         // if(comp != cmd.sq){
         //     cout << "sender : " << cmd.buf  << "msg count : " << cmd.sq << endl;
         // }
         // comp = cmd.sq;
         //cout << "sender : " << cmd.buf  << endl;
 
-        message = pop(key_id, bufs);
+        message = cmd.buf;
         cout << "message: " << message << endl;
 
 		for (int i = 0; i < message.length(); i += max_chunk_size) {
