@@ -65,5 +65,5 @@ while True:
 
     add_logfile(log_data, formatted_time)
 
-    time.sleep(0.1)    
+    time.sleep(1)    
 
