@@ -1,7 +1,5 @@
 #include <DBASEV/communication.h>
 
-#include <vector>
-
 template<typename T>
 void pop_front(std::vector<T> &v)
 {
@@ -40,7 +38,6 @@ void * sender(void *arg)
     int comp;
 
     string message;
-    string temp2;
          
     vector<string> data = {
         "0/1/1/1.0",
@@ -163,7 +160,6 @@ void * sender(void *arg)
     };    
 
     while (true) {
-		
 		//cmd = pop(key_id, bufs);
         // if(comp != cmd.sq){
         //     cout << "sender : " << cmd.buf  << "msg count : " << cmd.sq << endl;
@@ -177,7 +173,7 @@ void * sender(void *arg)
 
         message = data.front();
         pop_front(data);
-        //cout << "message: " << message << endl;
+        cout << "message: " << message << endl;
         sleep(1);
 
 		for (int i = 0; i < message.length(); i += max_chunk_size) {
