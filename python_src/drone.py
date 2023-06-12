@@ -13,9 +13,13 @@ class Drone:
         self.target_speed = 0
         self.max_speed = 15.0
 
+        # cur cmd 
+        self.will_go_waypoint_queue = deque()
+        self.cmd_num = 0
+
         # Current waypoint
-        self.waypoint = 1
-        self.road_id = 1
+        self.waypoint = 0
+        self.road_id = 0
 
         # GPS
         self.cur_gps = LocationGlobalRelative(0.0, 0.0, 0.0)
@@ -24,7 +28,21 @@ class Drone:
         self.dist_drone_car = 0
         self.dist = 0
 
+        self.ishovering = False
+
+    def add_will_go_waypoint_queue(self, waypoints):
+        for wp in waypoints:
+            self.will_go_waypoint_queue.append(wp)
+
     def update_drone_data(self):
+        if self.cmd_num != self.vehicle.commands.next:
+            if len(self.will_go_waypoint_queue) > 0:
+                wp = self.will_go_waypoint_queue.popleft()
+                self.road_id = wp[0]
+                self.waypoint = wp[1]
+
+                print("current willgo queue : ", self.will_go_waypoint_queue)
+        
         self.speed= self.vehicle.groundspeed
         self.cur_gps = self.vehicle.location.global_frame
 
@@ -55,32 +73,38 @@ class Drone:
 
         # Calculate 3D distance
         self.dist = math.sqrt(distance_2d ** 2 + delta_alt ** 2)
-        
+        print("distance between car and drone : ", self.dist - car_data["dist"])
         self.dist_drone_car = self.dist - car_data["dist"] 
 
 
     def update_drone_speed(self, car_data):
         # Same road
         if car_data["road_id"] == self.road_id:
-
+            print("current drone road id :", self.road_id)
             # if dist under 100m
             # drone have to fly to max speed
-            if self.dist_drone_car < 100:
+            if self.dist_drone_car < 90:
                 self.target_speed = self.max_speed
 
             # if dist over 100m
             else:
                 self.target_speed = car_data["speed"] - (self.dist_drone_car - 100)  
-                
-                if self.target_speed < 0 :
-                    self.target_speed = 0
-                
-                elif self.target_speed > self.max_speed:
+                print("100m over & target speed : ", self.target_speed)
+
+                if self.target_speed > self.max_speed:
                     self.target_speed = self.max_speed
         # different road
         else:
+            print("current car road id :", car_data["road_id"])
+            print("current drone road id :", self.road_id)
             self.target_speed = self.max_speed
 
+    def hovering(self):
+        print("hovering!!!")
+        
+        self.ishovering = True
+        self.change_vehicleMode("GUIDED")
+        
 
     """--------------------------------------------------------------------------------------------------------"""
 
@@ -149,9 +173,11 @@ class Drone:
 
     # Add waypoints to the drone
     def add_waypoints_to_pixhawk(self, waypoint_list):
-        
+
         cmd = self.vehicle.commands
-        
+
+        print("pre add | cmd next :", cmd.next)
+        print("command len : ", len(cmd))
         for waypoint in waypoint_list:
             print("add wapoint : ", waypoint[2], waypoint[3], waypoint[4])
             wp = LocationGlobalRelative(waypoint[2], waypoint[3], waypoint[4])
@@ -162,15 +188,28 @@ class Drone:
                     0, 1, 0, 0, 0, 0,
                     wp.lat, wp.lon, wp.alt
                 )
-            )    
+            )
+
         cmd.upload()
+
+        print("complete add | cmd next :", cmd.next)
+        print("command len : ", len(cmd))
         
         self.change_vehicleMode("AUTO")
-
-
+        self.ishovering = False
+        
     # Set drone airspeed
     def set_airspeed_to_pixhawk(self, airspeed):
-        self.vehicle.groundspeed = airspeed
+        if airspeed < 1:
+            self.hovering()
+        
+        else:
+            if self.ishovering:
+                print("End Hovering")
+                self.ishovering = False
+                self.change_vehicleMode("AUTO")
+
+            self.vehicle.airspeed = airspeed
 
     # Landing function
     def land_to_pixhawk(self):
@@ -186,9 +225,6 @@ class Drone:
         while self.vehicle.mode.name != new_mode:
             print("Vehicl mode : ", self.vehicle.mode.name)
             print("Changing Vehcile mode to ", new_mode, "....")
-            
-            if new_mode == "GUIDED":
-                self.vehicle.arm = True
 
             self.vehicle.mode = VehicleMode(new_mode)
-            time.sleep(1)
+            time.sleep(0.5)

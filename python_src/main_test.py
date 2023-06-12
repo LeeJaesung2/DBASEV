@@ -10,28 +10,31 @@ def init(drone):
 
 
 def update(msg, roadMap, car, drone, pre_car_road_id):
-
-    drone.update_drone_data()
     pre_car_road_id = car.road_id
     car.update_car_data(msg)
 
     if pre_car_road_id != car.road_id:
+        print("new road!!!")
         waypoints = roadMap[car.road_id]
-        # control drone waypoint
+        drone.add_will_go_waypoint_queue(waypoints)
         drone.add_waypoints_to_pixhawk(waypoints)
     
-    
+    '''
+    drone.update_drone_data()
     car_data = car.get_car_data()
-
+    
     startpoint = (roadMap[drone.road_id][0][2], roadMap[drone.road_id][0][3], roadMap[drone.road_id][0][4]) 
     drone.update_dist(startpoint,  car_data)
+
     drone.update_drone_speed(car_data)
     
     # control drone speed
-    print(drone.speed)
+    
     drone.set_airspeed_to_pixhawk(drone.target_speed)
-
+    '''
+    
     return pre_car_road_id
+    
 
 def init_make_logfile(num):
     title = "{} logfile.txt".format(num)

@@ -1,0 +1,2 @@
+time,car_road_id,car_speed,car_dist,drone_road_id,drone_speed,drone_target_speed,drone_dist,distance
+4.816436529159546,1,0.0,1.0,1,0.1190589889883995,15.0,0.5184864219949199,-0.4815135780050801

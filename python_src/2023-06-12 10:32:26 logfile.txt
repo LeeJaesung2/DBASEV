@@ -1,0 +1,1 @@
+time,car_road_id,car_speed,car_dist,drone_road_id,drone_speed,drone_target_speed,drone_dist,distance
