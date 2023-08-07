@@ -4,7 +4,7 @@ void * flight_control(void *arg)
 {   
 
     const char* src = "main"; //source code file
-    const char* func = "multiply"; //method for excute
+    const char* func = "flight_control"; //method for excute
     
     //func = "embedd";
     callPython(src, func, 1, 1);   
