@@ -1,5 +1,5 @@
 #include <DBASEV/embedd.h>
-#include <python2.7/Python.h>
+#include <Python.h>
 
 int callPython(const char *src,const char *func, int arg, ...){
     PyObject *pName, *pModule, *pFunc;
@@ -9,7 +9,8 @@ int callPython(const char *src,const char *func, int arg, ...){
     Py_Initialize();
     PyRun_SimpleString("import sys");
     PyRun_SimpleString("sys.path.append(\"./python_src\")"); //set python src path
-    pName = PyString_FromString(src); //get python src
+    pName = PyUnicode_DecodeFSDefault(src); //get python src
+
 
     /*Error checking of pName*/
     pModule = PyImport_Import(pName);
@@ -17,14 +18,12 @@ int callPython(const char *src,const char *func, int arg, ...){
 
     if (pModule != NULL) {
         pFunc = PyObject_GetAttrString(pModule, func);
-
         if (pFunc && PyCallable_Check(pFunc)) {
-
             va_list ap;
             va_start(ap,arg);
             pArgs = PyTuple_New(arg);
             for (i = 0; i < arg; ++i) {
-                pValue = PyInt_FromLong(va_arg(ap,int));
+                pValue = PyLong_FromLong(va_arg(ap,int));
                 if (!pValue) {
                     Py_DECREF(pArgs);
                     Py_DECREF(pModule);
@@ -41,7 +40,7 @@ int callPython(const char *src,const char *func, int arg, ...){
             Py_DECREF(pArgs);
             /*value checking*/
             if (pValue != NULL) {
-                printf("Result of call: %ld\n", PyInt_AsLong(pValue));
+                printf("Result of call: %ld\n", PyLong_AsLong(pValue));
                 #ifndef DEBUG
                     cout << "embedd.cpp" << endl;
                 #endif
@@ -77,7 +76,7 @@ int callPython(const char *src,const char *func, int arg, ...){
         return 1;
     }
     Py_Finalize();
-    return PyInt_AsLong(pValue);
+    return PyLong_AsLong(pValue);
     
 }
 

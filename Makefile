@@ -12,7 +12,7 @@ CC=g++
 CFLAGS=-c -Wall
 LDFLAGS=-lpthread -std=c++14
 GPFLAGS = -lws2811 -lwiringPi
-PYFLAGS = -I/usr/include/python2.7 -lpython2.7
+PYFLAGS = -I/usr/include/python3.8 -lpython3.8
 SRC_DIR=./src
 OBJ_DIR=./build
 DRONE_DIR=./raspberryPi/drone

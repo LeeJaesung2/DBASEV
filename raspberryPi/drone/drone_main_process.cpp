@@ -6,7 +6,7 @@
 
 
 
-#define NUM_THREADS 2
+#define NUM_THREADS 1
 
 
 
@@ -25,10 +25,10 @@ int main()
         perror("failure create thread");
     }
     // create receiver thread
-    thr_id = pthread_create(&threads[1], NULL, &receiver, NULL);
-    if(thr_id < 0){
-        perror("failure create thread");
-    }
+    // thr_id = pthread_create(&threads[1], NULL, &receiver, NULL);
+    // if(thr_id < 0){
+    //     perror("failure create thread");
+    // }
 
 
 
@@ -51,7 +51,7 @@ int main()
     }
 
     //after dead all of thread
-    printf("all of threads are dead");
+    printf("all of threads are dead\n");
     //announceOff();
 
     return 0;
