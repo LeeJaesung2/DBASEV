@@ -1,0 +1,2 @@
+dronekit==2.9.2
+sysv-ipc==1.1.0
