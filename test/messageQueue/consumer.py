@@ -38,9 +38,11 @@ def pop(mq):
 def consumer(a):
     BUFFER_SIZE = 26
     msgcount = 0
+    rvlist = []
+    jplist = []
 
     # Get message queue ID using same key as C++ program
-    key = 5656
+    key = 5657
     mq = mq_init(key)
 
     print("Message queue created with ID:", mq)
@@ -54,8 +56,9 @@ def consumer(a):
         print("Message data:", msg)
         if (value!=-1):
             msgcount+=1
+            rvlist.append(value)
 
-        if value >= 999999:
+        if value >= 99999:
             print("All messages received!")
             break
 
@@ -63,4 +66,11 @@ def consumer(a):
     #mq.close()
     #sysv_ipc.unlink_message_queue(key)
     print("received message number is ", msgcount)
+    for i in range (msgcount):
+        #print(rvlist[i])
+        if(rvlist[i]!= 99999):
+            if((rvlist[i+1] - rvlist[i]) != 1):
+                jplist.append(rvlist[i])
+    print(jplist)
+    print(len(jplist))
     return 0

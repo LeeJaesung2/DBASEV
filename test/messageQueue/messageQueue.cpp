@@ -1,5 +1,5 @@
 #include "messageQueue.h"
-#include <python2.7/Python.h> //embedding
+#include <Python.h>
 
 #include <iostream> //cout
 #include <string>
@@ -23,7 +23,7 @@ int callPython(const char *src,const char *func, int arg, ...){
     Py_Initialize();
     PyRun_SimpleString("import sys");
     PyRun_SimpleString("sys.path.append(\".\")");
-    pName = PyString_FromString(src); //get python src
+    pName = PyUnicode_DecodeFSDefault(src); //get python src
 
     /*Error checking of pName*/
     pModule = PyImport_Import(pName);
@@ -38,7 +38,7 @@ int callPython(const char *src,const char *func, int arg, ...){
             va_start(ap,arg);
             pArgs = PyTuple_New(arg);
             for (i = 0; i < arg; ++i) {
-                pValue = PyInt_FromLong(va_arg(ap,int));
+                pValue = PyLong_FromLong(va_arg(ap,int));
                 if (!pValue) {
                     Py_DECREF(pArgs);
                     Py_DECREF(pModule);
@@ -52,7 +52,7 @@ int callPython(const char *src,const char *func, int arg, ...){
             Py_DECREF(pArgs);
             /*value checking*/
             if (pValue != NULL) {
-                printf("Result of call: %ld\n", PyInt_AsLong(pValue));
+                printf("Result of call: %ld\n", PyLong_AsLong(pValue));
                 Py_DECREF(pValue);
             }
             /*No return value*/
@@ -79,7 +79,7 @@ int callPython(const char *src,const char *func, int arg, ...){
         return 1;
     }
     Py_Finalize();
-    return PyInt_AsLong(pValue);
+    return PyLong_AsLong(pValue);
     
 }
 
@@ -134,12 +134,12 @@ void * comm(void *arg){
     int cnt = 0;
     MsgBuf msg;
     msg.msgtype = 1;
-    int key_id = mq_init((key_t)5656);
+    int key_id = mq_init((key_t)5657);
 
     struct msqid_ds buf;
     while(1){
         msg.value = ++cnt;
-        if (cnt >= 1000000) {
+        if (cnt >= 100000) {
             cout << "Message Sending Finished!" << endl;
             break;
         }

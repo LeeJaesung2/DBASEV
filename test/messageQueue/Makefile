@@ -1,7 +1,7 @@
 CC=g++
 CFLAGS=-c -Wall
 LDFLAGS=-lpthread -ltbb -std=c++14
-PYFLAGS = -I/usr/include/python2.7 -lpython2.7
+PYFLAGS = -I/usr/include/python3.8 -lpython3.8
 
 EXECUTABLE= main.exe
 
