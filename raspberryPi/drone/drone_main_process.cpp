@@ -24,11 +24,11 @@ int main()
     if(thr_id < 0){
         perror("failure create thread");
     }
-    // create receiver thread
-    // thr_id = pthread_create(&threads[1], NULL, &receiver, NULL);
-    // if(thr_id < 0){
-    //     perror("failure create thread");
-    // }
+    //create receiver thread
+    thr_id = pthread_create(&threads[1], NULL, &receiver, NULL);
+    if(thr_id < 0){
+        perror("failure create thread");
+    }
 
 
 
@@ -36,9 +36,11 @@ int main()
     /*check OS version
     only run on raspberry pi*/
     struct utsname linux_info;
+    
+
     if (uname(&linux_info) != -1) {
-        if(strcmp(linux_info.release,"6.1.21-v8+")==0){
-            printf("hern");
+        if(strcmp(linux_info.nodename,"raspberrypi")==0){
+            //printf("hern");
             announceOn();
         }
     } else {

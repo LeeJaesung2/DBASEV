@@ -12,7 +12,8 @@ CC=g++
 CFLAGS=-c -Wall
 LDFLAGS=-lpthread -std=c++14
 GPFLAGS = -lws2811 -lwiringPi
-PYFLAGS = -I/usr/include/python3.9 -lpython3.9
+PYTHON_VERSION := $(shell python -c "import sys; print('.'.join(map(str, sys.version_info[:2])))")
+PYFLAGS = -I/usr/include/python$(PYTHON_VERSION) -lpython$(PYTHON_VERSION)
 SRC_DIR=./src
 OBJ_DIR=./build
 DRONE_DIR=./raspberryPi/drone
