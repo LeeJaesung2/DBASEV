@@ -1,7 +1,8 @@
 CC=g++
 CFLAGS=-c -Wall
-LDFLAGS=-lpthread -ltbb -std=c++14
-PYFLAGS = -I/usr/include/python3.8 -lpython3.8
+LDFLAGS=-lpthread -std=c++14
+PYTHON_VERSION := $(shell python -c "import sys; print('.'.join(map(str, sys.version_info[:2])))")
+PYFLAGS = -I/usr/include/python$(PYTHON_VERSION) -lpython$(PYTHON_VERSION)
 
 EXECUTABLE= main.exe
 
