@@ -5,4 +5,4 @@ apt-get update -y
 apt-get upgrade -y
 
 #install python2.7
-apt-get install -y python2.7-dev
+apt-get install -y python3.8-dev

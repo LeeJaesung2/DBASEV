@@ -118,7 +118,7 @@ class Drone:
         
     def connect_to_pixhawk(self):
         # Specify the path of the serial port to connect
-        connection_string = "/dev/ttyAMA0" # USB: '/dev/ttyACM0' 
+        connection_string = "/dev/serial0" # USB: '/dev/ttyACM0' 
 
         # Connect to the vehicle
         vehicle = connect(connection_string, baud=57600, wait_ready=True)

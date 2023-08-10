@@ -20,3 +20,6 @@ cmake -D BUILD_SHARED=OFF -D BUILD_TEST=ON ..
 cmake --build .
 make install
 cd ../../..
+
+mkdir /usr/include/ws2811
+cp lib/rpi_ws281x/version.h /usr/include/ws2811
